@@ -3,6 +3,38 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.38 — 2026-09-13
+
+### One category order, instead of two that had to agree
+
+Hiding and reordering a category from the browse screen — the long-press menu the television gained
+from a community pull request, and that the phone now has too — needs the rail's list of categories
+in exactly the order the rail is showing it. That list was already core's: `applyCustomizationsWithCustoms` builds it, and every browse screen calls it to draw the rail.
+
+The move did not use it. It rebuilt the same ordering inline, and it did so **three times**, once in
+each of the television's Live, Movies and Series view models, 102 lines apiece and byte-identical
+apart from the media type. Two implementations of one ordering is not merely duplication: they have
+to agree, and the day they stop agreeing, a move reorders a list that is not the one on screen.
+
+`core/customize/CategoryOrdering.kt` collapses it:
+
+- **`railCategories`** — the kids filter, the profile's custom combined categories, hides, renames
+  and the manual order, in one place. Every rail in both apps now calls it. The hand-written version
+  turned out to exist in **six** places, not three: all six rails plus the television's guide picker
+  were each repeating the kids filter before calling into core.
+- **`CategoryMove`** — one category being moved, stepping through the existing `moveBlock`. The
+  television drives it from its D-pad overlay; the phone commits a step at a time from a menu.
+- **`CategoryRailEditor`** — resolve a `LiveKey` to a customization key, then hide, begin a move, or
+  move and commit.
+
+`CategoryOrderingTest` proves the rail and a move build the same list, and that committing a move
+reproduces the order the user saw. That test is the point of the change.
+
+**Additive only.** Nothing that existed changed shape or meaning, so the television keeps the
+behaviour it was signed off with — including that a move from the browse screen stores the visible
+categories' order, leaving a hidden category to return at the end of the rail if it is unhidden
+later. Both apps were rebuilt and tested on the owner's devices before this was tagged.
+
 ## core-1.0.37 — 2026-09-13
 
 ### Downloads and recordings can be saved to a folder the user picks
