@@ -211,5 +211,47 @@
     <string name="recording_failed_unavailable">Kanał nie chciał się odtworzyć</string>
     <string name="recording_failed_channel_gone">Tego kanału nie ma już na Twojej liście</string>
     <string name="recording_failed_unknown">Nie nagrano</string>
+    <string name="recording_title">Nagrania</string>
+    <string name="recording_description">Telewizja na żywo zapisana na tym urządzeniu.</string>
+    <string name="recording_empty">Nic jeszcze nie nagrano. Otwórz program TV, wybierz audycję i naciśnij Nagraj.</string>
+    <string name="recording_group_now">Teraz nagrywa</string>
+    <string name="recording_group_scheduled">Zaplanowane</string>
+    <string name="recording_group_completed">Nagrane</string>
+    <string name="recording_group_failed">Nie powiodło się</string>
+    <string name="recording_group_missed">Pominięte</string>
+    <string name="recording_record">Nagraj</string>
+    <string name="recording_stop">Zatrzymaj nagrywanie</string>
+    <string name="recording_record_series">Nagrywaj każdą emisję</string>
+    <string name="recording_stop_series">Przestań nagrywać każdą emisję</string>
+    <string name="recording_from_archive">Nagraj z archiwum</string>
+    <string name="recording_scheduled_for">Nagra <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Nagrywanie: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">Koliduje z <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Nagrywanie</string>
+    <string name="settings_recording_reserve">Zostaw jedno połączenie wolne do oglądania</string>
+    <string name="settings_recording_reserve_description">Nagrania zostawiają jedno połączenie dostawcy wolne, żeby zawsze było na czym oglądać. Wyłącz, aby nagrywać na wszystkich.</string>
+    <string name="settings_recording_pre_roll">Zacznij wcześniej</string>
+    <string name="settings_recording_pre_roll_description">Zacznij tyle przed podaną godziną rozpoczęcia, żeby nieco spieszący się program TV nie zgubił początku.</string>
+    <string name="settings_recording_post_roll">Kontynuuj po końcu</string>
+    <string name="settings_recording_post_roll_description">Kontynuuj tyle po podanej godzinie zakończenia, żeby przeciągająca się audycja nie została ucięta.</string>
+    <string name="settings_recording_timers_inexact">To urządzenie nie pozwala aplikacji OwnTV ustawiać dokładnych alarmów, więc nagranie może zacząć się kilka minut później. Nagrania startują wcześniej, aby to nadrobić.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minuta</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> minuty</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> minut</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minuty</item>
+    </plurals>
     <string name="recording_failed_encrypted">Ten kanał jest szyfrowany i nie można go nagrać</string>
+    <string name="recording_failed_metered">Nie nagrano przez dane komórkowe</string>
+    <string name="settings_recording_mobile_data">Nagrywaj przez dane komórkowe</string>
+    <string name="settings_recording_mobile_data_description">Wyłączone: nagranie wypadające poza Wi-Fi zostanie pominięte zamiast czekać — audycja na żywo się nie powtórzy.</string>
+    <string name="settings_record_watching">Nagrywaj to, co oglądam</string>
+    <string name="settings_record_watching_description">Dodaje do odtwarzacza przycisk nagrywania, który zapisuje oglądany kanał. Pobiera kanał samodzielnie, więc przez ten czas zajmuje jedno z połączeń dostawcy i nagrywa dalej po zmianie kanału lub wyjściu z odtwarzacza.</string>
+    <string name="settings_record_watching_warning_title">Tylko jedno połączenie</string>
+    <string name="settings_record_watching_warning_description">Nagrywanie pobiera kanał po raz drugi, więc zajmuje kolejne połączenie dostawcy. Na koncie, które pozwala tylko na jedno, nagrywanie zostanie odrzucone podczas oglądania. Po uruchomieniu działa samo — zmień kanał, wyjdź z odtwarzacza, a będzie trwać do końca audycji albo do zatrzymania w Nagraniach.</string>
+    <string name="settings_record_watching_keep_off">Zostaw wyłączone</string>
+    <string name="settings_record_watching_turn_on">Włącz</string>
+    <string name="player_recording_conflict">Twój dostawca pozwala tylko na jeden strumień naraz, a nagrywanie właśnie go używa.</string>
+    <string name="player_keep_watching_stop_recording">Oglądaj dalej (zatrzyma nagrywanie)</string>
 </resources>

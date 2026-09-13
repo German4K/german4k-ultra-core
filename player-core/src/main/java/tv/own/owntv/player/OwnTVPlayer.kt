@@ -147,6 +147,7 @@ enum class ZoomMode(@param:androidx.annotation.StringRes val labelRes: Int) {
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class OwnTVPlayer(
     private val context: Context,
+
     private val settings: SettingsRepository,
     private val connectivity: tv.own.owntv.core.network.ConnectivityObserver,
     private val streamingHttp: tv.own.owntv.core.network.StreamingHttpClient,
@@ -157,6 +158,16 @@ class OwnTVPlayer(
     private val playbackPrefs: tv.own.owntv.core.player.PlaybackPrefsStore,
 ) : MPVLib.EventObserver {
     private val toastRenderer = PlayerToastRenderer(context, localeStore)
+
+    /** Lets mpv play a download or recording saved into a folder the user picked (a SAF document). */
+    private val contentFds = ContentFds(context)
+
+    /**
+     * The same context, for the rest of this module. [SubtitleController] needs one to resolve a
+     * finished download's stored location before it can fingerprint it, and this player is the only
+     * thing it already holds.
+     */
+    internal val appContext: Context get() = context
     private val toastEpoch = AtomicInteger(0)
     private var activeToast: android.widget.Toast? = null
 
@@ -895,7 +906,9 @@ class OwnTVPlayer(
     private fun MPVLib.loadfileWithStopClassification(url: String, reason: String) {
         val counted = incrementPendingStopCounter(reason)
         try {
-            command(arrayOf("loadfile", url))
+            // A document has no path for mpv to open, so it is handed an already-open descriptor
+            // instead. Everything else passes through untouched.
+            command(arrayOf("loadfile", contentFds.playable(url)))
             markActiveFile(true)
         } catch (t: Throwable) {
             if (counted) rollbackPendingStopCounter(reason)
@@ -3481,6 +3494,7 @@ class OwnTVPlayer(
 
     fun release() {
         clearToast()
+        contentFds.release()
         // Queued freeze-frame/PixelCopy callbacks must never fire after teardown (released surface/bitmap).
         freezeHandler.removeCallbacksAndMessages(null)
         errorCheckJob?.cancel()

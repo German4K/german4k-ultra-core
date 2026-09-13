@@ -420,6 +420,7 @@
     <string name="settings_search_keywords_autoplay">automatisk afspilning serier sæson</string>
     <string name="settings_search_keywords_catchup">arkiv tidszone forskydning tv-arkiv ekstern afspiller vlc mx</string>
     <string name="settings_search_keywords_video">dekoder undertekster synkronisering</string>
+    <string name="settings_search_keywords_recording">optag optagelse optagelser dvr timer planlæg serie gem live</string>
     <string name="settings_search_keywords_subtitle_appearance">undertekst størrelse farve kulør placering gennemsigtighed baggrund opacitet</string>
     <string name="settings_search_keywords_latency">live buffer forsinkelse lav forsinkelse sekunder tæt på livepunkt</string>
     <string name="settings_search_keywords_proxy">http trafik rute</string>
@@ -770,6 +771,13 @@
     <string name="settings_sources_test_connections_max">Forbindelser: op til <xliff:g id="max">%1$d</xliff:g> ad gangen</string>
     <string name="settings_sources_test_trial">Prøvekonto</string>
     <string name="settings_sources_test_expiry_none">Ingen udløbsdato oplyst</string>
+    <string name="settings_sources_info">Info</string>
+    <string name="settings_sources_retest">Test igen</string>
+    <string name="settings_sources_probe_title">Vil du teste denne playliste?</string>
+    <string name="settings_sources_probe_warning">Mange udbydere oplyser aldrig, hvor mange kanaler du må se samtidig, så OwnTV finder ud af det ved at åbne nogle stykker og se, hvilke der overlever. Alt, der afspilles nu, stopper, og det kan tage op til to minutter.</string>
+    <string name="settings_sources_probe_running">Kontrollerer, hvor mange kanaler denne udbyder tillader… (<xliff:g id="current">%1$d</xliff:g> af <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV kunne ikke finde ud af, hvor mange kanaler denne udbyder tillader.</string>
+    <string name="settings_sources_probe_skip">Spring over</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDARD</string>
     <string name="settings_sources_backup">Sikkerhedskopi</string>
@@ -1347,8 +1355,10 @@
     <string name="more_pane_encrypted">Krypteret</string>
     <string name="settings_backup_location">Placering</string>
     <string name="settings_multiview">Multivisning</string>
-    <string name="settings_multiview_description">Se op til fire livekanaler på én gang. Hver flade bruger en af udbyderens forbindelser.</string>
+    <string name="settings_multiview_description">Se flere direkte kanaler samtidig. Du bestemmer hvor mange hver gang, op til denne grænse — hvert felt bruger en af udbyderens forbindelser.</string>
     <string name="settings_multiview_tiles">Flader</string>
+    <string name="settings_multiview_tiles_max">Flest felter</string>
+    <string name="settings_multiview_tiles_max_value">Maks. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Mere end to flader</string>
     <string name="settings_multiview_warning_description">Tre eller fire flader kræver tre eller fire forbindelser hos udbyderen, og en tv-boks kan kun afkode et begrænset antal kanaler samtidig. Hvis en flade ikke starter, siger den hvorfor, og de andre spiller videre.</string>
     <string name="settings_multiview_keep_two">Behold 2</string>

@@ -403,6 +403,12 @@
     <string name="content_storage_removable">Removable storage</string>
     <!-- Translators: Storage location label for app-private storage. -->
     <string name="content_storage_app">App storage (no permission needed)</string>
+    <!-- Translators: Row in the download-options sheet that opens the system folder picker so the user can choose any folder on the device. The ellipsis signals that a chooser opens. -->
+    <string name="content_storage_choose_folder">Choose another folder…</string>
+    <!-- Translators: Label for a download folder the user picked with the system folder picker, shown above the folder's own name. -->
+    <string name="content_storage_chosen_folder">Chosen folder</string>
+    <!-- Translators: Shown when the folder the user had chosen for downloads can no longer be written to, because the permission was withdrawn or the storage was removed. -->
+    <string name="content_storage_folder_lost">That folder is no longer available. Choose it again, or pick another.</string>
     <!-- Translators: Download status showing completed size. "size" is the formatted file size. -->
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> downloaded</string>
     <!-- Translators: Error message on a failed download item. Directs the user to tap Retry. -->

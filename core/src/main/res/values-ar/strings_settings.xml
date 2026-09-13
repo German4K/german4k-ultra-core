@@ -428,6 +428,7 @@
     <string name="settings_search_keywords_autoplay">تشغيل تلقائي مسلسل موسم</string>
     <string name="settings_search_keywords_catchup">أرشيف منطقة زمنية إزاحة مشاهدة البث الفائت مشغّل خارجي vlc mx</string>
     <string name="settings_search_keywords_video">وحدة فك الترميز ترجمة مزامنة</string>
+    <string name="settings_search_keywords_recording">تسجيل تسجيلات مؤقت جدولة مسلسل حفظ مباشر</string>
     <string name="settings_search_keywords_subtitle_appearance">ترجمة حجم لون موضع شفافية خلفية عتامة</string>
     <string name="settings_search_keywords_latency">مباشر مخزن مؤقت زمن استجابة تأخير منخفض ثوانٍ قرب حافة البث المباشر</string>
     <string name="settings_search_keywords_proxy">http حركة بيانات توجيه</string>
@@ -794,6 +795,13 @@
     <string name="settings_sources_test_connections_max">الاتصالات: حتى <xliff:g id="max">%1$d</xliff:g> في وقت واحد</string>
     <string name="settings_sources_test_trial">حساب تجريبي</string>
     <string name="settings_sources_test_expiry_none">لم يُبلَّغ عن تاريخ انتهاء</string>
+    <string name="settings_sources_info">معلومات</string>
+    <string name="settings_sources_retest">إعادة الاختبار</string>
+    <string name="settings_sources_probe_title">اختبار هذه القائمة؟</string>
+    <string name="settings_sources_probe_warning">لا يذكر كثير من المزوّدين عدد القنوات التي يمكنك مشاهدتها في وقت واحد، لذا يكتشف OwnTV ذلك بفتح بضع قنوات ومعرفة أيها يستمر. سيتوقف كل ما يعمل الآن، وقد يستغرق هذا حتى دقيقتين.</string>
+    <string name="settings_sources_probe_running">جارٍ التحقق من عدد القنوات التي يسمح بها هذا المزوّد… (<xliff:g id="current">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">تعذّر على OwnTV تحديد عدد القنوات التي يسمح بها هذا المزوّد.</string>
+    <string name="settings_sources_probe_skip">تخطّي</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">افتراضي</string>
     <string name="settings_sources_backup">نسخة احتياطية</string>
@@ -1435,8 +1443,10 @@
     <string name="more_pane_encrypted">مشفّرة</string>
     <string name="settings_backup_location">الموقع</string>
     <string name="settings_multiview">العرض المتعدد</string>
-    <string name="settings_multiview_description">شاهد حتى أربع قنوات مباشرة في وقت واحد. كل مربع يستخدم اتصالًا واحدًا من مزوّدك.</string>
+    <string name="settings_multiview_description">شاهد عدة قنوات مباشرة في وقت واحد. أنت تحدد العدد في كل مرة، بحد أقصى هذا الحد — ويستخدم كل مربع أحد اتصالات المزوّد.</string>
     <string name="settings_multiview_tiles">المربعات</string>
+    <string name="settings_multiview_tiles_max">أقصى عدد للمربعات</string>
+    <string name="settings_multiview_tiles_max_value">بحد أقصى <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">أكثر من مربعين</string>
     <string name="settings_multiview_warning_description">ثلاثة أو أربعة مربعات تحتاج إلى ثلاثة أو أربعة اتصالات من مزوّدك، وجهاز التلفزيون نفسه لا يفكّ ترميز إلا عددًا محدودًا من القنوات في وقت واحد. إذا تعذّر تشغيل مربع فسيوضّح السبب، وتستمر البقية في العمل.</string>
     <string name="settings_multiview_keep_two">أبقِ 2</string>

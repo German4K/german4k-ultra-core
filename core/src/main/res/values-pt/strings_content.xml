@@ -226,6 +226,9 @@
     <string name="content_storage_internal">Armazenamento interno</string>
     <string name="content_storage_removable">Armazenamento removível</string>
     <string name="content_storage_app">Armazenamento do aplicativo (nenhuma permissão necessária)</string>
+    <string name="content_storage_choose_folder">Escolher outra pasta…</string>
+    <string name="content_storage_chosen_folder">Pasta escolhida</string>
+    <string name="content_storage_folder_lost">Essa pasta não está mais disponível. Escolha-a novamente ou selecione outra.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> baixados</string>
     <string name="content_downloads_failure_message">Falha no download — não foi possível acessar a fonte. Selecione Tentar novamente.</string>
     <string name="content_downloads_queued">Na fila…</string>

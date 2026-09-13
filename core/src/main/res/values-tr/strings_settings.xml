@@ -420,6 +420,7 @@
     <string name="settings_search_keywords_autoplay">otomatik oynatma dizi sezon</string>
     <string name="settings_search_keywords_catchup">arşiv saat dilimi zaman farkı geri izleme harici oynatıcı vlc mx</string>
     <string name="settings_search_keywords_video">kod çözücü altyazılar eşitleme</string>
+    <string name="settings_search_keywords_recording">kayıt kaydet kayıtlar dvr zamanlayıcı zamanla dizi kaydet canlı</string>
     <string name="settings_search_keywords_subtitle_appearance">altyazı boyutu renk konum saydamlık arka plan opaklık</string>
     <string name="settings_search_keywords_latency">canlı arabellek gecikme düşük saniye yayın noktası yakın</string>
     <string name="settings_search_keywords_proxy">http trafik yönlendirme</string>
@@ -770,6 +771,13 @@
     <string name="settings_sources_test_connections_max">Bağlantılar: aynı anda en fazla <xliff:g id="max">%1$d</xliff:g></string>
     <string name="settings_sources_test_trial">Deneme hesabı</string>
     <string name="settings_sources_test_expiry_none">Bitiş tarihi bildirilmedi</string>
+    <string name="settings_sources_info">Bilgi</string>
+    <string name="settings_sources_retest">Yeniden test et</string>
+    <string name="settings_sources_probe_title">Bu oynatma listesi test edilsin mi?</string>
+    <string name="settings_sources_probe_warning">Birçok sağlayıcı aynı anda kaç kanal izleyebileceğinizi hiç belirtmez; bu yüzden OwnTV birkaç kanal açıp hangilerinin devam ettiğine bakarak bunu kendisi bulur. Şu anda oynatılan her şey duracak ve bu işlem iki dakikaya kadar sürebilir.</string>
+    <string name="settings_sources_probe_running">Bu sağlayıcının kaç kanala izin verdiği kontrol ediliyor… (<xliff:g id="current">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV bu sağlayıcının kaç kanala izin verdiğini belirleyemedi.</string>
+    <string name="settings_sources_probe_skip">Atla</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">VARSAYILAN</string>
     <string name="settings_sources_backup">Yedekleme</string>
@@ -1347,8 +1355,10 @@
     <string name="more_pane_encrypted">Şifreli</string>
     <string name="settings_backup_location">Konum</string>
     <string name="settings_multiview">Çoklu görünüm</string>
-    <string name="settings_multiview_description">Aynı anda dört canlı kanala kadar izleyin. Her karo, sağlayıcınızın bir bağlantısını kullanır.</string>
+    <string name="settings_multiview_description">Aynı anda birden fazla canlı kanal izleyin. Kaç tane olacağına her seferinde siz karar verirsiniz, bu sınıra kadar — her kutucuk sağlayıcınızın bir bağlantısını kullanır.</string>
     <string name="settings_multiview_tiles">Karolar</string>
+    <string name="settings_multiview_tiles_max">En fazla kutucuk</string>
+    <string name="settings_multiview_tiles_max_value">En fazla <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">İkiden fazla karo</string>
     <string name="settings_multiview_warning_description">Üç veya dört karo, sağlayıcınızdan üç veya dört bağlantı ister ve bir TV cihazı aynı anda ancak belirli sayıda kanalı çözebilir. Bir karo açılmazsa nedenini söyler, diğerleri oynamaya devam eder.</string>
     <string name="settings_multiview_keep_two">2 kalsın</string>

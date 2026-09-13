@@ -124,6 +124,8 @@
     <string name="sync_error_secure">Den sikre tilkoblingen mislyktes – serverens sertifikat kan være ugyldig.</string>
     <string name="sync_error_malformed_guide">Programoversiktsdataene fra serveren var feil formatert. Noe kan likevel ha blitt lastet inn – prøv igjen, eller kontroller EPG-URL-en.</string>
     <string name="common_items_per_skip">Elementer per hopp</string>
+    <string name="common_minutes">Minutter</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Skjul</string>

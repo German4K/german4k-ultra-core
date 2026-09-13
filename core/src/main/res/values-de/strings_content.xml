@@ -219,6 +219,9 @@
     <string name="content_storage_internal">Interner Speicher</string>
     <string name="content_storage_removable">Wechselspeicher</string>
     <string name="content_storage_app">App-Speicher (keine Berechtigung erforderlich)</string>
+    <string name="content_storage_choose_folder">Anderen Ordner wählen…</string>
+    <string name="content_storage_chosen_folder">Gewählter Ordner</string>
+    <string name="content_storage_folder_lost">Dieser Ordner ist nicht mehr verfügbar. Wähle ihn erneut oder wähle einen anderen.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> heruntergeladen</string>
     <string name="content_downloads_failure_message">Download fehlgeschlagen — die Quelle war nicht erreichbar. Wähle Erneut versuchen.</string>
     <string name="content_downloads_queued">In Warteschlange…</string>

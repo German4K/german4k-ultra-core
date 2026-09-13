@@ -195,5 +195,45 @@
     <string name="recording_failed_unavailable">Kanalen ville ikke spille</string>
     <string name="recording_failed_channel_gone">Kanalen finnes ikke lenger i spillelisten</string>
     <string name="recording_failed_unknown">Det ble ikke tatt opp</string>
+    <string name="recording_title">Opptak</string>
+    <string name="recording_description">Direkte-TV lagret på denne enheten.</string>
+    <string name="recording_empty">Ingenting er tatt opp ennå. Åpne TV-guiden, velg et program og trykk Ta opp.</string>
+    <string name="recording_group_now">Tar opp nå</string>
+    <string name="recording_group_scheduled">Planlagt</string>
+    <string name="recording_group_completed">Tatt opp</string>
+    <string name="recording_group_failed">Mislyktes</string>
+    <string name="recording_group_missed">Gikk glipp av</string>
+    <string name="recording_record">Ta opp</string>
+    <string name="recording_stop">Stopp opptaket</string>
+    <string name="recording_record_series">Ta opp alle visninger</string>
+    <string name="recording_stop_series">Slutt å ta opp alle visninger</string>
+    <string name="recording_from_archive">Ta opp fra arkivet</string>
+    <string name="recording_scheduled_for">Tar opp <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Tar opp <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">Kolliderer med <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Opptak</string>
+    <string name="settings_recording_reserve">Hold én strøm ledig til å se på</string>
+    <string name="settings_recording_reserve_description">Opptak lar én av leverandørens tilkoblinger stå ledig, slik at det alltid finnes én å se på. Slå av for å ta opp på alle.</string>
+    <string name="settings_recording_pre_roll">Start tidligere</string>
+    <string name="settings_recording_pre_roll_description">Begynn så lenge før det oppgitte starttidspunktet, slik at en guide som går litt foran likevel får med begynnelsen.</string>
+    <string name="settings_recording_post_roll">Fortsett etter slutten</string>
+    <string name="settings_recording_post_roll_description">Fortsett så lenge etter det oppgitte sluttidspunktet, slik at et program som drar ut ikke blir kuttet.</string>
+    <string name="settings_recording_timers_inexact">Denne enheten lar ikke OwnTV sette nøyaktige alarmer, så et opptak kan starte noen minutter for sent. Opptak starter tidligere for å veie opp for det.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minutt</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minutter</item>
+    </plurals>
     <string name="recording_failed_encrypted">Denne kanalen er kryptert og kan ikke tas opp</string>
+    <string name="recording_failed_metered">Ikke tatt opp på mobildata</string>
+    <string name="settings_recording_mobile_data">Ta opp på mobildata</string>
+    <string name="settings_recording_mobile_data_description">Av: et opptak som faller utenfor Wi-Fi hoppes over i stedet for å vente — et direktesendt program kommer ikke tilbake.</string>
+    <string name="settings_record_watching">Ta opp det jeg ser på</string>
+    <string name="settings_record_watching_description">Legger en opptaksknapp i spilleren som lagrer kanalen du ser på. Den henter kanalen selv, så den bruker en av leverandørens tilkoblinger mens den går, og fortsetter å ta opp når du bytter kanal eller forlater spilleren.</string>
+    <string name="settings_record_watching_warning_title">Bare én tilkobling</string>
+    <string name="settings_record_watching_warning_description">Opptaket henter kanalen en gang til og bruker dermed enda en av leverandørens tilkoblinger. På en konto som bare tillater én, avvises opptaket mens du ser på. Når det først er i gang, går det av seg selv — bytt kanal, forlat spilleren, og det fortsetter til programmet er slutt eller du stopper det under Opptak.</string>
+    <string name="settings_record_watching_keep_off">La stå av</string>
+    <string name="settings_record_watching_turn_on">Slå på</string>
+    <string name="player_recording_conflict">Leverandøren din tillater bare én strøm om gangen, og opptaket bruker den.</string>
+    <string name="player_keep_watching_stop_recording">Fortsett å se (stopper opptaket)</string>
 </resources>

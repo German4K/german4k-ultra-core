@@ -142,6 +142,8 @@
     <string name="sync_error_secure">Nie udało się nawiązać bezpiecznego połączenia — certyfikat serwera może być nieprawidłowy.</string>
     <string name="sync_error_malformed_guide">Dane przewodnika z serwera miały nieprawidłowy format. Część mogła mimo to zostać wczytana — spróbuj ponownie lub sprawdź adres URL EPG.</string>
     <string name="common_items_per_skip">Liczba elementów pomijanych jednorazowo</string>
+    <string name="common_minutes">Minuty</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Ukryj</string>

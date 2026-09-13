@@ -420,6 +420,7 @@
     <string name="settings_search_keywords_autoplay">अपने-आप चलाएँ सीरीज़ सीज़न</string>
     <string name="settings_search_keywords_catchup">आर्काइव समय क्षेत्र ऑफ़सेट कैच-अप बाहरी प्लेयर VLC MX</string>
     <string name="settings_search_keywords_video">डिकोडर सबटाइटल सिंक</string>
+    <string name="settings_search_keywords_recording">रिकॉर्ड रिकॉर्डिंग डीवीआर टाइमर शेड्यूल सीरीज सहेजें लाइव</string>
     <string name="settings_search_keywords_subtitle_appearance">सबटाइटल आकार रंग कलर स्थिति पारदर्शिता पृष्ठभूमि अपारदर्शिता</string>
     <string name="settings_search_keywords_latency">लाइव बफ़र विलंबता देरी कम विलंबता सेकंड लाइव बिंदु के पास</string>
     <string name="settings_search_keywords_proxy">HTTP ट्रैफ़िक रूट</string>
@@ -770,6 +771,13 @@
     <string name="settings_sources_test_connections_max">कनेक्शन: एक साथ अधिकतम <xliff:g id="max">%1$d</xliff:g></string>
     <string name="settings_sources_test_trial">ट्रायल खाता</string>
     <string name="settings_sources_test_expiry_none">कोई समाप्ति तिथि नहीं बताई गई</string>
+    <string name="settings_sources_info">जानकारी</string>
+    <string name="settings_sources_retest">फिर से जाँचें</string>
+    <string name="settings_sources_probe_title">इस प्लेलिस्ट की जाँच करें?</string>
+    <string name="settings_sources_probe_warning">कई प्रदाता कभी नहीं बताते कि आप एक साथ कितने चैनल देख सकते हैं, इसलिए OwnTV कुछ चैनल खोलकर और यह देखकर पता लगाता है कि कौन से चलते रहते हैं। अभी जो कुछ चल रहा है वह रुक जाएगा, और इसमें दो मिनट तक लग सकते हैं।</string>
+    <string name="settings_sources_probe_running">जाँचा जा रहा है कि यह प्रदाता कितने चैनलों की अनुमति देता है… (<xliff:g id="total">%2$d</xliff:g> में से <xliff:g id="current">%1$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV यह पता नहीं लगा सका कि यह प्रदाता कितने चैनलों की अनुमति देता है।</string>
+    <string name="settings_sources_probe_skip">छोड़ें</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">डिफ़ॉल्ट</string>
     <string name="settings_sources_backup">बैकअप</string>
@@ -1347,8 +1355,10 @@
     <string name="more_pane_encrypted">एन्क्रिप्टेड</string>
     <string name="settings_backup_location">स्थान</string>
     <string name="settings_multiview">मल्टीव्यू</string>
-    <string name="settings_multiview_description">एक साथ चार लाइव चैनल तक देखें। हर टाइल आपके प्रोवाइडर का एक कनेक्शन लेती है।</string>
+    <string name="settings_multiview_description">एक साथ कई लाइव चैनल देखें। हर बार आप तय करते हैं कि कितने, इस सीमा तक — हर टाइल आपके प्रदाता का एक कनेक्शन इस्तेमाल करती है।</string>
     <string name="settings_multiview_tiles">टाइलें</string>
+    <string name="settings_multiview_tiles_max">अधिकतम टाइल</string>
+    <string name="settings_multiview_tiles_max_value">अधिकतम <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">दो से ज़्यादा टाइलें</string>
     <string name="settings_multiview_warning_description">तीन या चार टाइलों के लिए प्रोवाइडर से तीन या चार कनेक्शन चाहिए, और टीवी डिवाइस भी एक समय में सीमित चैनल ही डिकोड कर पाता है। कोई टाइल शुरू न हो तो वह कारण बताती है, बाकी टाइलें चलती रहती हैं।</string>
     <string name="settings_multiview_keep_two">2 ही रखें</string>

@@ -20,6 +20,7 @@ class EpgSyncWorker(
     private val store: EpgSourceStore,
     private val connectivity: ConnectivityObserver,
     private val activityTracker: EpgActivityTracker,
+    private val recordings: tv.own.owntv.core.recording.RecordingManager,
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -46,6 +47,12 @@ class EpgSyncWorker(
             }
             progress.flush()
             store.setSynced(source.id, System.currentTimeMillis(), null)
+            // A series rule is a standing instruction about programmes that do not exist in the
+            // database until the guide mentioning them is fetched — so this is the moment "record
+            // every showing" becomes actual timers (D7). Best-effort: a rule that could not be
+            // applied is re-applied on the next refresh, and it must never fail the EPG sync.
+            runCatching { recordings.applyRules() }
+                .onFailure { Log.w(TAG, "series rules not applied after EPG sync: ${it.message}") }
             Log.i(
                 TAG,
                 "EPG sync finished sourceId=${source.id} reason=$reason programmes=$programmes ms=${SystemClock.elapsedRealtime() - startedAt}",

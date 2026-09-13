@@ -78,6 +78,14 @@ enum class RecordingFailure {
     CHANNEL_GONE,
 
     /**
+     * The connection was metered and the user has asked that recordings stay off mobile data.
+     *
+     * Its own reason rather than a silent wait: a download can be held until Wi-Fi arrives because
+     * the film is still there tomorrow, and a live programme cannot.
+     */
+    METERED_CONNECTION,
+
+    /**
      * The channel is delivered as encrypted HLS (`#EXT-X-KEY` with a method other than `NONE`).
      *
      * Refused rather than attempted, on purpose: writing the encrypted segments out unchanged would

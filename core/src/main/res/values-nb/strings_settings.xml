@@ -420,6 +420,7 @@
     <string name="settings_search_keywords_autoplay">automatisk avspilling serier sesong</string>
     <string name="settings_search_keywords_catchup">arkiv tidssone forskyvning TV-arkiv ekstern avspiller VLC MX</string>
     <string name="settings_search_keywords_video">dekoder undertekster synkronisering</string>
+    <string name="settings_search_keywords_recording">opptak ta opp dvr tidsur planlegg serie lagre direkte</string>
     <string name="settings_search_keywords_subtitle_appearance">undertekst størrelse farge plassering transparens bakgrunn tetthet</string>
     <string name="settings_search_keywords_latency">direkte buffer forsinkelse lav forsinkelse sekunder nær direkteposisjon</string>
     <string name="settings_search_keywords_proxy">HTTP trafikk rute</string>
@@ -770,6 +771,13 @@
     <string name="settings_sources_test_connections_max">Tilkoblinger: opptil <xliff:g id="max">%1$d</xliff:g> samtidig</string>
     <string name="settings_sources_test_trial">Prøvekonto</string>
     <string name="settings_sources_test_expiry_none">Ingen utløpsdato oppgitt</string>
+    <string name="settings_sources_info">Info</string>
+    <string name="settings_sources_retest">Test på nytt</string>
+    <string name="settings_sources_probe_title">Vil du teste denne spillelisten?</string>
+    <string name="settings_sources_probe_warning">Mange leverandører sier aldri hvor mange kanaler du kan se samtidig, så OwnTV finner det ut ved å åpne noen og se hvilke som holder. Alt som spilles av nå, stopper, og dette kan ta opptil to minutter.</string>
+    <string name="settings_sources_probe_running">Sjekker hvor mange kanaler denne leverandøren tillater… (<xliff:g id="current">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV klarte ikke å finne ut hvor mange kanaler denne leverandøren tillater.</string>
+    <string name="settings_sources_probe_skip">Hopp over</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDARD</string>
     <string name="settings_sources_backup">Sikkerhetskopi</string>
@@ -1347,8 +1355,10 @@
     <string name="more_pane_encrypted">Kryptert</string>
     <string name="settings_backup_location">Plassering</string>
     <string name="settings_multiview">Multivisning</string>
-    <string name="settings_multiview_description">Se opptil fire direktekanaler samtidig. Hver rute bruker en av leverandørens tilkoblinger.</string>
+    <string name="settings_multiview_description">Se flere direktekanaler samtidig. Du bestemmer hvor mange hver gang, opp til denne grensen – hver rute bruker én av leverandørens tilkoblinger.</string>
     <string name="settings_multiview_tiles">Ruter</string>
+    <string name="settings_multiview_tiles_max">Flest ruter</string>
+    <string name="settings_multiview_tiles_max_value">Maks. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Flere enn to ruter</string>
     <string name="settings_multiview_warning_description">Tre eller fire ruter krever tre eller fire tilkoblinger hos leverandøren, og en TV-boks kan bare dekode et begrenset antall kanaler samtidig. Hvis en rute ikke starter, sier den hvorfor, og de andre spiller videre.</string>
     <string name="settings_multiview_keep_two">Behold 2</string>

@@ -420,6 +420,7 @@
     <string name="settings_search_keywords_autoplay">স্বয়ংক্রিয়-চালনা সিরিজ সিজন</string>
     <string name="settings_search_keywords_catchup">আর্কাইভ সময়-অঞ্চল অফসেট ক্যাচ-আপ বাহ্যিক প্লেয়ার vlc mx</string>
     <string name="settings_search_keywords_video">ডিকোডার সাবটাইটেল সিঙ্ক</string>
+    <string name="settings_search_keywords_recording">রেকর্ড রেকর্ডিং ডিভিআর টাইমার সময়সূচি সিরিজ সংরক্ষণ লাইভ</string>
     <string name="settings_search_keywords_subtitle_appearance">সাবটাইটেল আকার রং বর্ণ অবস্থান স্বচ্ছতা পটভূমি অস্বচ্ছতা</string>
     <string name="settings_search_keywords_latency">লাইভ বাফার বিলম্ব দেরি কম-বিলম্ব সেকেন্ড লাইভ-প্রান্তের-কাছে</string>
     <string name="settings_search_keywords_proxy">http ট্রাফিক রুট</string>
@@ -770,6 +771,13 @@
     <string name="settings_sources_test_connections_max">সংযোগ: একসাথে সর্বোচ্চ <xliff:g id="max">%1$d</xliff:g>টি</string>
     <string name="settings_sources_test_trial">ট্রায়াল অ্যাকাউন্ট</string>
     <string name="settings_sources_test_expiry_none">কোনো মেয়াদ শেষের তারিখ জানানো হয়নি</string>
+    <string name="settings_sources_info">তথ্য</string>
+    <string name="settings_sources_retest">আবার পরীক্ষা করুন</string>
+    <string name="settings_sources_probe_title">এই প্লেলিস্ট পরীক্ষা করবেন?</string>
+    <string name="settings_sources_probe_warning">অনেক সরবরাহকারী কখনোই জানায় না আপনি একসঙ্গে কতগুলি চ্যানেল দেখতে পারবেন, তাই OwnTV কয়েকটি চ্যানেল খুলে কোনগুলি টিকে থাকে তা দেখে এটি নির্ণয় করে। এখন যা চলছে সব বন্ধ হয়ে যাবে, এবং এতে দুই মিনিট পর্যন্ত লাগতে পারে।</string>
+    <string name="settings_sources_probe_running">এই সরবরাহকারী কতগুলি চ্যানেল অনুমোদন করে তা পরীক্ষা করা হচ্ছে… (<xliff:g id="total">%2$d</xliff:g>-এর মধ্যে <xliff:g id="current">%1$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">এই সরবরাহকারী কতগুলি চ্যানেল অনুমোদন করে OwnTV তা নির্ণয় করতে পারেনি।</string>
+    <string name="settings_sources_probe_skip">এড়িয়ে যান</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">ডিফল্ট</string>
     <string name="settings_sources_backup">ব্যাকআপ</string>
@@ -1347,8 +1355,10 @@
     <string name="more_pane_encrypted">এনক্রিপ্ট করা</string>
     <string name="settings_backup_location">অবস্থান</string>
     <string name="settings_multiview">মাল্টিভিউ</string>
-    <string name="settings_multiview_description">একসঙ্গে চারটি পর্যন্ত লাইভ চ্যানেল দেখুন। প্রতিটি টাইল আপনার প্রোভাইডারের একটি সংযোগ ব্যবহার করে।</string>
+    <string name="settings_multiview_description">একসঙ্গে একাধিক লাইভ চ্যানেল দেখুন। প্রতিবার আপনি ঠিক করেন কতগুলি, এই সীমা পর্যন্ত — প্রতিটি টাইল আপনার সরবরাহকারীর একটি সংযোগ ব্যবহার করে।</string>
     <string name="settings_multiview_tiles">টাইল</string>
+    <string name="settings_multiview_tiles_max">সর্বাধিক টাইল</string>
+    <string name="settings_multiview_tiles_max_value">সর্বাধিক <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">দুইয়ের বেশি টাইল</string>
     <string name="settings_multiview_warning_description">তিন বা চারটি টাইলের জন্য প্রোভাইডারের তিন বা চারটি সংযোগ লাগে, আর টিভি যন্ত্রও একসঙ্গে সীমিত সংখ্যক চ্যানেল ডিকোড করতে পারে। কোনো টাইল চালু না হলে সে কারণ জানায়, বাকিগুলো চলতে থাকে।</string>
     <string name="settings_multiview_keep_two">2 রাখুন</string>

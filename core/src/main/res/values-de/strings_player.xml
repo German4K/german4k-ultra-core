@@ -318,5 +318,6 @@
     <string name="multiview_add_to">Zu Multiview hinzufügen</string>
     <string name="multiview_added">Für Multiview gemerkt · <xliff:g id="count">%1$d</xliff:g> von <xliff:g id="total">%2$d</xliff:g>. Starte einen Sender, um das Raster zu öffnen.</string>
     <string name="multiview_tile_sound_only">Nur Ton</string>
+    <string name="multiview_tile_show_picture">Bild anzeigen</string>
     <string name="multiview_sound_only_note">Nur Ton — belegt trotzdem einen Stream deines Anbieters</string>
 </resources>

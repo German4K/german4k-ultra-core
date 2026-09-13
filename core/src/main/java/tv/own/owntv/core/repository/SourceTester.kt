@@ -10,6 +10,7 @@ import tv.own.owntv.core.parser.XtreamClient
 import tv.own.owntv.core.stalker.StalkerAuthManager
 import tv.own.owntv.core.stalker.StalkerClient
 import tv.own.owntv.core.stalker.stalkerCredentials
+import tv.own.owntv.core.stalker.stalkerExpiryOf
 
 /** What a "Test source" run found out. */
 sealed interface SourceTestResult {
@@ -21,6 +22,12 @@ sealed interface SourceTestResult {
     data class Ok(
         /** Subscription end, or null when the provider reports none/unlimited/nothing. */
         val expiryMs: Long? = null,
+        /**
+         * Subscription end as the provider wrote it, for portals that give a date rather than a
+         * timestamp. Shown verbatim — re-parsing a portal's own wording invents wrong dates — and
+         * preferred over [expiryMs] when both somehow exist.
+         */
+        val expiryText: String? = null,
         /** The provider's own status word ("Active", "Expired", …) — shown as-is, never translated. */
         val status: String? = null,
         val trial: Boolean = false,
@@ -121,10 +128,20 @@ class SourceTester(
         val mac = StalkerClient.canonicalizeMac(source.mac.orEmpty())
             ?: return SourceTestResult.AuthFailed
         return try {
-            val profile = stalkerAuth.testConnection(source.stalkerCredentials(mac)).profile
+            val creds = source.stalkerCredentials(mac)
+            val session = stalkerAuth.testConnection(creds)
+            val profile = session.profile
+            // The expiry is worth a second request: portals keep it in `account_info`, not in the
+            // profile, and the test said "no expiry date reported" for a portal that reports one.
+            val account = stalkerAuth.accountInfo(session, creds)
             SourceTestResult.Ok(
-                status = profile["status"],
+                // A portal's `status` is often the flag `1`, and "Status: 1" tells the user nothing —
+                // it reads as a fault code. Only a word is worth showing; "Connection OK" above has
+                // already said the rest.
+                status = profile["status"]?.takeIf { it.isNotBlank() && it.toIntOrNull() == null },
+                expiryText = stalkerExpiryOf(account) ?: stalkerExpiryOf(profile),
                 // Portals scatter the same idea across several keys; the first one that looks real wins.
+                // Many report none at all, which is what the playlist's own Maximum connections is for.
                 maxConnections = profile.firstIntOf("max_online", "num_of_devices", "max_connections"),
             )
         } catch (e: Exception) {

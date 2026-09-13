@@ -418,6 +418,7 @@
     <string name="settings_search_keywords_autoplay">自動播放 影集 季</string>
     <string name="settings_search_keywords_catchup">封存 時區 時差 回看 外部播放器 VLC MX</string>
     <string name="settings_search_keywords_video">解碼器 字幕 同步</string>
+    <string name="settings_search_keywords_recording">錄影 錄製 定時 預約 影集 儲存 直播</string>
     <string name="settings_search_keywords_subtitle_appearance">字幕 大小 色彩 顏色 位置 透明度 背景 不透明度</string>
     <string name="settings_search_keywords_latency">直播 緩衝處理 延遲 低延遲 秒 接近直播最新進度</string>
     <string name="settings_search_keywords_proxy">HTTP 流量 路由</string>
@@ -764,6 +765,13 @@
     <string name="settings_sources_test_connections_max">連線：最多可同時使用 <xliff:g id="max">%1$d</xliff:g> 個</string>
     <string name="settings_sources_test_trial">試用帳號</string>
     <string name="settings_sources_test_expiry_none">未提供到期日</string>
+    <string name="settings_sources_info">資訊</string>
+    <string name="settings_sources_retest">重新測試</string>
+    <string name="settings_sources_probe_title">測試此播放清單？</string>
+    <string name="settings_sources_probe_warning">許多供應商從不說明你可以同時觀看多少個頻道，因此 OwnTV 會開啟幾個頻道，看看哪些能持續播放來判斷。目前正在播放的內容會停止，此過程最多需要兩分鐘。</string>
+    <string name="settings_sources_probe_running">正在檢測此供應商允許的頻道數量…（<xliff:g id="current">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g>）</string>
+    <string name="settings_sources_probe_unknown">OwnTV 無法判斷此供應商允許多少個頻道。</string>
+    <string name="settings_sources_probe_skip">略過</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">預設</string>
     <string name="settings_sources_backup">備份</string>
@@ -1325,8 +1333,10 @@
     <string name="more_pane_encrypted">已加密</string>
     <string name="settings_backup_location">位置</string>
     <string name="settings_multiview">多畫面</string>
-    <string name="settings_multiview_description">最多同時觀看四個直播頻道。每個畫面會占用一個供應商連線。</string>
+    <string name="settings_multiview_description">同時觀看多個直播頻道。每次由你決定幾個，最多不超過此上限——每個畫面佔用供應商的一個連線。</string>
     <string name="settings_multiview_tiles">畫面數</string>
+    <string name="settings_multiview_tiles_max">最多畫面數</string>
+    <string name="settings_multiview_tiles_max_value">最多 <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">超過兩個畫面</string>
     <string name="settings_multiview_warning_description">三或四個畫面需要供應商提供三或四個連線，電視裝置同時能解碼的頻道數量也有限。某個畫面無法啟動時會說明原因，其他畫面照常播放。</string>
     <string name="settings_multiview_keep_two">保持 2 個</string>

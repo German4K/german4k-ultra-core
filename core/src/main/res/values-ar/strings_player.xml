@@ -354,5 +354,6 @@
     <string name="multiview_add_to">إضافة إلى العرض المتعدد</string>
     <string name="multiview_added">محفوظة للعرض المتعدد · <xliff:g id="count">%1$d</xliff:g> من <xliff:g id="total">%2$d</xliff:g>. شغّل قناة لفتح الشبكة.</string>
     <string name="multiview_tile_sound_only">الصوت فقط</string>
+    <string name="multiview_tile_show_picture">إظهار الصورة</string>
     <string name="multiview_sound_only_note">الصوت فقط — ومع ذلك يستخدم أحد بثوث مزوّدك</string>
 </resources>

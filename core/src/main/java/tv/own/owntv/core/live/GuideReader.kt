@@ -8,6 +8,7 @@ import tv.own.owntv.core.database.dao.EpgDao
 import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
+import tv.own.owntv.core.epg.EpgDedupe
 import tv.own.owntv.core.epg.EpgShift
 import tv.own.owntv.core.epg.EpgSourceStore
 
@@ -33,6 +34,11 @@ class GuideReader(
     private val epgDao: EpgDao,
     private val epgSourceStore: EpgSourceStore,
     private val sourceDao: SourceDao,
+    /**
+     * The second guide. [row] falls back to its provider fetch when the stored table has nothing for
+     * a channel in the window, so the grid shows what the preview pane has always shown.
+     */
+    private val liveEpgReader: LiveEpgReader,
 ) {
     /**
      * Every playlist plus every EPG feed. Guide rows are keyed by epg id and routinely live under a
@@ -50,18 +56,18 @@ class GuideReader(
      * to come back in one cursor window. The descriptions are dropped by the query — a window of them
      * is megabytes of text nothing on screen shows — so [description] fetches the one that is opened.
      */
-    suspend fun window(sourceIds: List<Long>, from: Long, to: Long): Map<String, List<EpgProgrammeEntity>> =
+    suspend fun window(from: Long, to: Long): Map<String, List<EpgProgrammeEntity>> =
         withContext(Dispatchers.Default) {
             val all = ArrayList<EpgProgrammeEntity>()
             var afterId = 0L
             while (true) {
-                val page = epgDao.programmesInWindowPage(sourceIds, from, to, afterId, WINDOW_PAGE)
+                val page = epgDao.programmesInWindowPage(from, to, afterId, WINDOW_PAGE)
                 if (page.isEmpty()) break
                 all += page
                 afterId = page.last().id
                 if (page.size < WINDOW_PAGE) break
             }
-            all.groupBy { it.epgChannelId }.mapValues { (_, v) -> v.sortedBy { it.startMs } }
+            all.groupBy { it.epgChannelId }.mapValues { (_, v) -> EpgDedupe.collapse(v) }
         }
 
     /**
@@ -75,16 +81,29 @@ class GuideReader(
         channel: ChannelEntity,
         cust: SectionCustomizations,
         globalShiftMinutes: Int,
-        sourceIds: List<Long>,
         from: Long,
         to: Long,
     ): List<EpgProgrammeEntity> = withContext(Dispatchers.IO) {
-        val epgKey = epgKeyOf(channel, cust) ?: return@withContext emptyList()
+        val epgKey = epgKeyOf(channel, cust)
         val shift = EpgShift.minutesFor(cust, channel, globalShiftMinutes)
-        if (shift == 0) return@withContext epgDao.programmeSummariesForChannel(sourceIds, epgKey, from, to)
-        epgDao
-            .programmeSummariesForChannel(sourceIds, epgKey, EpgShift.toStored(from, shift), EpgShift.toStored(to, shift))
-            .map { EpgShift.apply(it, shift) }
+        val stored = when {
+            epgKey == null -> emptyList()
+            shift == 0 -> epgDao.programmeSummariesForChannel(epgKey, from, to)
+            else -> epgDao
+                .programmeSummariesForChannel(epgKey, EpgShift.toStored(from, shift), EpgShift.toStored(to, shift))
+                .map { EpgShift.apply(it, shift) }
+        }
+        if (stored.isNotEmpty()) return@withContext EpgDedupe.collapse(stored)
+        // Nothing stored for this channel in this window. That is not the same as nothing being on:
+        // the bulk guide can simply stop — a feed that ends at midnight leaves today's daytime blank —
+        // and the provider's own short-EPG endpoint answers for exactly that gap. It is what the
+        // preview pane has always fallen back to, and the grid drawing a row of nothing beside a
+        // preview listing programmes is the contradiction this removes.
+        //
+        // Only the part of it inside the asked-for window is returned, so a row never draws outside
+        // the time it was asked about.
+        liveEpgReader.providerProgrammes(channel, cust, globalShiftMinutes)
+            .filter { it.stopMs > from && it.startMs < to }
     }
 
     /**
@@ -99,7 +118,6 @@ class GuideReader(
         channels: List<ChannelEntity>,
         cust: SectionCustomizations,
         globalShiftMinutes: Int,
-        sourceIds: List<Long>,
         from: Long,
         to: Long,
     ): Map<Long, List<EpgProgrammeEntity>> = withContext(Dispatchers.IO) {
@@ -115,7 +133,6 @@ class GuideReader(
                 .chunked(KEY_CHUNK)
                 .flatMap { keys ->
                     epgDao.programmeSummariesForChannels(
-                        sourceIds,
                         keys,
                         EpgShift.toStored(from, shift),
                         EpgShift.toStored(to, shift),
@@ -124,7 +141,7 @@ class GuideReader(
                 .groupBy { it.epgChannelId }
             for ((channelId, epgKey, _) in group) {
                 rowsByKey[epgKey]?.takeIf { it.isNotEmpty() }
-                    ?.let { collected[channelId] = EpgShift.apply(it.sortedBy { row -> row.startMs }, shift) }
+                    ?.let { collected[channelId] = EpgShift.apply(EpgDedupe.collapse(it), shift) }
             }
         }
         val ordered = LinkedHashMap<Long, List<EpgProgrammeEntity>>(collected.size)
@@ -143,11 +160,10 @@ class GuideReader(
         channels: List<ChannelEntity>,
         cust: SectionCustomizations,
         globalShiftMinutes: Int,
-        sourceIds: List<Long>,
         atMs: Long,
         lookAheadMs: Long,
     ): Map<Long, GuideSlot> {
-        val rows = slice(channels, cust, globalShiftMinutes, sourceIds, atMs, atMs + lookAheadMs)
+        val rows = slice(channels, cust, globalShiftMinutes, atMs, atMs + lookAheadMs)
         val result = HashMap<Long, GuideSlot>(rows.size)
         for ((channelId, list) in rows) {
             val now = list.firstOrNull { atMs in it.startMs until it.stopMs }

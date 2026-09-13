@@ -180,7 +180,7 @@ class SubtitleController(
         val moviehash = if (ctx.localFilePath != null && useQuery == null) {
             kotlinx.coroutines.withTimeoutOrNull(2_000) {
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    MovieHash.compute(java.io.File(ctx.localFilePath))
+                    MovieHash.compute(tv.own.owntv.core.storage.MediaTarget.of(player.appContext, ctx.localFilePath))
                 }
             }
         } else {

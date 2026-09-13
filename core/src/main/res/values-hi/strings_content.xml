@@ -219,6 +219,9 @@
     <string name="content_storage_internal">आंतरिक स्टोरेज</string>
     <string name="content_storage_removable">हटाने योग्य स्टोरेज</string>
     <string name="content_storage_app">ऐप स्टोरेज (अनुमति की आवश्यकता नहीं)</string>
+    <string name="content_storage_choose_folder">दूसरा फ़ोल्डर चुनें…</string>
+    <string name="content_storage_chosen_folder">चुना गया फ़ोल्डर</string>
+    <string name="content_storage_folder_lost">वह फ़ोल्डर अब उपलब्ध नहीं है. उसे दोबारा चुनें या कोई दूसरा चुनें.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> डाउनलोड किया गया</string>
     <string name="content_downloads_failure_message">डाउनलोड विफल हुआ — स्रोत तक नहीं पहुँचा जा सका। फिर से कोशिश करें पर टैप करें।</string>
     <string name="content_downloads_queued">कतार में…</string>

@@ -195,5 +195,45 @@
     <string name="recording_failed_unavailable">चैनल चला नहीं</string>
     <string name="recording_failed_channel_gone">वह चैनल अब आपकी प्लेलिस्ट में नहीं है</string>
     <string name="recording_failed_unknown">रिकॉर्ड नहीं हुआ</string>
+    <string name="recording_title">रिकॉर्डिंग</string>
+    <string name="recording_description">इस डिवाइस पर सहेजा गया लाइव टीवी।</string>
+    <string name="recording_empty">अभी कुछ रिकॉर्ड नहीं हुआ। टीवी गाइड खोलें, कोई कार्यक्रम चुनें और रिकॉर्ड दबाएँ।</string>
+    <string name="recording_group_now">अभी रिकॉर्ड हो रहा है</string>
+    <string name="recording_group_scheduled">निर्धारित</string>
+    <string name="recording_group_completed">रिकॉर्ड हो गया</string>
+    <string name="recording_group_failed">विफल</string>
+    <string name="recording_group_missed">छूट गया</string>
+    <string name="recording_record">रिकॉर्ड करें</string>
+    <string name="recording_stop">रिकॉर्डिंग रोकें</string>
+    <string name="recording_record_series">हर प्रसारण रिकॉर्ड करें</string>
+    <string name="recording_stop_series">हर प्रसारण रिकॉर्ड करना बंद करें</string>
+    <string name="recording_from_archive">आर्काइव से रिकॉर्ड करें</string>
+    <string name="recording_scheduled_for"><xliff:g id="time">%1$s</xliff:g> को रिकॉर्ड होगा</string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> रिकॉर्ड हो रहा है</string>
+    <string name="recording_clash_with"><xliff:g id="programme">%1$s</xliff:g> से टकराव है</string>
+    <string name="recording_settings_group">रिकॉर्डिंग</string>
+    <string name="settings_recording_reserve">देखने के लिए एक स्ट्रीम खाली रखें</string>
+    <string name="settings_recording_reserve_description">रिकॉर्डिंग आपके प्रदाता का एक कनेक्शन खाली छोड़ती है, ताकि देखने के लिए हमेशा एक बचा रहे। सभी कनेक्शनों पर रिकॉर्ड करने के लिए इसे बंद करें।</string>
+    <string name="settings_recording_pre_roll">पहले शुरू करें</string>
+    <string name="settings_recording_pre_roll_description">बताए गए शुरुआती समय से इतना पहले शुरू करें, ताकि थोड़ा आगे चलने वाली गाइड से शुरुआत न छूटे।</string>
+    <string name="settings_recording_post_roll">अंत के बाद भी जारी रखें</string>
+    <string name="settings_recording_post_roll_description">बताए गए समाप्ति समय के बाद इतनी देर तक जारी रखें, ताकि लंबा खिंचने वाला कार्यक्रम कटे नहीं।</string>
+    <string name="settings_recording_timers_inexact">यह डिवाइस OwnTV को सटीक अलार्म सेट करने नहीं देता, इसलिए रिकॉर्डिंग कुछ मिनट देर से शुरू हो सकती है। इसकी भरपाई के लिए रिकॉर्डिंग जल्दी शुरू होती है।</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> मिनट</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> मिनट</item>
+    </plurals>
     <string name="recording_failed_encrypted">यह चैनल एन्क्रिप्टेड है और इसे रिकॉर्ड नहीं किया जा सकता</string>
+    <string name="recording_failed_metered">मोबाइल डेटा पर रिकॉर्ड नहीं हुआ</string>
+    <string name="settings_recording_mobile_data">मोबाइल डेटा पर रिकॉर्ड करें</string>
+    <string name="settings_recording_mobile_data_description">बंद होने पर, Wi-Fi के बाहर पड़ने वाली रिकॉर्डिंग इंतज़ार करने के बजाय छोड़ दी जाती है — लाइव कार्यक्रम दोबारा नहीं आता।</string>
+    <string name="settings_record_watching">जो देख रहा हूँ उसे रिकॉर्ड करें</string>
+    <string name="settings_record_watching_description">प्लेयर में एक रिकॉर्ड बटन जोड़ता है, जो आपका देखा जा रहा चैनल सहेजता है। यह चैनल खुद लाता है, इसलिए चलते समय आपके प्रदाता का एक कनेक्शन लेता है, और चैनल बदलने या प्लेयर छोड़ने के बाद भी रिकॉर्ड करता रहता है।</string>
+    <string name="settings_record_watching_warning_title">सिर्फ़ एक कनेक्शन</string>
+    <string name="settings_record_watching_warning_description">रिकॉर्डिंग चैनल को दूसरी बार लाती है, इसलिए आपके प्रदाता का एक और कनेक्शन लेती है। जिस खाते में केवल एक ही कनेक्शन हो, वहाँ देखते समय रिकॉर्डिंग अस्वीकार हो जाती है। शुरू होने के बाद यह अपने आप चलती रहती है — चैनल बदलें या प्लेयर छोड़ें, यह कार्यक्रम खत्म होने तक या रिकॉर्डिंग से रोकने तक चलती रहेगी।</string>
+    <string name="settings_record_watching_keep_off">बंद ही रहने दें</string>
+    <string name="settings_record_watching_turn_on">चालू करें</string>
+    <string name="player_recording_conflict">आपका प्रदाता एक समय में केवल एक स्ट्रीम देता है, और रिकॉर्डिंग उसे इस्तेमाल कर रही है।</string>
+    <string name="player_keep_watching_stop_recording">देखते रहें (रिकॉर्डिंग रुक जाएगी)</string>
 </resources>

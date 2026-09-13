@@ -115,6 +115,8 @@
     <string name="sync_error_secure">보안 연결에 실패했습니다 — 서버 인증서가 유효하지 않을 수 있습니다.</string>
     <string name="sync_error_malformed_guide">서버에서 받은 편성표 데이터 형식이 잘못되었습니다. 일부는 이미 불러왔을 수 있습니다 — 다시 시도하거나 EPG URL을 확인하세요.</string>
     <string name="common_items_per_skip">한 번에 건너뛸 항목 수</string>
+    <string name="common_minutes">분</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">숨기기</string>

@@ -424,6 +424,7 @@
     <string name="settings_search_keywords_autoplay">autoodtwarzanie seriale sezon</string>
     <string name="settings_search_keywords_catchup">archiwum strefa czasowa przesunięcie oglądanie wstecz odtwarzacz zewnętrzny vlc mx</string>
     <string name="settings_search_keywords_video">dekoder napisy synchronizacja</string>
+    <string name="settings_search_keywords_recording">nagrywaj nagranie nagrania dvr minutnik harmonogram serial zapisz na żywo</string>
     <string name="settings_search_keywords_subtitle_appearance">napisy rozmiar kolor barwa położenie przezroczystość tło krycie</string>
     <string name="settings_search_keywords_latency">na żywo bufor opóźnienie małe opóźnienie sekundy bieżący punkt transmisji</string>
     <string name="settings_search_keywords_proxy">http ruch trasa</string>
@@ -782,6 +783,13 @@
     <string name="settings_sources_test_connections_max">Połączenia: maksymalnie <xliff:g id="max">%1$d</xliff:g> jednocześnie</string>
     <string name="settings_sources_test_trial">Konto próbne</string>
     <string name="settings_sources_test_expiry_none">Nie podano daty wygaśnięcia</string>
+    <string name="settings_sources_info">Informacje</string>
+    <string name="settings_sources_retest">Testuj ponownie</string>
+    <string name="settings_sources_probe_title">Przetestować tę playlistę?</string>
+    <string name="settings_sources_probe_warning">Wielu dostawców nigdy nie podaje, ile kanałów można oglądać jednocześnie, więc OwnTV sprawdza to, otwierając kilka i obserwując, które przetrwają. Wszystko, co jest teraz odtwarzane, zostanie zatrzymane, a może to potrwać do dwóch minut.</string>
+    <string name="settings_sources_probe_running">Sprawdzanie, ile kanałów dopuszcza ten dostawca… (<xliff:g id="current">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV nie zdołał ustalić, ile kanałów dopuszcza ten dostawca.</string>
+    <string name="settings_sources_probe_skip">Pomiń</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">DOMYŚLNE</string>
     <string name="settings_sources_backup">Kopia zapasowa</string>
@@ -1391,8 +1399,10 @@
     <string name="more_pane_encrypted">Zaszyfrowana</string>
     <string name="settings_backup_location">Lokalizacja</string>
     <string name="settings_multiview">Multiview</string>
-    <string name="settings_multiview_description">Oglądaj nawet cztery kanały na żywo naraz. Każdy kafelek zajmuje jedno połączenie u dostawcy.</string>
+    <string name="settings_multiview_description">Oglądaj kilka kanałów na żywo jednocześnie. Za każdym razem sam decydujesz ile, maksymalnie tyle — każdy kafelek zajmuje jedno połączenie dostawcy.</string>
     <string name="settings_multiview_tiles">Kafelki</string>
+    <string name="settings_multiview_tiles_max">Najwięcej kafelków</string>
+    <string name="settings_multiview_tiles_max_value">Maks. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Więcej niż dwa kafelki</string>
     <string name="settings_multiview_warning_description">Trzy lub cztery kafelki wymagają trzech lub czterech połączeń u dostawcy, a odbiornik TV dekoduje tylko ograniczoną liczbę kanałów naraz. Jeśli kafelek się nie uruchomi, poda powód, a pozostałe grają dalej.</string>
     <string name="settings_multiview_keep_two">Zostaw 2</string>

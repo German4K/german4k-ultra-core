@@ -1196,7 +1196,7 @@ class LivePreviewEngine(
         /** Widevine/ClearKey licence details for this channel (#115); null for an unprotected stream. */
         drmConfig: String? = null,
     ) {
-        LiveDiagnosticsLog.event("play() url=${HttpClient.redactUrl(url)} muted=$muted")
+        LiveDiagnosticsLog.event("play() engine=$engineId url=${HttpClient.redactUrl(url)} muted=$muted")
         // THE reset. Everything a new channel must not inherit from the previous one lives in
         // [TuneState], so forgetting it is one assignment that cannot be partially done.
         tune = TuneState(playStartedMs = android.os.SystemClock.elapsedRealtime())
@@ -1348,7 +1348,13 @@ class LivePreviewEngine(
             .build()
     }
 
+    /** Which instance this is, so several engines' lines can be told apart in one log. */
+    private val engineId: String get() = Integer.toHexString(System.identityHashCode(this))
+
     fun setMuted(m: Boolean) {
+        // Kept: which engine is unmuted, and who changed it. Multiview's doubled sound was finally
+        // named by exactly this line — an unmuted engine the tile pool had never built.
+        if (muted != m) LiveDiagnosticsLog.event("setMuted engine=$engineId muted=$m")
         muted = m
         _volume.value = if (m) 0 else 100
         applyMute()

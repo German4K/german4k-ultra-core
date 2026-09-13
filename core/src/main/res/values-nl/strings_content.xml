@@ -219,6 +219,9 @@
     <string name="content_storage_internal">Interne opslag</string>
     <string name="content_storage_removable">Verwijderbare opslag</string>
     <string name="content_storage_app">App-opslag (geen toestemming nodig)</string>
+    <string name="content_storage_choose_folder">Andere map kiezen…</string>
+    <string name="content_storage_chosen_folder">Gekozen map</string>
+    <string name="content_storage_folder_lost">Die map is niet meer beschikbaar. Kies de map opnieuw of selecteer een andere.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> gedownload</string>
     <string name="content_downloads_failure_message">Download mislukt — de bron kon niet worden bereikt. Druk op Opnieuw proberen.</string>
     <string name="content_downloads_queued">In wachtrij…</string>

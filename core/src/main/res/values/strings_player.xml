@@ -560,6 +560,8 @@
     <string name="multiview_added">Kept for Multiview · <xliff:g id="count">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g>. Play a channel to open the grid.</string>
     <!-- Translators: Tile menu: play this tile without a picture, for its sound only. -->
     <string name="multiview_tile_sound_only">Sound only</string>
+    <!-- Translators: Tile menu: give a sound-only tile its picture back. The opposite of "Sound only". -->
+    <string name="multiview_tile_show_picture">Show the picture</string>
     <!-- Translators: Shown on a sound-only tile. It still uses one provider connection. -->
     <string name="multiview_sound_only_note">Sound only — still one of your provider\'s streams</string>
 </resources>

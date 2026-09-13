@@ -70,13 +70,20 @@ interface EpgDao {
     @Query("SELECT (MAX(stopMs) - MIN(startMs)) / 86400000 FROM epg_programmes WHERE epgChannelId = :epgChannelId")
     suspend fun coverageDays(epgChannelId: String): Int?
 
-    /** Lightweight guide rows: the grid needs titles/times, not potentially huge XMLTV descriptions. */
-    @Query(
-        "SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, 0 AS contentHash " +
-            "FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to " +
-            "ORDER BY epgChannelId ASC, startMs ASC",
-    )
-    suspend fun programmeSummariesInWindow(sourceIds: List<Long>, from: Long, to: Long): List<EpgProgrammeEntity>
+    // --- Guide reads: keyed by epgChannelId ALONE ------------------------------------------------
+    //
+    // None of the four queries below filters by sourceId, and that is the fix for a bug that outlived
+    // two attempts at it. A channel's guide is identified by its `epgChannelId`; which playlist or EPG
+    // feed happened to deliver a row is not part of that identity. Filtering on it meant that a row
+    // whose source had since been deleted, or re-added and given a new id, became invisible — while
+    // `nowPlaying`/`upcoming` above, which never filtered, still found it. So the preview pane showed a
+    // full guide and the grid and the channel row beside it stayed blank, permanently, for every
+    // affected channel.
+    //
+    // The list had already been widened once (playlists PLUS EPG feeds) after the same class of report.
+    // Widening it a third time would only move the boundary; removing it is what makes all three reads
+    // answer identically. Two feeds carrying one channel now both come back, which is what
+    // [tv.own.owntv.core.epg.EpgDedupe] collapses.
 
     /**
      * One page of the guide window, WITHOUT the heavy `description` column. Two reasons this is paged
@@ -88,8 +95,8 @@ interface EpgDao {
      * Caller loops with `afterId = lastId` until a short page, then groups by channel. description is
      * fetched lazily via [programmeDescription] when a programme's detail dialog opens.
      */
-    @Query("SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, contentHash FROM epg_programmes WHERE sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to AND id > :afterId ORDER BY id ASC LIMIT :limit")
-    suspend fun programmesInWindowPage(sourceIds: List<Long>, from: Long, to: Long, afterId: Long, limit: Int): List<EpgProgrammeEntity>
+    @Query("SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, contentHash FROM epg_programmes WHERE stopMs > :from AND startMs < :to AND id > :afterId ORDER BY id ASC LIMIT :limit")
+    suspend fun programmesInWindowPage(from: Long, to: Long, afterId: Long, limit: Int): List<EpgProgrammeEntity>
 
     /** One programme's synopsis, loaded on demand for the detail dialog (the grid load drops it). */
     @Query("SELECT description FROM epg_programmes WHERE id = :programmeId LIMIT 1")
@@ -100,24 +107,24 @@ interface EpgDao {
      * normalized (trim+lowercase) id — programmes are stored normalized, so this hits the
      * (epgChannelId, startMs) index and stays instant even with 100k+ stored programmes.
      */
-    @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgKey AND sourceId IN (:sourceIds) AND stopMs > :from AND startMs < :to ORDER BY startMs ASC")
-    suspend fun programmesForChannel(sourceIds: List<Long>, epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
+    @Query("SELECT * FROM epg_programmes WHERE epgChannelId = :epgKey AND stopMs > :from AND startMs < :to ORDER BY startMs ASC")
+    suspend fun programmesForChannel(epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
 
     /** Lightweight version for Guide row rendering; avoids CursorWindow pressure from descriptions. */
     @Query(
         "SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, 0 AS contentHash " +
-            "FROM epg_programmes WHERE epgChannelId = :epgKey AND sourceId IN (:sourceIds) " +
+            "FROM epg_programmes WHERE epgChannelId = :epgKey " +
             "AND stopMs > :from AND startMs < :to ORDER BY startMs ASC",
     )
-    suspend fun programmeSummariesForChannel(sourceIds: List<Long>, epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
+    suspend fun programmeSummariesForChannel(epgKey: String, from: Long, to: Long): List<EpgProgrammeEntity>
 
     /** Lightweight rows for several Home On Now channels at once. */
     @Query(
         "SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, 0 AS contentHash " +
-            "FROM epg_programmes WHERE epgChannelId IN (:epgKeys) AND sourceId IN (:sourceIds) " +
+            "FROM epg_programmes WHERE epgChannelId IN (:epgKeys) " +
             "AND stopMs > :from AND startMs < :to ORDER BY epgChannelId ASC, startMs ASC",
     )
-    suspend fun programmeSummariesForChannels(sourceIds: List<Long>, epgKeys: List<String>, from: Long, to: Long): List<EpgProgrammeEntity>
+    suspend fun programmeSummariesForChannels(epgKeys: List<String>, from: Long, to: Long): List<EpgProgrammeEntity>
 
     /** How many programmes are stored for these sources (to tell "no guide yet" from "empty window"). */
     @Query("SELECT COUNT(*) FROM epg_programmes WHERE sourceId IN (:sourceIds)")

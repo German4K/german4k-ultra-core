@@ -226,6 +226,9 @@
     <string name="content_storage_internal">Armazenamento interno</string>
     <string name="content_storage_removable">Armazenamento amovível</string>
     <string name="content_storage_app">Armazenamento da aplicação (não requer permissão)</string>
+    <string name="content_storage_choose_folder">Escolher outra pasta…</string>
+    <string name="content_storage_chosen_folder">Pasta escolhida</string>
+    <string name="content_storage_folder_lost">Essa pasta já não está disponível. Escolha-a novamente ou selecione outra.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> transferidos</string>
     <string name="content_downloads_failure_message">A transferência falhou — não foi possível aceder à origem. Prima Tentar novamente.</string>
     <string name="content_downloads_queued">Em fila…</string>

@@ -124,6 +124,8 @@
     <string name="sync_error_secure">Güvenli bağlantı kurulamadı — sunucunun sertifikası geçersiz olabilir.</string>
     <string name="sync_error_malformed_guide">Sunucudan gelen rehber verileri hatalı biçimlendirilmiş. Verilerin bir kısmı yine de yüklenmiş olabilir — lütfen tekrar deneyin veya EPG URL\'sini kontrol edin.</string>
     <string name="common_items_per_skip">Atlama başına öğe sayısı</string>
+    <string name="common_minutes">Dakika</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Gizle</string>

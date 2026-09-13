@@ -211,6 +211,9 @@
     <string name="content_storage_internal">Belső tárhely</string>
     <string name="content_storage_removable">Cserélhető tárhely</string>
     <string name="content_storage_app">Alkalmazástárhely (nem igényel engedélyt)</string>
+    <string name="content_storage_choose_folder">Másik mappa választása…</string>
+    <string name="content_storage_chosen_folder">Kiválasztott mappa</string>
+    <string name="content_storage_folder_lost">Ez a mappa már nem érhető el. Válassza ki újra, vagy válasszon másikat.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> letöltve</string>
     <string name="content_downloads_failure_message">A letöltés sikertelen — a forrás nem volt elérhető. Válaszd az Újra lehetőséget.</string>
     <string name="content_downloads_queued">Sorban áll…</string>

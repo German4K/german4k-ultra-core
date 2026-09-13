@@ -233,6 +233,9 @@
     <string name="content_storage_internal">Pamięć wewnętrzna</string>
     <string name="content_storage_removable">Pamięć wymienna</string>
     <string name="content_storage_app">Pamięć aplikacji (bez wymaganych uprawnień)</string>
+    <string name="content_storage_choose_folder">Wybierz inny folder…</string>
+    <string name="content_storage_chosen_folder">Wybrany folder</string>
+    <string name="content_storage_folder_lost">Ten folder nie jest już dostępny. Wybierz go ponownie lub wskaż inny.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> pobrano</string>
     <string name="content_downloads_failure_message">Pobieranie nie powiodło się — nie udało się połączyć ze źródłem. Naciśnij Ponów.</string>
     <string name="content_downloads_queued">W kolejce…</string>

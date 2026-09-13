@@ -219,6 +219,9 @@
     <string name="content_storage_internal">ഇന്റേണൽ സ്റ്റോറേജ്</string>
     <string name="content_storage_removable">നീക്കം ചെയ്യാവുന്ന സ്റ്റോറേജ്</string>
     <string name="content_storage_app">ആപ്പ് സ്റ്റോറേജ് (അനുമതി ആവശ്യമില്ല)</string>
+    <string name="content_storage_choose_folder">മറ്റൊരു ഫോൾഡർ തിരഞ്ഞെടുക്കുക…</string>
+    <string name="content_storage_chosen_folder">തിരഞ്ഞെടുത്ത ഫോൾഡർ</string>
+    <string name="content_storage_folder_lost">ആ ഫോൾഡർ ഇനി ലഭ്യമല്ല. അത് വീണ്ടും തിരഞ്ഞെടുക്കുക, അല്ലെങ്കിൽ മറ്റൊന്ന് തിരഞ്ഞെടുക്കുക.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> ഡൗൺലോഡ് ചെയ്തു</string>
     <string name="content_downloads_failure_message">ഡൗൺലോഡ് പരാജയപ്പെട്ടു — ഉറവിടവുമായി ബന്ധപ്പെടാനായില്ല. വീണ്ടും ശ്രമിക്കുക അമർത്തുക.</string>
     <string name="content_downloads_queued">നിരയിലുണ്ട്…</string>

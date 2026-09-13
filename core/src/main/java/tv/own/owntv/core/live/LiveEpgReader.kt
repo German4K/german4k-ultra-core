@@ -12,6 +12,7 @@ import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.EpgChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 import tv.own.owntv.core.epg.EpgMatcher
+import tv.own.owntv.core.epg.EpgDedupe
 import tv.own.owntv.core.epg.EpgShift
 import tv.own.owntv.core.epg.EpgSourceStore
 import tv.own.owntv.core.model.SourceType
@@ -43,6 +44,21 @@ private const val EPG_PICKER_RESULT_LIMIT = 300
 
 private const val LOG_TAG = "OwnTVHome"
 
+/**
+ * How long a resolved now/next stays usable. Long enough that scrolling back to a channel costs
+ * nothing, short enough that a programme changing over is noticed.
+ */
+private const val CACHE_TTL_MS = 5 * 60_000L
+
+/** How many entries the provider's short-EPG endpoint is asked for. Its own practical maximum. */
+private const val SHORT_EPG_LIMIT = 8
+
+/**
+ * How many stored rows to read for Next/Later. More than the four Later shows, because duplicates
+ * from a second feed are collapsed afterwards and would otherwise eat the list.
+ */
+private const val UPCOMING_LIMIT = 12
+
 /** Logcat tag for maintainer-only performance measurements (`BuildConfig.DEV_TOOLS` builds). */
 private const val PERF_TAG = "OwnTVPerf"
 
@@ -69,6 +85,11 @@ class LiveEpgReader(
      *  undefined, up to a corrupt table or an infinite loop inside `get`. */
     private val cache = java.util.concurrent.ConcurrentHashMap<Long, CachedEpg>()
 
+    private data class CachedRows(val at: Long, val rows: List<EpgProgrammeEntity>)
+
+    /** Provider-fetched guide rows per channel, so the grid and the preview share one request. */
+    private val providerRows = java.util.concurrent.ConcurrentHashMap<Long, CachedRows>()
+
     /** Drop every cached now/next — the global guide offset moved, so all of them are stale. */
     fun clearCache() {
         cache.clear()
@@ -84,7 +105,7 @@ class LiveEpgReader(
     suspend fun nowNext(ch: ChannelEntity, cust: SectionCustomizations, globalShiftMinutes: Int): EpgNowNext? =
         withContext(Dispatchers.IO) {
             val now = System.currentTimeMillis()
-            cache[ch.id]?.takeIf { now - it.at < 5 * 60_000 }?.let { return@withContext it.data }
+            cache[ch.id]?.takeIf { now - it.at < CACHE_TTL_MS }?.let { return@withContext it.data }
 
             // 1) Bulk guide via the effective EPG id (manual match overrides the channel's own id).
             val epgKey = (cust.epgMatches[CustomizeKeys.channel(ch)] ?: ch.epgChannelId)?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
@@ -94,7 +115,10 @@ class LiveEpgReader(
             if (epgKey != null) {
                 val at = EpgShift.toStored(now, shift)
                 val nowProg = epgDao.nowPlaying(epgKey, at)
-                val future = epgDao.upcoming(epgKey, at, 6).first().filter { it.startMs > (nowProg?.startMs ?: 0) }
+                // Collapsed first: two feeds covering one channel list every programme twice, which
+                // put the same title in Next AND at the head of Later.
+                val future = EpgDedupe.collapse(epgDao.upcoming(epgKey, at, UPCOMING_LIMIT).first())
+                    .filter { it.startMs > (nowProg?.startMs ?: 0) }
                 val nextProg = future.firstOrNull()
                 if (nowProg != null || nextProg != null) {
                     val prevProg = epgDao.previousProgramme(epgKey, nowProg?.startMs ?: at)
@@ -109,21 +133,7 @@ class LiveEpgReader(
             }
 
             // 2) Provider short-EPG API fallback (Xtream get_short_epg / Stalker get_short_epg, Phase E §5.5).
-            val streamId = ch.remoteId ?: return@withContext null
-            val source = sourceDao.getById(ch.sourceId) ?: return@withContext null
-            val rawEntries = when (source.type) {
-                SourceType.XTREAM -> runCatching { xtreamClient.getShortEpg(source, streamId, limit = 8) }
-                    .getOrNull().orEmpty()
-                SourceType.STALKER -> runCatching {
-                    streamUrlResolver.shortEpg(source, streamId)
-                        .map { XtEpgEntry(title = it.title, description = it.description, startMs = it.startMs, stopMs = it.stopMs) }
-                }.getOrNull().orEmpty()
-                else -> return@withContext null
-            }
-            // The provider's own guide needs the same shift as the stored one — same channel, same clock.
-            val entries = if (shift == 0) rawEntries else rawEntries.map {
-                it.copy(startMs = it.startMs + shift * 60_000L, stopMs = it.stopMs + shift * 60_000L)
-            }
+            val entries = providerEntries(ch, shift) ?: return@withContext null
             // A gap in the provider's own guide data around "now" (nothing covers this instant) must leave
             // current null — picking the next entry that simply hasn't ended yet would mislabel an upcoming
             // programme as live (issue #68). "Next"/"Later" are computed independently below, so a genuine
@@ -138,12 +148,98 @@ class LiveEpgReader(
         }
 
     /**
+     * The channel's guide as the **provider** reports it right now, on the user's clock.
+     *
+     * This is the second of the two guides OwnTV reads, and the reason the preview pane could show a
+     * programme while the grid and the channel row beside it stayed blank: these entries are fetched
+     * live and are never written to `epg_programmes`, so anything reading only the table sees nothing.
+     * Pulled out of [nowNext] so the guide grid and the channel rows can read exactly the same answer.
+     *
+     * Null — as distinct from empty — means there is no provider guide to ask for at all: no stream
+     * id, no source, or a source type with no short-EPG endpoint. Callers use that to tell "the
+     * provider says nothing is on" from "there was nobody to ask".
+     *
+     * **It is only ever a few hours.** `get_short_epg` returns about eight entries, so this fills now
+     * and the rest of the evening, never a whole scrollable day.
+     */
+    private suspend fun providerEntries(ch: ChannelEntity, shift: Int): List<XtEpgEntry>? {
+        val streamId = ch.remoteId ?: return null
+        val source = sourceDao.getById(ch.sourceId) ?: return null
+        val raw = when (source.type) {
+            SourceType.XTREAM -> runCatching { xtreamClient.getShortEpg(source, streamId, limit = SHORT_EPG_LIMIT) }
+                .getOrNull().orEmpty()
+            SourceType.STALKER -> runCatching {
+                streamUrlResolver.shortEpg(source, streamId)
+                    .map { XtEpgEntry(title = it.title, description = it.description, startMs = it.startMs, stopMs = it.stopMs) }
+            }.getOrNull().orEmpty()
+            else -> return null
+        }
+        // The provider's own guide needs the same shift as the stored one — same channel, same clock.
+        return if (shift == 0) raw else raw.map {
+            it.copy(startMs = it.startMs + shift * 60_000L, stopMs = it.stopMs + shift * 60_000L)
+        }
+    }
+
+    /**
+     * The provider's guide for [channel] as guide rows, ready to draw — the grid's half of the same
+     * fallback the preview pane has always had.
+     *
+     * The rows are **synthetic** — they exist nowhere in the database — so anything that looks a
+     * programme up by id must fall back to the row it already holds, which is why the description
+     * travels with it rather than being fetched later.
+     *
+     * Their ids are the **negated start time**: negative, so they can never collide with a real row's
+     * (Room generates those upwards from 1), and distinct within a channel, so a caller that gathers
+     * ids into a set — the grid marks its catch-up cells that way — cannot have one synthetic row
+     * stand for all of them.
+     *
+     * Cached per channel for [CACHE_TTL_MS], so a row scrolling in and out of view, and the list's
+     * own periodic refresh, cost one request rather than one per look.
+     */
+    suspend fun providerProgrammes(
+        channel: ChannelEntity,
+        cust: SectionCustomizations,
+        globalShiftMinutes: Int,
+    ): List<EpgProgrammeEntity> = withContext(Dispatchers.IO) {
+        val now = System.currentTimeMillis()
+        providerRows[channel.id]?.takeIf { now - it.at < CACHE_TTL_MS }?.let { return@withContext it.rows }
+        val shift = EpgShift.minutesFor(cust, channel, globalShiftMinutes)
+        val key = (cust.epgMatches[CustomizeKeys.channel(channel)] ?: channel.epgChannelId)
+            ?.trim()?.lowercase()?.takeIf { it.isNotEmpty() } ?: channel.streamUrl
+        val rows = providerEntries(channel, shift).orEmpty().map {
+            EpgProgrammeEntity(
+                id = -it.startMs,
+                sourceId = channel.sourceId,
+                epgChannelId = key,
+                startMs = it.startMs,
+                stopMs = it.stopMs,
+                title = it.title,
+                description = it.description,
+            )
+        }.sortedBy { it.startMs }
+        providerRows[channel.id] = CachedRows(now, rows)
+        rows
+    }
+
+    /**
      * The programme currently airing on each of [channels] (channel id → title), looked up in ONE batch
      * against the stored bulk guide — same query the Home "On Now" rail uses. This powers the small
      * "current programme" subtitle under each channel row in the Live list and the in-player channel
-     * overlay. Only the stored guide is consulted (no per-channel short-EPG API calls): a channel with no
-     * guide simply has no entry here, and the row shows no second line. Returns only channels that
-     * actually have something airing right now.
+     * overlay. Returns only channels that actually have something airing right now.
+     *
+     * **Two passes, because there are two guides.** The stored bulk guide answers first, in one query,
+     * and covers most channels for the cost of a single round trip. Whatever it cannot answer then goes
+     * through [nowNext] — *the very function that fills the preview pane* — which checks its own cache,
+     * then the stored guide, then falls back to the provider's short-EPG API.
+     *
+     * That second pass is the whole point. Those short-EPG programmes are never written to the table, so
+     * a channel served that way showed a full guide in the preview pane and a blank second line in the
+     * list right beside it, permanently — the two were reading different guides. Now there is one answer
+     * for one channel, and the row and the pane agree by construction rather than by coincidence: if the
+     * preview has a programme the row shows it, and if the preview has none the row is blank too.
+     *
+     * **Nothing here goes to the network.** That is a hard rule, not an optimisation: see the note at
+     * the second pass for what filling a list of hundreds by asking the provider actually did.
      */
     suspend fun nowPlayingFor(
         channels: List<ChannelEntity>,
@@ -176,7 +272,7 @@ class LiveEpgReader(
             val rowsByKey = group
                 .map { it.second }.distinct()
                 .chunked(400)
-                .flatMap { keys -> epgDao.programmeSummariesForChannels(sourceIds, keys, at, at + 1) }
+                .flatMap { keys -> epgDao.programmeSummariesForChannels(keys, at, at + 1) }
                 .groupBy { it.epgChannelId }
             for ((channelId, epgKey, _) in group) {
                 rowsByKey[epgKey]
@@ -184,7 +280,39 @@ class LiveEpgReader(
                     ?.let { result[channelId] = it.title }
             }
         }
+        // Second pass: whatever the preview pane has already resolved for a channel the stored guide
+        // could not answer — **from cache, never from the network**.
+        //
+        // Fetching here was tried and was a mistake worth recording. A list holds hundreds of
+        // channels, so "ask the provider for the ones we cannot answer" became hundreds of
+        // `get_short_epg` requests, most of them returning nothing because that provider has no short
+        // guide for those channels at all. Worse, the batch could not return until the last one
+        // finished, so the list that used to fill from one query instantly now filled from nothing:
+        // EVERY row went blank, which is the opposite of the bug it set out to fix.
+        //
+        // The provider is still asked — just never in bulk. The channel under the cursor is fetched
+        // by the preview pane itself, and a guide row fetches as it scrolls into view. Both land in
+        // this cache, so the list fills in behind them for free.
+        for (ch in channels) {
+            if (ch.id in result) continue
+            cachedNowTitle(ch.id, now)?.let { result[ch.id] = it }
+        }
         result
+    }
+
+    /**
+     * The current programme already resolved for [channelId], if it is still fresh — from either
+     * cache, because the preview pane and the guide grid fill different ones.
+     *
+     * Deliberately never fetches. See the note in [nowPlayingFor] for what happened when it did.
+     */
+    private fun cachedNowTitle(channelId: Long, now: Long): String? {
+        cache[channelId]?.takeIf { now - it.at < CACHE_TTL_MS }?.data?.now?.title
+            ?.takeIf { it.isNotBlank() }?.let { return it }
+        return providerRows[channelId]
+            ?.takeIf { now - it.at < CACHE_TTL_MS }
+            ?.rows?.firstOrNull { it.startMs <= now && it.stopMs > now }
+            ?.title?.takeIf { it.isNotBlank() }
     }
 
     /**
@@ -236,7 +364,7 @@ class LiveEpgReader(
         // archive URL built from the picked programme asks for the time it really aired.
         val shift = EpgShift.minutesFor(cust, ch, globalShiftMinutes)
         val at = EpgShift.toStored(now, shift)
-        epgDao.programmesForChannel(ids, epgKey, at - windowMs, at + 60 * 60 * 1000)
+        epgDao.programmesForChannel(epgKey, at - windowMs, at + 60 * 60 * 1000)
             .filter { it.startMs <= at }           // already started → catch-up applies
             .sortedByDescending { it.startMs }      // most recent first
             .take(80)
@@ -264,7 +392,7 @@ class LiveEpgReader(
         val shift = EpgShift.minutesFor(cust, ch, globalShiftMinutes)
         val from = EpgShift.toStored(afterStopMs, shift)
         val ids = liveSourceIds + epgSourceStore.getAll().map { it.id }
-        epgDao.programmesForChannel(ids, epgKey, from, from + NEXT_PROGRAMME_GAP_CAP_MS)
+        epgDao.programmesForChannel(epgKey, from, from + NEXT_PROGRAMME_GAP_CAP_MS)
             // The query keeps anything still running at [from]; the next programme is the one that
             // starts at or after it.
             .firstOrNull { it.startMs >= from }

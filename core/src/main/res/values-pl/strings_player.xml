@@ -336,5 +336,6 @@
     <string name="multiview_add_to">Dodaj do Multiview</string>
     <string name="multiview_added">Zachowano dla Multiview · <xliff:g id="count">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g>. Włącz kanał, aby otworzyć siatkę.</string>
     <string name="multiview_tile_sound_only">Tylko dźwięk</string>
+    <string name="multiview_tile_show_picture">Pokaż obraz</string>
     <string name="multiview_sound_only_note">Tylko dźwięk — nadal zajmuje jeden strumień u dostawcy</string>
 </resources>

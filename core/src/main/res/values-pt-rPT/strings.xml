@@ -133,6 +133,8 @@
     <string name="sync_error_secure">Falha na ligação segura — o certificado do servidor poderá ser inválido.</string>
     <string name="sync_error_malformed_guide">Os dados do guia provenientes do servidor estavam malformados. Parte dos dados poderá ainda ter sido carregada — tente novamente ou verifique o URL do EPG.</string>
     <string name="common_items_per_skip">Itens por salto</string>
+    <string name="common_minutes">Minutos</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Ocultar</string>

@@ -195,5 +195,45 @@
     <string name="recording_failed_unavailable">Het kanaal speelde niet af</string>
     <string name="recording_failed_channel_gone">Dat kanaal staat niet meer in je afspeellijst</string>
     <string name="recording_failed_unknown">Er is niets opgenomen</string>
+    <string name="recording_title">Opnames</string>
+    <string name="recording_description">Live tv die op dit apparaat is opgeslagen.</string>
+    <string name="recording_empty">Nog niets opgenomen. Open de tv-gids, kies een programma en druk op Opnemen.</string>
+    <string name="recording_group_now">Wordt nu opgenomen</string>
+    <string name="recording_group_scheduled">Gepland</string>
+    <string name="recording_group_completed">Opgenomen</string>
+    <string name="recording_group_failed">Mislukt</string>
+    <string name="recording_group_missed">Gemist</string>
+    <string name="recording_record">Opnemen</string>
+    <string name="recording_stop">Opname stoppen</string>
+    <string name="recording_record_series">Elke uitzending opnemen</string>
+    <string name="recording_stop_series">Niet meer elke uitzending opnemen</string>
+    <string name="recording_from_archive">Opnemen uit het archief</string>
+    <string name="recording_scheduled_for">Neemt <xliff:g id="time">%1$s</xliff:g> op</string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> wordt opgenomen</string>
+    <string name="recording_clash_with">Overlapt met <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Opnemen</string>
+    <string name="settings_recording_reserve">Houd één stream vrij om te kijken</string>
+    <string name="settings_recording_reserve_description">Opnames laten één verbinding van je provider vrij, zodat er altijd één is om op te kijken. Zet dit uit om op alle verbindingen op te nemen.</string>
+    <string name="settings_recording_pre_roll">Eerder beginnen</string>
+    <string name="settings_recording_pre_roll_description">Begin deze tijd vóór de vermelde starttijd, zodat een gids die iets voorloopt het begin toch meeneemt.</string>
+    <string name="settings_recording_post_roll">Doorgaan na het einde</string>
+    <string name="settings_recording_post_roll_description">Ga deze tijd door na de vermelde eindtijd, zodat een programma dat uitloopt niet wordt afgekapt.</string>
+    <string name="settings_recording_timers_inexact">Dit apparaat staat OwnTV geen exacte wekkers toe, dus een opname kan een paar minuten later beginnen. Opnames starten eerder om dat te compenseren.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minuut</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minuten</item>
+    </plurals>
     <string name="recording_failed_encrypted">Dit kanaal is versleuteld en kan niet worden opgenomen</string>
+    <string name="recording_failed_metered">Niet opgenomen via mobiele data</string>
+    <string name="settings_recording_mobile_data">Opnemen via mobiele data</string>
+    <string name="settings_recording_mobile_data_description">Uit: een opname die valt terwijl je niet op wifi zit wordt overgeslagen in plaats van te wachten — een live programma komt niet terug.</string>
+    <string name="settings_record_watching">Opnemen wat ik kijk</string>
+    <string name="settings_record_watching_description">Zet een opnameknop in de speler die het kanaal opneemt dat je kijkt. Hij haalt het kanaal zelf op en gebruikt daarvoor een van de verbindingen van je aanbieder, en blijft opnemen als je van kanaal wisselt of de speler verlaat.</string>
+    <string name="settings_record_watching_warning_title">Maar één verbinding</string>
+    <string name="settings_record_watching_warning_description">De opname haalt het kanaal een tweede keer op en gebruikt dus nog een verbinding van je aanbieder. Bij een account met maar één wordt de opname geweigerd terwijl je kijkt. Eenmaal gestart loopt hij zelfstandig door — wissel van kanaal, verlaat de speler, en hij gaat door tot het programma eindigt of je hem stopt bij Opnames.</string>
+    <string name="settings_record_watching_keep_off">Uit laten</string>
+    <string name="settings_record_watching_turn_on">Aanzetten</string>
+    <string name="player_recording_conflict">Je provider staat maar één stream tegelijk toe, en de opname gebruikt hem.</string>
+    <string name="player_keep_watching_stop_recording">Blijven kijken (stopt de opname)</string>
 </resources>

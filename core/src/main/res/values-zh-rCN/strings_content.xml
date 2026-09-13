@@ -212,6 +212,9 @@
     <string name="content_storage_internal">内部存储空间</string>
     <string name="content_storage_removable">可移动存储空间</string>
     <string name="content_storage_app">应用存储空间（无需权限）</string>
+    <string name="content_storage_choose_folder">选择其他文件夹…</string>
+    <string name="content_storage_chosen_folder">所选文件夹</string>
+    <string name="content_storage_folder_lost">该文件夹已不可用。请重新选择该文件夹，或选择其他文件夹。</string>
     <string name="content_downloads_completed">已下载 <xliff:g id="size">%1$s</xliff:g></string>
     <string name="content_downloads_failure_message">下载失败——无法连接到源。请点击“重试”。</string>
     <string name="content_downloads_queued">已排队…</string>

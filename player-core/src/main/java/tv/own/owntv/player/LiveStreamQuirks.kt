@@ -64,8 +64,16 @@ object LiveStreamQuirks {
      * panels invent codes in this range for "max connections" — so it is matched exactly rather than by
      * class, and it means something very different from [isEdgeRefusal]: the stream is fine, *we* are the
      * second client.
+     *
+     * `407` joins it for the same reason. A panel fronted by a gateway answers the *reconnect* with
+     * "Proxy Authentication Required" while the dying connection is still counted against the
+     * account, even though no proxy is in play — traced on a television whose channel had played for
+     * twenty seconds with zero dropped frames, then burned all eight reconnects on `407` in six
+     * seconds and gave up. The stream was never the problem: the previous socket had not finished
+     * closing. Waiting once is the answer here exactly as it is for `458`.
      */
-    fun isSessionLimit(responseCode: Int): Boolean = responseCode == 458
+    fun isSessionLimit(responseCode: Int): Boolean =
+        responseCode == 458 || responseCode == PlayerErrors.HTTP_PROXY_AUTH
 
     /**
      * Statuses a WAF uses to refuse a request on *who is asking* rather than what was asked for — worth

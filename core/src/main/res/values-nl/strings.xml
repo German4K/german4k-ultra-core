@@ -124,6 +124,8 @@
     <string name="sync_error_secure">Beveiligde verbinding mislukt — het certificaat van de server is mogelijk ongeldig.</string>
     <string name="sync_error_malformed_guide">De gegevens van de programmagids van de server waren onjuist opgemaakt. Een deel is mogelijk toch geladen — probeer het opnieuw of controleer de EPG-URL.</string>
     <string name="common_items_per_skip">Aantal items per sprong</string>
+    <string name="common_minutes">Minuten</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Verbergen</string>

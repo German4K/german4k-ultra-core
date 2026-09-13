@@ -212,6 +212,9 @@
     <string name="content_storage_internal">内部ストレージ</string>
     <string name="content_storage_removable">リムーバブルストレージ</string>
     <string name="content_storage_app">アプリ用ストレージ（権限不要）</string>
+    <string name="content_storage_choose_folder">別のフォルダーを選択…</string>
+    <string name="content_storage_chosen_folder">選択したフォルダー</string>
+    <string name="content_storage_folder_lost">そのフォルダーは利用できなくなりました。もう一度選択するか、別のフォルダーを選んでください。</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g>をダウンロード済み</string>
     <string name="content_downloads_failure_message">ダウンロードに失敗しました — ソースに接続できませんでした。「再試行」を押してください。</string>
     <string name="content_downloads_queued">キュー待ち…</string>

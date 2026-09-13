@@ -267,10 +267,29 @@ object PlayerErrors {
         var hops = 0
         while (t != null && hops++ < CAUSE_CHAIN_MAX_HOPS) {
             (t as? androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException)?.let { return it.responseCode }
+            if (t is java.net.ProtocolException && isProxylessProxyAuth(t.message)) return HTTP_PROXY_AUTH
             t = t.cause
         }
         return null
     }
+
+    /**
+     * A `407` that arrived with **no proxy configured** — which is a panel refusing us, not a proxy
+     * asking for a password.
+     *
+     * It has to be matched on the message because OkHttp never lets this one become a response:
+     * `407` outside a proxy exchange is a protocol violation, so it throws before anything can read
+     * `response.code`, and [httpStatusOf]'s usual `InvalidResponseCodeException` never appears. The
+     * "while not using proxy" half of the message is the guard that keeps a genuine proxy
+     * authentication failure — which OkHttp words differently — out of this branch.
+     */
+    private fun isProxylessProxyAuth(message: String?): Boolean {
+        val m = message ?: return false
+        return m.contains("HTTP_PROXY_AUTH") && m.contains("not using proxy")
+    }
+
+    /** Standard "Proxy Authentication Required"; see [isProxylessProxyAuth] for why a panel sends it. */
+    const val HTTP_PROXY_AUTH = 407
 
     private const val CAUSE_CHAIN_MAX_HOPS = 8
 

@@ -2,6 +2,7 @@ package tv.own.owntv.core.download
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import tv.own.owntv.core.storage.MediaTarget
 import java.io.File
 
 /**
@@ -13,26 +14,26 @@ class DownloadResumeTest {
     @Test
     fun `resume offset is the file length, not the recorded counter`() {
         val file = tempFile(ByteArray(1_500))
-        assertEquals(1_500L, DownloadResume.resumeOffset(file))
+        assertEquals(1_500L, DownloadResume.resumeOffset(MediaTarget.Path(file)))
     }
 
     @Test
     fun `resume offset of a file that does not exist is zero`() {
         val file = File(tempDir(), "absent.mp4")
-        assertEquals(0L, DownloadResume.resumeOffset(file))
+        assertEquals(0L, DownloadResume.resumeOffset(MediaTarget.Path(file)))
     }
 
     @Test
     fun `paused bytes ignore a stale in-memory counter`() {
         // The writer had appended 1500 bytes when the counter last flushed at 1000.
         val file = tempFile(ByteArray(1_500))
-        assertEquals(1_500L, DownloadResume.bytesOnDisk(file, recorded = 1_000))
+        assertEquals(1_500L, DownloadResume.bytesOnDisk(MediaTarget.Path(file), recorded = 1_000))
     }
 
     @Test
     fun `paused bytes fall back to the counter when the file is gone`() {
         val file = File(tempDir(), "unmounted.mp4")
-        assertEquals(1_000L, DownloadResume.bytesOnDisk(file, recorded = 1_000))
+        assertEquals(1_000L, DownloadResume.bytesOnDisk(MediaTarget.Path(file), recorded = 1_000))
         assertEquals(0L, DownloadResume.bytesOnDisk(null, recorded = -5))
     }
 
@@ -49,13 +50,13 @@ class DownloadResumeTest {
         // First attempt: fresh start, interrupted after 1500 bytes.
         // The temp dir survives between runs; start from "nothing downloaded yet" every time.
         val file = File(tempDir(), "movie.mp4").apply { delete(); deleteOnExit() }
-        assertEquals(0L, DownloadResume.resumeOffset(file))
+        assertEquals(0L, DownloadResume.resumeOffset(MediaTarget.Path(file)))
         file.writeBytes(body.copyOfRange(0, 1_500))
-        val pausedAt = DownloadResume.bytesOnDisk(file, recorded = 900) // counter deliberately stale
+        val pausedAt = DownloadResume.bytesOnDisk(MediaTarget.Path(file), recorded = 900) // counter deliberately stale
 
         // Second attempt: Range starts where the file really ends.
         assertEquals(1_500L, pausedAt)
-        val offset = DownloadResume.resumeOffset(file)
+        val offset = DownloadResume.resumeOffset(MediaTarget.Path(file))
         assertEquals(pausedAt, offset)
         val remainder = body.copyOfRange(offset.toInt(), body.size)
         assertEquals(

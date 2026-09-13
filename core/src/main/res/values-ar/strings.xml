@@ -160,6 +160,8 @@
     <string name="sync_error_secure">فشل الاتصال الآمن — ربما تكون شهادة الخادم غير صالحة.</string>
     <string name="sync_error_malformed_guide">كانت بيانات دليل البرامج الواردة من الخادم بتنسيق غير صالح. ربما تم تحميل بعضها رغم ذلك — يُرجى المحاولة مرة أخرى، أو التحقق من عنوان URL الخاص بدليل البرامج الإلكتروني.</string>
     <string name="common_items_per_skip">عدد العناصر لكل تخطٍّ</string>
+    <string name="common_minutes">دقائق</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> ميجابايت</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">إخفاء</string>

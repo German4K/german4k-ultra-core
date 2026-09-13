@@ -211,5 +211,47 @@
     <string name="recording_failed_unavailable">Канал не удалось воспроизвести</string>
     <string name="recording_failed_channel_gone">Этого канала больше нет в вашем плейлисте</string>
     <string name="recording_failed_unknown">Запись не выполнена</string>
+    <string name="recording_title">Записи</string>
+    <string name="recording_description">Прямой эфир, сохранённый на этом устройстве.</string>
+    <string name="recording_empty">Пока ничего не записано. Откройте телегид, выберите передачу и нажмите «Записать».</string>
+    <string name="recording_group_now">Записывается сейчас</string>
+    <string name="recording_group_scheduled">Запланировано</string>
+    <string name="recording_group_completed">Записано</string>
+    <string name="recording_group_failed">Не удалось</string>
+    <string name="recording_group_missed">Пропущено</string>
+    <string name="recording_record">Записать</string>
+    <string name="recording_stop">Остановить запись</string>
+    <string name="recording_record_series">Записывать каждый показ</string>
+    <string name="recording_stop_series">Больше не записывать каждый показ</string>
+    <string name="recording_from_archive">Записать из архива</string>
+    <string name="recording_scheduled_for">Запишется <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Идёт запись: <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">Пересекается с <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Запись</string>
+    <string name="settings_recording_reserve">Оставлять одно подключение для просмотра</string>
+    <string name="settings_recording_reserve_description">Записи оставляют одно подключение провайдера свободным, чтобы всегда было на чём смотреть. Отключите, чтобы записывать на всех.</string>
+    <string name="settings_recording_pre_roll">Начинать раньше</string>
+    <string name="settings_recording_pre_roll_description">Начинать за столько до указанного времени начала, чтобы спешащий телегид не потерял начало передачи.</string>
+    <string name="settings_recording_post_roll">Продолжать после конца</string>
+    <string name="settings_recording_post_roll_description">Продолжать столько после указанного времени окончания, чтобы затянувшаяся передача не обрывалась.</string>
+    <string name="settings_recording_timers_inexact">Это устройство не разрешает OwnTV ставить точные будильники, поэтому запись может начаться на несколько минут позже. Записи стартуют раньше, чтобы это компенсировать.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> минута</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> минуты</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> минут</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> минуты</item>
+    </plurals>
     <string name="recording_failed_encrypted">Этот канал зашифрован, запись невозможна</string>
+    <string name="recording_failed_metered">Не записано через мобильный интернет</string>
+    <string name="settings_recording_mobile_data">Записывать через мобильный интернет</string>
+    <string name="settings_recording_mobile_data_description">Выключено: запись, выпавшая на время без Wi-Fi, пропускается, а не ждёт — прямой эфир не повторится.</string>
+    <string name="settings_record_watching">Записывать то, что смотрю</string>
+    <string name="settings_record_watching_description">Добавляет в плеер кнопку записи, которая сохраняет канал, который вы смотрите. Канал загружается отдельно, поэтому во время записи занято одно из подключений провайдера, и запись продолжается после смены канала или выхода из плеера.</string>
+    <string name="settings_record_watching_warning_title">Только одно подключение</string>
+    <string name="settings_record_watching_warning_description">Запись загружает канал второй раз, поэтому занимает ещё одно подключение провайдера. На аккаунте, где разрешено только одно, запись во время просмотра будет отклонена. После запуска она идёт сама — переключите канал, выйдите из плеера, и она продолжится до конца передачи или пока вы не остановите её в «Записях».</string>
+    <string name="settings_record_watching_keep_off">Оставить выключенным</string>
+    <string name="settings_record_watching_turn_on">Включить</string>
+    <string name="player_recording_conflict">Ваш провайдер разрешает только один поток одновременно, и его занимает запись.</string>
+    <string name="player_keep_watching_stop_recording">Продолжить просмотр (остановит запись)</string>
 </resources>

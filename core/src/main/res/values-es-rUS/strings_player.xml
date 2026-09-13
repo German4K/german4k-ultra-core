@@ -327,5 +327,6 @@
     <string name="multiview_add_to">Añadir a Multivista</string>
     <string name="multiview_added">Guardado para Multivista · <xliff:g id="count">%1$d</xliff:g> de <xliff:g id="total">%2$d</xliff:g>. Reproduce un canal para abrir la cuadrícula.</string>
     <string name="multiview_tile_sound_only">Solo sonido</string>
+    <string name="multiview_tile_show_picture">Mostrar la imagen</string>
     <string name="multiview_sound_only_note">Solo sonido: sigue usando una emisión de tu proveedor</string>
 </resources>

@@ -318,5 +318,6 @@
     <string name="multiview_add_to">मल्टीव्यू में जोड़ें</string>
     <string name="multiview_added">मल्टीव्यू के लिए रखा · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>। ग्रिड खोलने के लिए कोई चैनल चलाएँ।</string>
     <string name="multiview_tile_sound_only">सिर्फ़ आवाज़</string>
+    <string name="multiview_tile_show_picture">तस्वीर दिखाएँ</string>
     <string name="multiview_sound_only_note">सिर्फ़ आवाज़ — फिर भी प्रोवाइडर की एक स्ट्रीम लेती है</string>
 </resources>

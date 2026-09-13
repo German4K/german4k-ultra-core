@@ -247,6 +247,9 @@
     <string name="content_storage_internal">وحدة التخزين الداخلية</string>
     <string name="content_storage_removable">وحدة تخزين قابلة للإزالة</string>
     <string name="content_storage_app">مساحة تخزين التطبيق (لا يلزم إذن)</string>
+    <string name="content_storage_choose_folder">اختيار مجلد آخر…</string>
+    <string name="content_storage_chosen_folder">المجلد المختار</string>
+    <string name="content_storage_folder_lost">لم يعد هذا المجلد متاحًا. اخترهُ مرة أخرى، أو اختر مجلدًا آخر.</string>
     <string name="content_downloads_completed">تم تنزيل <xliff:g id="size">%1$s</xliff:g></string>
     <string name="content_downloads_failure_message">فشل التنزيل — تعذر الوصول إلى المصدر. اضغط على «إعادة المحاولة».</string>
     <string name="content_downloads_queued">في قائمة الانتظار…</string>

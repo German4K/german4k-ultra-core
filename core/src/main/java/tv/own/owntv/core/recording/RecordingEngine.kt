@@ -1,5 +1,6 @@
 package tv.own.owntv.core.recording
 
+import android.content.Context
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -19,12 +20,13 @@ import tv.own.owntv.core.live.StreamPurpose
 import tv.own.owntv.core.live.connectionBudget
 import tv.own.owntv.core.model.RecordingFailure
 import tv.own.owntv.core.model.RecordingStatus
+import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.network.StreamHeaders
 import tv.own.owntv.core.settings.SettingsRepository
+import tv.own.owntv.core.storage.MediaTarget
 import tv.own.owntv.core.stalker.StalkerClient
 import tv.own.owntv.core.stalker.StreamUrlResolver
-import java.io.File
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 
@@ -47,12 +49,15 @@ import java.util.concurrent.ConcurrentHashMap
  * queue of its own, it drains whatever rows are due.
  */
 class RecordingEngine(
+    /** Only to resolve a stored `filePath` into something writable — a document needs a resolver. */
+    private val context: Context,
     private val recordingDao: RecordingDao,
     private val client: OkHttpClient,
     private val sourceDao: SourceDao,
     private val streamUrlResolver: StreamUrlResolver,
     private val streams: OpenStreamRegistry,
     private val settings: SettingsRepository,
+    private val connectivity: ConnectivityObserver,
     private val activityTracker: RecordingActivityTracker,
     private val clock: () -> Long = System::currentTimeMillis,
 ) {
@@ -86,8 +91,22 @@ class RecordingEngine(
             queueDirty = false
             val now = clock()
             val reserve = settings.recordingReserveConnection()
+            // Checked once per pass, not per row: it is one system call and every row this pass gets
+            // the same answer.
+            val meteredRefused = connectivity.isMeteredNow() && !settings.recordingOverMobileData()
             for (row in recordingDao.dueAt(now)) {
                 if (active.containsKey(row.id) || row.id in suppressed) continue
+                // A blank stream URL means "somebody else is writing this file": a
+                // "record what I'm watching" row, whose bytes come from the player's already-open
+                // stream (D3, mode b). Touching it would open a second connection, which is the one
+                // thing that mode exists to avoid.
+                if (row.streamUrl.isBlank()) continue
+                // Said as a MISSED row with a reason rather than by deferring the work. A download
+                // waits for Wi-Fi because the film is there tomorrow; a live programme is not.
+                if (meteredRefused) {
+                    markMissed(row, RecordingFailure.METERED_CONNECTION)
+                    continue
+                }
                 when (val grant = grantFor(row, reserve)) {
                     is StreamGrant.Refused -> markMissed(row, RecordingRules.missedBecause(grant.reason))
                     StreamGrant.Allowed -> start(row, report)
@@ -154,9 +173,9 @@ class RecordingEngine(
      */
     private suspend fun runRecording(id: Long, onProgress: (RecordingProgress) -> Unit) {
         val row = recordingDao.getById(id) ?: return
-        val file = File(row.filePath ?: return)
+        val target = MediaTarget.of(context, row.filePath) ?: return
         val startedAt = clock()
-        if (!ensureWritable(file)) {
+        if (!canRecordInto(target)) {
             android.util.Log.w(TAG, "recording target unavailable id=$id path=${row.filePath}")
             finish(row, bytes = 0, failure = RecordingFailure.NO_SPACE, startedAt = startedAt)
             return
@@ -165,8 +184,8 @@ class RecordingEngine(
             id = id,
             status = RecordingStatus.RECORDING,
             failure = RecordingFailure.NONE,
-            bytes = bytesOnDisk(file),
-            filePath = file.absolutePath,
+            bytes = target.length(),
+            filePath = target.stored,
             startedAt = startedAt,
             endedAt = null,
             timestamp = clock(),
@@ -178,7 +197,7 @@ class RecordingEngine(
             while (currentCoroutineContext().isActive && !RecordingRules.shouldStop(clock(), row.stopMs)) {
                 attempt++
                 val reason = try {
-                    attemptRecord(row, file, onProgress)
+                    attemptRecord(row, target, onProgress)
                 } catch (e: kotlinx.coroutines.CancellationException) {
                     throw e
                 } catch (e: Exception) {
@@ -203,7 +222,7 @@ class RecordingEngine(
         } finally {
             // Also the path a cancellation takes — a recording stopped by hand, or by the drain
             // loop's overrun backstop, still has its bytes written down and its file kept.
-            finish(row, bytesOnDisk(file), failure, startedAt)
+            finish(row, target.length(), failure, startedAt)
         }
     }
 
@@ -213,7 +232,7 @@ class RecordingEngine(
      */
     private suspend fun attemptRecord(
         row: RecordingEntity,
-        file: File,
+        target: MediaTarget,
         onProgress: (RecordingProgress) -> Unit,
     ): RecordingFailure {
         val (url, userAgent) = resolveTarget(row)
@@ -238,18 +257,18 @@ class RecordingEngine(
             if (HlsMediaPlaylist.looksLikePlaylist(response.header("Content-Type"), peek)) {
                 // The playlist's *final* URL, so relative segment URIs resolve against wherever the
                 // redirects actually landed rather than where we asked.
-                return recordHls(row, file, response.request.url.toString(), agent, headers, onProgress)
+                return recordHls(row, target, response.request.url.toString(), agent, headers, onProgress)
             }
             // Always append: a reconnect continues the same file from wherever the stream is now.
             // There is no Range to resume with and nothing to rewind to.
             response.body.byteStream().use { input ->
-                java.io.FileOutputStream(file, true).use { out ->
+                target.openOutput(append = true).use { out ->
                     val buffer = ByteArray(BUFFER_BYTES)
                     var lastTick = 0L
                     while (true) {
                         if (!currentCoroutineContext().isActive) return RecordingFailure.NONE
                         if (RecordingRules.shouldStop(clock(), row.stopMs)) return RecordingFailure.NONE
-                        if (!RecordingRules.hasSpace(usableSpace(file))) {
+                        if (!RecordingRules.hasSpace(target.usableSpace())) {
                             android.util.Log.w(TAG, "recording stopped, disk reserve reached id=${row.id}")
                             return RecordingFailure.NO_SPACE
                         }
@@ -269,13 +288,13 @@ class RecordingEngine(
                         val now = clock()
                         if (now - lastTick > PROGRESS_INTERVAL_MS) {
                             lastTick = now
-                            val bytes = file.length()
+                            val bytes = target.length()
                             recordingDao.updateProgress(
                                 id = row.id,
                                 status = RecordingStatus.RECORDING,
                                 failure = RecordingFailure.NONE,
                                 bytes = bytes,
-                                filePath = file.absolutePath,
+                                filePath = target.stored,
                                 startedAt = row.startedAt ?: now,
                                 endedAt = null,
                                 timestamp = now,
@@ -305,7 +324,7 @@ class RecordingEngine(
      */
     private suspend fun recordHls(
         row: RecordingEntity,
-        file: File,
+        target: MediaTarget,
         playlistUrl: String,
         userAgent: String,
         headers: Map<String, String>,
@@ -317,7 +336,7 @@ class RecordingEngine(
         var lastSequence = -1L
         while (currentCoroutineContext().isActive) {
             if (RecordingRules.shouldStop(clock(), row.stopMs)) return RecordingFailure.NONE
-            if (!RecordingRules.hasSpace(usableSpace(file))) {
+            if (!RecordingRules.hasSpace(target.usableSpace())) {
                 android.util.Log.w(TAG, "recording stopped, disk reserve reached id=${row.id}")
                 return RecordingFailure.NO_SPACE
             }
@@ -338,11 +357,11 @@ class RecordingEngine(
                 if (!currentCoroutineContext().isActive) return RecordingFailure.NONE
                 if (lastSequence >= 0 && segment.sequence <= lastSequence) continue
                 if (RecordingRules.shouldStop(clock(), row.stopMs)) return RecordingFailure.NONE
-                if (!RecordingRules.hasSpace(usableSpace(file))) return RecordingFailure.NO_SPACE
+                if (!RecordingRules.hasSpace(target.usableSpace())) return RecordingFailure.NO_SPACE
                 val segmentUrl = absoluteUrl(playlistUrl, segment.uri) ?: continue
                 val ok = client.newCall(request(segmentUrl, userAgent, headers)).execute().use { response ->
                     if (!response.isSuccessful) return@use false
-                    java.io.FileOutputStream(file, true).use { out ->
+                    target.openOutput(append = true).use { out ->
                         response.body.byteStream().use { input -> input.copyTo(out, BUFFER_BYTES) }
                     }
                     true
@@ -351,7 +370,7 @@ class RecordingEngine(
                 // carries on. Giving up here would end a two-hour recording over one bad six seconds.
                 if (!ok) android.util.Log.w(TAG, "segment refused id=${row.id} seq=${segment.sequence}")
                 lastSequence = segment.sequence
-                report(row, file, onProgress)
+                report(row, target, onProgress)
             }
             // A playlist that says it has ended is a finite stream — a catch-up window, usually. The
             // recording is done whether or not the clock agrees.
@@ -373,17 +392,17 @@ class RecordingEngine(
         runCatching { java.net.URI(base).resolve(uri).toString() }.getOrNull()
 
     /** Write the byte count down and tell the pill, at most twice a second. */
-    private suspend fun report(row: RecordingEntity, file: File, onProgress: (RecordingProgress) -> Unit) {
+    private suspend fun report(row: RecordingEntity, target: MediaTarget, onProgress: (RecordingProgress) -> Unit) {
         val now = clock()
         if (now - lastReportAt < PROGRESS_INTERVAL_MS) return
         lastReportAt = now
-        val bytes = file.length()
+        val bytes = target.length()
         recordingDao.updateProgress(
             id = row.id,
             status = RecordingStatus.RECORDING,
             failure = RecordingFailure.NONE,
             bytes = bytes,
-            filePath = file.absolutePath,
+            filePath = target.stored,
             startedAt = row.startedAt ?: now,
             endedAt = null,
             timestamp = now,
@@ -441,15 +460,13 @@ class RecordingEngine(
         return streamUrlResolver.resolve(source, row.streamUrl, vod = false) to ua
     }
 
-    private fun ensureWritable(file: File): Boolean {
-        val parent = file.parentFile ?: return false
-        if (!parent.exists()) runCatching { parent.mkdirs() }
-        return parent.isDirectory && parent.canWrite() && RecordingRules.hasSpace(parent.usableSpace)
-    }
-
-    private fun usableSpace(file: File): Long = file.parentFile?.usableSpace ?: 0L
-
-    private fun bytesOnDisk(file: File): Long = if (file.exists()) file.length() else 0L
+    /**
+     * Somewhere to write, **and room to write into it**. The second half is this engine's own and not
+     * a download's: a recording has no content length to check against up front, so the only moment
+     * it can refuse for want of space is before it starts and then again as it goes.
+     */
+    private fun canRecordInto(target: MediaTarget): Boolean =
+        target.ensureWritable() && RecordingRules.hasSpace(target.usableSpace())
 
     private companion object {
         const val TAG = "RecordingEngine"

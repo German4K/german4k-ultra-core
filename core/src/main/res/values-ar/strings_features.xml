@@ -227,5 +227,49 @@
     <string name="recording_failed_unavailable">تعذّر تشغيل القناة</string>
     <string name="recording_failed_channel_gone">لم تعد هذه القناة في قائمة التشغيل</string>
     <string name="recording_failed_unknown">لم يتم التسجيل</string>
+    <string name="recording_title">التسجيلات</string>
+    <string name="recording_description">بث مباشر محفوظ على هذا الجهاز.</string>
+    <string name="recording_empty">لا توجد تسجيلات بعد. افتح دليل البرامج واختر برنامجًا ثم اضغط تسجيل.</string>
+    <string name="recording_group_now">يسجّل الآن</string>
+    <string name="recording_group_scheduled">مجدول</string>
+    <string name="recording_group_completed">مُسجَّل</string>
+    <string name="recording_group_failed">فشل</string>
+    <string name="recording_group_missed">فائت</string>
+    <string name="recording_record">تسجيل</string>
+    <string name="recording_stop">إيقاف التسجيل</string>
+    <string name="recording_record_series">تسجيل كل عرض</string>
+    <string name="recording_stop_series">إيقاف تسجيل كل عرض</string>
+    <string name="recording_from_archive">التسجيل من الأرشيف</string>
+    <string name="recording_scheduled_for">سيسجّل <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">يجري تسجيل <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">يتعارض مع <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">التسجيل</string>
+    <string name="settings_recording_reserve">إبقاء اتصال واحد متاحًا للمشاهدة</string>
+    <string name="settings_recording_reserve_description">تترك التسجيلات أحد اتصالات مزوّدك متاحًا، ليبقى دائمًا اتصال للمشاهدة. أوقف هذا للتسجيل على كل الاتصالات.</string>
+    <string name="settings_recording_pre_roll">البدء مبكرًا</string>
+    <string name="settings_recording_pre_roll_description">ابدأ بهذه المدة قبل وقت البدء المعلن، حتى لا يفوّت دليلٌ متقدّمٌ قليلًا بدايةَ البرنامج.</string>
+    <string name="settings_recording_post_roll">المتابعة بعد النهاية</string>
+    <string name="settings_recording_post_roll_description">تابع بهذه المدة بعد وقت الانتهاء المعلن، حتى لا يُقطع برنامج امتدّ أكثر من موعده.</string>
+    <string name="settings_recording_timers_inexact">لا يسمح هذا الجهاز لـ OwnTV بضبط منبّهات دقيقة، لذلك قد يبدأ التسجيل متأخرًا بضع دقائق. تبدأ التسجيلات مبكرًا لتعويض ذلك.</string>
+    <plurals name="recording_minutes">
+        <item quantity="zero"><xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+        <item quantity="two"><xliff:g id="count">%1$d</xliff:g> دقيقتان</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> دقائق</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> دقيقة</item>
+    </plurals>
     <string name="recording_failed_encrypted">هذه القناة مشفّرة ولا يمكن تسجيلها</string>
+    <string name="recording_failed_metered">لم يُسجَّل عبر بيانات الهاتف</string>
+    <string name="settings_recording_mobile_data">التسجيل عبر بيانات الهاتف</string>
+    <string name="settings_recording_mobile_data_description">عند الإيقاف، يُتخطّى أي تسجيل يحين خارج شبكة Wi-Fi بدل الانتظار — فالبرنامج المباشر لا يتكرر.</string>
+    <string name="settings_record_watching">تسجيل ما أشاهده</string>
+    <string name="settings_record_watching_description">يضيف إلى المشغّل زر تسجيل يحفظ القناة التي تشاهدها. يجلب القناة بنفسه، فيستهلك أحد اتصالات مزوّدك أثناء عمله، ويواصل التسجيل بعد تغيير القناة أو مغادرة المشغّل.</string>
+    <string name="settings_record_watching_warning_title">اتصال واحد فقط</string>
+    <string name="settings_record_watching_warning_description">يجلب التسجيل القناة مرة ثانية، فيستهلك اتصالاً آخر من مزوّدك. وعلى حساب لا يسمح إلا باتصال واحد يُرفض التسجيل أثناء المشاهدة. وبعد أن يبدأ يتابع وحده: غيّر القناة أو غادر المشغّل وسيستمر حتى ينتهي البرنامج أو توقفه من «التسجيلات».</string>
+    <string name="settings_record_watching_keep_off">إبقاؤه متوقفًا</string>
+    <string name="settings_record_watching_turn_on">تشغيله</string>
+    <string name="player_recording_conflict">يسمح مزوّدك ببثّ واحد في الوقت نفسه، والتسجيل يستخدمه الآن.</string>
+    <string name="player_keep_watching_stop_recording">متابعة المشاهدة (يوقف التسجيل)</string>
 </resources>

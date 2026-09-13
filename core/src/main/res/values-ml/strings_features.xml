@@ -195,5 +195,45 @@
     <string name="recording_failed_unavailable">ചാനൽ പ്ലേ ചെയ്തില്ല</string>
     <string name="recording_failed_channel_gone">ആ ചാനൽ ഇനി നിങ്ങളുടെ പ്ലേലിസ്റ്റിൽ ഇല്ല</string>
     <string name="recording_failed_unknown">റെക്കോർഡ് ചെയ്തില്ല</string>
+    <string name="recording_title">റെക്കോർഡിംഗുകൾ</string>
+    <string name="recording_description">ഈ ഉപകരണത്തിൽ സൂക്ഷിച്ച തത്സമയ ടിവി.</string>
+    <string name="recording_empty">ഇതുവരെ ഒന്നും റെക്കോർഡ് ചെയ്തിട്ടില്ല. ടിവി ഗൈഡ് തുറന്ന് ഒരു പരിപാടി തിരഞ്ഞെടുത്ത് റെക്കോർഡ് അമർത്തുക.</string>
+    <string name="recording_group_now">ഇപ്പോൾ റെക്കോർഡ് ചെയ്യുന്നു</string>
+    <string name="recording_group_scheduled">ഷെഡ്യൂൾ ചെയ്തു</string>
+    <string name="recording_group_completed">റെക്കോർഡ് ചെയ്തു</string>
+    <string name="recording_group_failed">പരാജയപ്പെട്ടു</string>
+    <string name="recording_group_missed">നഷ്ടമായി</string>
+    <string name="recording_record">റെക്കോർഡ്</string>
+    <string name="recording_stop">റെക്കോർഡിംഗ് നിർത്തുക</string>
+    <string name="recording_record_series">എല്ലാ പ്രക്ഷേപണവും റെക്കോർഡ് ചെയ്യുക</string>
+    <string name="recording_stop_series">എല്ലാ പ്രക്ഷേപണവും റെക്കോർഡ് ചെയ്യുന്നത് നിർത്തുക</string>
+    <string name="recording_from_archive">ആർക്കൈവിൽ നിന്ന് റെക്കോർഡ് ചെയ്യുക</string>
+    <string name="recording_scheduled_for"><xliff:g id="time">%1$s</xliff:g>-ന് റെക്കോർഡ് ചെയ്യും</string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> റെക്കോർഡ് ചെയ്യുന്നു</string>
+    <string name="recording_clash_with"><xliff:g id="programme">%1$s</xliff:g>-മായി ഏറ്റുമുട്ടുന്നു</string>
+    <string name="recording_settings_group">റെക്കോർഡിംഗ്</string>
+    <string name="settings_recording_reserve">കാണാൻ ഒരു സ്ട്രീം ഒഴിവാക്കി വയ്ക്കുക</string>
+    <string name="settings_recording_reserve_description">റെക്കോർഡിംഗുകൾ നിങ്ങളുടെ ദാതാവിന്റെ ഒരു കണക്ഷൻ ഒഴിച്ചിടും, അങ്ങനെ കാണാൻ എപ്പോഴും ഒന്ന് ബാക്കിയുണ്ടാകും. എല്ലാ കണക്ഷനിലും റെക്കോർഡ് ചെയ്യാൻ ഇത് ഓഫാക്കുക.</string>
+    <string name="settings_recording_pre_roll">നേരത്തെ തുടങ്ങുക</string>
+    <string name="settings_recording_pre_roll_description">കാണിച്ച ആരംഭ സമയത്തിന് ഇത്ര മുമ്പ് തുടങ്ങുക, അങ്ങനെ അല്പം നേരത്തെയുള്ള ഗൈഡിലും തുടക്കം നഷ്ടമാകില്ല.</string>
+    <string name="settings_recording_post_roll">അവസാനത്തിനു ശേഷവും തുടരുക</string>
+    <string name="settings_recording_post_roll_description">കാണിച്ച അവസാന സമയത്തിന് ശേഷം ഇത്ര നേരം തുടരുക, അങ്ങനെ നീണ്ടുപോകുന്ന പരിപാടി മുറിഞ്ഞുപോകില്ല.</string>
+    <string name="settings_recording_timers_inexact">ഈ ഉപകരണം OwnTV-യെ കൃത്യമായ അലാറം സജ്ജമാക്കാൻ അനുവദിക്കുന്നില്ല, അതിനാൽ റെക്കോർഡിംഗ് കുറച്ച് മിനിറ്റ് വൈകി തുടങ്ങാം. അത് നികത്താൻ റെക്കോർഡിംഗ് നേരത്തെ ആരംഭിക്കുന്നു.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> മിനിറ്റ്</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> മിനിറ്റ്</item>
+    </plurals>
     <string name="recording_failed_encrypted">ഈ ചാനൽ എൻക്രിപ്റ്റ് ചെയ്തതിനാൽ റെക്കോർഡ് ചെയ്യാനാകില്ല</string>
+    <string name="recording_failed_metered">മൊബൈൽ ഡാറ്റയിൽ റെക്കോർഡ് ചെയ്തില്ല</string>
+    <string name="settings_recording_mobile_data">മൊബൈൽ ഡാറ്റയിൽ റെക്കോർഡ് ചെയ്യുക</string>
+    <string name="settings_recording_mobile_data_description">ഓഫാണെങ്കിൽ, Wi-Fi ഇല്ലാത്ത നേരത്ത് വരുന്ന റെക്കോർഡിംഗ് കാത്തിരിക്കാതെ ഒഴിവാക്കും — തത്സമയ പരിപാടി വീണ്ടും വരില്ല.</string>
+    <string name="settings_record_watching">ഞാൻ കാണുന്നത് റെക്കോർഡ് ചെയ്യുക</string>
+    <string name="settings_record_watching_description">നിങ്ങള്‍ കാണുന്ന ചാനൽ സൂക്ഷിക്കുന്ന ഒരു റെക്കോർഡ് ബട്ടൺ പ്ലേയറിൽ ചേർക്കുന്നു. ചാനൽ സ്വയം എടുക്കുന്നതിനാൽ, പ്രവർത്തിക്കുമ്പോൾ ദാതാവിന്റെ ഒരു കണക്ഷൻ ഉപയോഗിക്കുന്നു; ചാനൽ മാറ്റിയാലും പ്ലേയർ വിട്ടാലും റെക്കോർഡിങ് തുടരും.</string>
+    <string name="settings_record_watching_warning_title">ഒരു കണക്ഷൻ മാത്രം</string>
+    <string name="settings_record_watching_warning_description">റെക്കോർഡിങ് ചാനൽ രണ്ടാമതും എടുക്കുന്നു, അതിനാൽ ദാതാവിന്റെ മറ്റൊരു കണക്ഷൻ ഉപയോഗിക്കുന്നു. ഒരു കണക്ഷൻ മാത്രം അനുവദിക്കുന്ന അക്കൗണ്ടിൽ, കാണുന്ന സമയത്ത് റെക്കോർഡിങ് നിരസിക്കപ്പെടും. തുടങ്ങികഴിഞ്ഞാൽ അത് സ്വയം തുടരും — ചാനൽ മാറ്റുക, പ്ലേയർ വിടുക, പരിപാടി തീരുന്നതുവരെ അല്ലെങ്കിൽ റെക്കോർഡിങ്ങുകളിൽ നിന്ന് നിർത്തുന്നതുവരെ തുടരും.</string>
+    <string name="settings_record_watching_keep_off">ഓഫായി തന്നെ വയ്ക്കുക</string>
+    <string name="settings_record_watching_turn_on">ഓണാക്കുക</string>
+    <string name="player_recording_conflict">നിങ്ങളുടെ ദാതാവ് ഒരേസമയം ഒരു സ്ട്രീം മാത്രമേ അനുവദിക്കൂ, അത് ഇപ്പോൾ റെക്കോർഡിംഗ് ഉപയോഗിക്കുന്നു.</string>
+    <string name="player_keep_watching_stop_recording">കാണൽ തുടരുക (റെക്കോർഡിംഗ് നിലയ്ക്കും)</string>
 </resources>

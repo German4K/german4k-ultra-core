@@ -895,6 +895,8 @@
     <string name="settings_search_keywords_catchup">archive timezone offset catchup external player vlc mx</string>
     <!-- Translators: Hidden keyword bag for the Video Player settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_video">decoder subtitles sync</string>
+    <!-- Translators: Search keywords for the Recording settings page. Not shown to the user — these are the words someone might type to find it, so use natural search terms in your language rather than a literal translation. -->
+    <string name="settings_search_keywords_recording">record recording recordings dvr timer schedule series save live</string>
     <!-- Translators: Hidden keyword bag for Subtitle appearance settings. Translate as individual search terms. -->
     <string name="settings_search_keywords_subtitle_appearance">subtitle size color colour position transparency background opacity</string>
     <!-- Translators: Hidden keyword bag for the Live latency settings. Translate as individual search terms. -->
@@ -1531,6 +1533,20 @@ Choose Balanced if a channel becomes unreliable.</string>
     <string name="settings_sources_test_trial">Trial account</string>
     <!-- Translators: Shown when the provider reports no subscription end date. -->
     <string name="settings_sources_test_expiry_none">No expiry date reported</string>
+    <!-- Translators: Button on a playlist row: show what is already known about it. -->
+    <string name="settings_sources_info">Info</string>
+    <!-- Translators: Button inside the Info popup: measure the playlist again. -->
+    <string name="settings_sources_retest">Re-test</string>
+    <!-- Translators: Title of the confirmation shown before the connection measurement runs. -->
+    <string name="settings_sources_probe_title">Test this playlist?</string>
+    <!-- Translators: Body of that confirmation. It must be clear that playback stops and that it is slow. -->
+    <string name="settings_sources_probe_warning">Many providers never say how many channels you may watch at the same time, so OwnTV finds out by opening a few and seeing which ones survive. Anything playing now will stop, and this can take up to two minutes.</string>
+    <!-- Translators: Progress while measuring. "current" is the stream being opened, "total" the most that will be. -->
+    <string name="settings_sources_probe_running">Checking how many channels this provider allows… (<xliff:g id="current">%1$d</xliff:g> of <xliff:g id="total">%2$d</xliff:g>)</string>
+    <!-- Translators: Shown when the measurement finished without being able to tell. -->
+    <string name="settings_sources_probe_unknown">OwnTV could not work out how many channels this provider allows.</string>
+    <!-- Translators: Button that abandons the connection measurement while it is running. -->
+    <string name="settings_sources_probe_skip">Skip</string>
     <!-- Translators: Auto-refresh mode display. 'mode' is the refresh mode. The circular arrow is a visual indicator. -->
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <!-- Translators: Badge indicating the default source. All caps is intentional. -->
@@ -2434,9 +2450,13 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <!-- Translators: Setting label for Multiview: several live channels on screen at once. -->
     <string name="settings_multiview">Multiview</string>
     <!-- Translators: Description of the Multiview setting. -->
-    <string name="settings_multiview_description">Watch up to four live channels at once. Every tile uses one of your provider\'s connections.</string>
+    <string name="settings_multiview_description">Watch several live channels at once. You choose how many each time, up to this limit — every tile uses one of your provider\'s connections.</string>
     <!-- Translators: Label for how many tiles the Multiview grid has (1-4). -->
     <string name="settings_multiview_tiles">Tiles</string>
+    <!-- Translators: Playlist/player setting: the largest number of Multiview tiles allowed. It is a ceiling, not a fixed size. -->
+    <string name="settings_multiview_tiles_max">Most tiles</string>
+    <!-- Translators: The value shown beside the setting above, e.g. "Max 4". -->
+    <string name="settings_multiview_tiles_max_value">Max <xliff:g id="count">%1$d</xliff:g></string>
     <!-- Translators: Title of the warning shown when 3 or 4 tiles are chosen. -->
     <string name="settings_multiview_warning_title">More than two tiles</string>
     <!-- Translators: Body of the warning shown when 3 or 4 tiles are chosen. -->

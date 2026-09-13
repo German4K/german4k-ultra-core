@@ -418,6 +418,7 @@
     <string name="settings_search_keywords_autoplay">自動再生 シリーズ シーズン</string>
     <string name="settings_search_keywords_catchup">アーカイブ タイムゾーン オフセット 見逃し配信 外部プレーヤー VLC MX</string>
     <string name="settings_search_keywords_video">デコーダー 字幕 同期</string>
+    <string name="settings_search_keywords_recording">録画 録る 予約 タイマー シリーズ 保存 ライブ 生放送</string>
     <string name="settings_search_keywords_subtitle_appearance">字幕 サイズ 色 位置 透明度 背景 不透明度</string>
     <string name="settings_search_keywords_latency">ライブ バッファ 遅延 低遅延 秒 ライブの最新位置</string>
     <string name="settings_search_keywords_proxy">HTTP トラフィック ルート</string>
@@ -764,6 +765,13 @@
     <string name="settings_sources_test_connections_max">接続数: 同時に最大 <xliff:g id="max">%1$d</xliff:g></string>
     <string name="settings_sources_test_trial">体験アカウント</string>
     <string name="settings_sources_test_expiry_none">有効期限の報告はありません</string>
+    <string name="settings_sources_info">情報</string>
+    <string name="settings_sources_retest">再テスト</string>
+    <string name="settings_sources_probe_title">このプレイリストをテストしますか？</string>
+    <string name="settings_sources_probe_warning">同時に視聴できるチャンネル数を知らせないプロバイダーは少なくありません。そこで OwnTV はいくつか実際に開き、どれが続くかを見て判断します。再生中のものはすべて停止し、最大で 2 分ほどかかります。</string>
+    <string name="settings_sources_probe_running">このプロバイダーが許可するチャンネル数を確認しています…（<xliff:g id="current">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g>）</string>
+    <string name="settings_sources_probe_unknown">このプロバイダーが許可するチャンネル数を OwnTV は特定できませんでした。</string>
+    <string name="settings_sources_probe_skip">スキップ</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">デフォルト</string>
     <string name="settings_sources_backup">バックアップ</string>
@@ -1325,8 +1333,10 @@
     <string name="more_pane_encrypted">暗号化済み</string>
     <string name="settings_backup_location">保存先</string>
     <string name="settings_multiview">マルチビュー</string>
-    <string name="settings_multiview_description">最大4つのライブチャンネルを同時に視聴できます。タイル1つにつきプロバイダーの接続を1つ使います。</string>
+    <string name="settings_multiview_description">複数のライブチャンネルを同時に視聴できます。いくつ並べるかは毎回あなたが決められ、この上限までです。各画面はプロバイダーの接続を 1 つ使います。</string>
     <string name="settings_multiview_tiles">タイル数</string>
+    <string name="settings_multiview_tiles_max">画面の最大数</string>
+    <string name="settings_multiview_tiles_max_value">最大 <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">3つ以上のタイル</string>
     <string name="settings_multiview_warning_description">3つまたは4つのタイルには、プロバイダーの接続が3つまたは4つ必要です。テレビ側も同時にデコードできるチャンネル数に限りがあります。タイルが開始できない場合は理由を表示し、ほかのタイルはそのまま再生を続けます。</string>
     <string name="settings_multiview_keep_two">2のままにする</string>

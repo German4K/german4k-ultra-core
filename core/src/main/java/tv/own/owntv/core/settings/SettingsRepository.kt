@@ -291,6 +291,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val RECORDING_RESERVE_CONNECTION = booleanPreferencesKey("recording_reserve_connection")
         val RECORDING_PRE_ROLL_MINUTES = intPreferencesKey("recording_pre_roll_minutes")
         val RECORDING_POST_ROLL_MINUTES = intPreferencesKey("recording_post_roll_minutes")
+        val RECORDING_OVER_MOBILE_DATA = booleanPreferencesKey("recording_over_mobile_data")
+        val RECORD_WHAT_IM_WATCHING = booleanPreferencesKey("record_what_im_watching")
         // Video Player Settings
         val HW_DECODING = booleanPreferencesKey("hw_decoding")
         val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo") // legacy; read for migration only
@@ -1886,6 +1888,39 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     /** Read once, when a recording's window is being worked out. */
     suspend fun recordingRollMinutes(): Pair<Int, Int> =
         recordingPreRollMinutes.first() to recordingPostRollMinutes.first()
+
+    /**
+     * Whether a recording may run on a metered connection. **On by default**, because a live
+     * programme does not come round again and a recording that silently did not happen is worse than
+     * one that cost some data.
+     *
+     * Deliberately *not* a WorkManager `UNMETERED` constraint, which is how downloads do it: that
+     * would make the work wait for Wi-Fi, and waiting means the programme is over by the time it
+     * runs. The recorder checks this at start time instead and records a **MISSED** row with a reason
+     * the user can read.
+     */
+    val recordingOverMobileData: Flow<Boolean> = prefsFlow {
+        it[Keys.RECORDING_OVER_MOBILE_DATA] ?: true
+    }
+
+    suspend fun setRecordingOverMobileData(allowed: Boolean) {
+        context.dataStore.edit { it[Keys.RECORDING_OVER_MOBILE_DATA] = allowed }
+    }
+
+    suspend fun recordingOverMobileData(): Boolean = recordingOverMobileData.first()
+
+    /**
+     * "Record what I'm watching" — the opt-in that puts a record button in the player (D3).
+     *
+     * **Off until the user turns it on, and it is never offered automatically**, not even when the
+     * playlist allows exactly one stream. Turning it on is where the one-connection warning is shown
+     * and accepted, which is why the HUD button needs no further nagging.
+     */
+    val recordWhatImWatching: Flow<Boolean> = prefsFlow { it[Keys.RECORD_WHAT_IM_WATCHING] ?: false }
+
+    suspend fun setRecordWhatImWatching(enabled: Boolean) {
+        context.dataStore.edit { it[Keys.RECORD_WHAT_IM_WATCHING] = enabled }
+    }
 
     /** Whether the >2-tile warning has been accepted, so it is asked once and not on every change. */
     val multiviewWarningAccepted: Flow<Boolean> = prefsFlow { it[Keys.MULTIVIEW_WARNING_ACCEPTED] ?: false }

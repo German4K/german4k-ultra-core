@@ -3,6 +3,339 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.37 — 2026-09-13
+
+### Downloads and recordings can be saved to a folder the user picks
+
+Core knew one kind of destination: a file path. That is all a television needs — it holds all-files
+access and browses real directories — but a phone bound for Google Play cannot have that permission
+at all, so the only folder of the user's own choosing it can reach is a Storage Access Framework
+tree. The phone's folder picker therefore offered exactly one row, and not because anything was
+broken: there was one volume to offer.
+
+- **A destination is now "a path *or* a document"** — `MediaTarget` and `MediaRoot`. Every write,
+  measure, delete and resume in downloads and recordings goes through them.
+- **No database change, and none was needed.** `filePath` and the `downloadRoot` preference are both
+  `String`, so a `content://` URI lives in the same column. Every row written before this is a path
+  and keeps working untouched.
+- **mpv plays a document** by being handed an already-open file descriptor as `fd://`. ExoPlayer
+  needed nothing: its `DefaultDataSource` already routed `content://`.
+- **Resume survives it.** A partial document is appended to, and a provider that refuses append mode
+  restarts the transfer from zero rather than truncating the file into a plausible-looking, corrupt
+  result.
+- **A withdrawn folder is said out loud.** A revoked grant or an unmounted card fails the download
+  with a reason instead of quietly re-homing gigabytes onto internal storage.
+- `MovieHash` reads through a stream, so a download saved to a picked folder is still fingerprinted
+  for a subtitle search. It returns nothing rather than a wrong hash if the stream will not seek.
+- Three new strings, in all 25 packaged locales.
+
+### The guide, the channel row and the preview pane finally agree
+
+Three places answer "what is on this channel now", and they disagreed — permanently, on whole
+playlists. The preview pane showed a full guide while the grid drew an empty row and the channel
+list showed no second line at all.
+
+They were reading the same table through different filters. `nowPlaying`/`upcoming`, which fill the
+preview, match on `epgChannelId` alone. Every other guide read also required
+`sourceId IN (…)` — the list of playlists and EPG feeds that exist **right now**. A guide row whose
+source had since been deleted, or re-added and handed a new id, was therefore invisible to the grid
+and the row and visible to the preview. The same class of report had already been answered once by
+*widening* that list from playlists to playlists-plus-feeds; widening it again would only have moved
+the boundary.
+
+- **The source filter is gone** from `programmesInWindowPage`, `programmesForChannel`,
+  `programmeSummariesForChannel` and `programmeSummariesForChannels`. A channel's guide is identified
+  by its `epgChannelId`; which feed delivered a row is not part of that identity.
+- **`GuideReader.window` / `row` / `slice` / `onNow` no longer take `sourceIds`**, and neither does
+  the series-rule scan in `RecordingManager` — that one was narrower still, pinned to the channel's
+  own source, so a recording rule could miss showings sitting in the table.
+- **No schema change.** The queries changed; the table did not. The read index
+  `(epgChannelId, startMs)` already existed, so the reads stay fast without the predicate.
+
+### The same programme is no longer listed twice
+
+Removing the filter above means a channel carried by two EPG feeds returns every programme twice —
+and it already did, for anyone whose feeds overlapped. The table's unique index is
+`(sourceId, epgChannelId, startMs)` and cannot catch it: the rows differ in source, and usually in
+start time too, because two feeds rarely agree to the minute. On screen that was one guide block
+drawn on top of another (`22:04–00:16` beneath `22:10–00:15`, the same film) and a Next/Later list
+that named the same programme twice.
+
+- **`EpgDedupe.collapse`** runs on every programme list — the guide window, each guide row, the
+  on-now slice and Next/Later.
+- **The test is a shared title *and* overlapping time, and both halves matter.** Overlap alone is two
+  feeds disagreeing about a schedule, which cannot honestly be resolved by discarding half of it; the
+  same title without overlap is a genuine repeat broadcast. Only both together mean one programme
+  written down twice.
+- The **longest** span of a duplicate set is kept, so the block it draws leaves no gap either side.
+- Next/Later now reads twelve stored rows instead of six, because collapsing would otherwise eat the
+  list down to two entries.
+
+### A guide row whose data has run out asks the provider
+
+The bulk guide can simply stop — a feed that ends at midnight leaves today's daytime blank — and the
+preview pane has always had a second place to look: the provider's own `get_short_epg`, for Xtream
+playlists and Stalker portals. The grid and the channel rows had no such fallback, so they drew
+nothing beside a preview listing programmes.
+
+- **`LiveEpgReader.providerProgrammes`** exposes that fetch as guide rows, and `GuideReader.row`
+  falls back to it when the stored table has nothing for a channel in the window.
+- Those rows are **synthetic** — they are in no table — so their ids are the negated start time:
+  negative, so they can never collide with a real row's, and distinct, so a caller gathering ids into
+  a set (the grid marks its catch-up cells that way) cannot have one row stand for all of them. Their
+  synopsis travels with them rather than being fetched by id.
+- **It is never done in bulk.** One channel is fetched by the preview pane, one by a guide row as it
+  scrolls into view, and the channel list reads only what those two have already cached.
+  `nowPlayingFor` **must not** fetch: a list holds hundreds of channels, and asking the provider for
+  each one produced hundreds of requests, most of them empty, with the batch unable to return until
+  the last had finished — every row went blank. That rule is now written next to the code.
+
+### One live-engine watchdog, shared by both apps
+
+Everything that decides a live channel on ExoPlayer is not working — a picture that never arrives
+while the audio plays, segment URLs the provider refuses, a stream that opens and delivers nothing,
+no decodable audio, a channel that played and then froze — lived inside the television's
+`LiveViewModel`. That is why the phone had no second engine: not because anyone decided a phone
+should go without, but because the logic sat where a phone could not reach it.
+
+- **`LiveExoWatchdog` is now in `:player-core`**, and the television calls it instead of its own copy.
+  Same rungs, same timings, same log lines; nothing in it knows what a television is.
+- `EXO_OPEN_TIMEOUT_MS` and the stall handoff moved with it.
+
+
+### An episode download appeared in no list at all
+
+A downloaded episode wrote itself to the right folder, reported its progress in the status pill, and
+then showed up nowhere — before or after it finished. Both apps had independently written
+`mediaType == SERIES` for their Series tab, and a download is never filed as `SERIES`: it is filed as
+`EPISODE`, because a single episode is what is being fetched. The television's code even carried a
+comment stating the wrong belief outright.
+
+- **`MediaFolders.folderFor(MediaType)`** now owns which of the three folders a kind belongs in, and
+  both apps ask it. It sits beside the folder names for the same reason those moved here: the
+  previous copy of this rule existed twice and drifted.
+
+### Playing a file the user chose, and a few things that assumed a path
+
+- **`MovieHash`** reads through a stream rather than a `RandomAccessFile`, so a download saved to a
+  picked folder is still fingerprinted for a subtitle search. A stream that will not skip the whole
+  way returns **no** hash rather than a wrong one — OpenSubtitles would answer a wrong hash with
+  somebody else's subtitles.
+- **`ExternalPlayerLauncher`** passes a `content://` destination through with the read grant it
+  already carries. Before, a document fell through to `File()`, did not exist, and the external
+  player silently refused to start.
+- **`StorageAccess`** gained `persistAccess`, `hasTree`, `releaseTree` and `folderLabel` — taking a
+  lasting grant on a folder or an exported file, checking one that may have been withdrawn, handing
+  one back, and turning a `content://…%2F…` URI into something a person can read.
+
+### A live channel that is refused on reconnect waits instead of giving up
+
+A panel fronted by a gateway answers the *reconnect* with `407 Proxy Authentication Required` while
+the connection that just died is still counted against the account. No proxy is involved, so OkHttp
+throws before anything can read a response code, `httpStatusOf` returned nothing, and the refusal was
+invisible: the channel burned all eight reconnects in six seconds and reported "played, then stalled
+for 15s without recovering". Traced on a television whose channel had played for twenty seconds with
+zero dropped frames.
+
+- **`407` is now read off the exception** and joins `458` as a session limit, so it takes the existing
+  wait-once-and-retry path rather than the reconnect ladder.
+- **Only when no proxy is configured.** A genuine proxy asking for credentials is worded differently
+  by OkHttp and is left alone.
+
+### "Record what I'm watching" no longer claims to start when it cannot
+
+`stream-record` copies the bytes of the file mpv currently has open. Set on an mpv that is alive but
+**idle** — which is what it is while Live TV runs on the ExoPlayer preview engine — it is accepted
+silently and writes nothing. `startStreamRecord` only checked `exoActive`, a flag about the player's
+*own* ExoPlayer handoff that knows nothing about the live engine, so it returned true, the row went
+to RECORDING, no file ever appeared, and the row was closed out with zero bytes as
+`STREAM_UNAVAILABLE` — **"The channel would not play"**, about a channel that was playing perfectly.
+
+- **`startStreamRecord` now requires mpv to actually hold a file**, and returns false otherwise.
+- The apps **delete** the withdrawn row instead of ending it, so a recording that never started no
+  longer appears in the list as a failure with an untrue reason.
+
+### "Record what I'm watching" says what it needs
+
+Writing the open stream to disk is mpv's `stream-record`, and ExoPlayer has no equivalent — so on a
+live channel playing through ExoPlayer the record button created a row that nothing wrote to and then
+withdrew it as **"The channel would not play"**, which was untrue. The setting's description now says
+the button appears only while the channel is playing on mpv, and how to get there.
+
+- One new string, `common_minutes`, and an extended `settings_record_watching_description`, both in
+  all 25 packaged locales.
+
+### One player HUD, the same on the television and the phone
+
+The two apps had drifted: a different order, four different glyphs for the same function, and one
+control that appeared under different rules. Core now owns the order, and both apps draw from it.
+
+- **The same controls in the same order**, with the television as the reference — it is the older,
+  more considered layout. Neither app may reorder the bar now, only leave a control out.
+- **Four glyphs on the phone redrawn to match the television's**: catch-up, sound-only, report and
+  the engine swap.
+- **Speed is on the phone**, which it never was and had no reason not to be.
+- **Report appears only while the stream info is open**, on both — it is a report about what that
+  panel is showing, and it was cluttering the phone's bar for everyone who never files one.
+- **The phone's player buttons no longer draw their names.** The bar sits over the picture and has
+  very little room; holding a button used to widen it into a word and push its neighbours off the
+  end. Screen readers still announce every control by name.
+- Brightness stays phone-only, and the channel list with it.
+
+
+### The buttons for recording, and the two ways to start one that are not a timer
+
+`core-1.0.36` shipped the recorder with nothing able to start it. This is everything the screens in
+both apps need, plus the two modes that are not a scheduled timer.
+
+- **Every word the recording screens use**, in all 25 packaged languages: the five groups a recording
+  can be in, the actions, the settings, and the reasons a recording did not happen.
+- **Record every showing of a programme on a channel.** Titles are matched after folding away the
+  differences a guide invents for itself — `(HD)`, `[S2 E4]`, `- Episode 4`, apostrophes, stray
+  punctuation and case. **It is not fuzzy**: a rule for *The News* will never record *Newsnight*.
+  New showings become timers as the guide refreshes, a showing already recorded is not recorded
+  twice, and **one you cancelled by hand stays cancelled**.
+- **Record what I'm watching**, off until you turn it on. It writes the stream already playing, so it
+  needs no second connection from your provider — which is the answer for accounts that allow exactly
+  one. It stops when you change channel or leave the player, and it cannot be scheduled; turning it
+  on is where that trade is explained.
+- **Record over mobile data**, on by default. Turning it off **skips** a recording that falls due
+  away from Wi-Fi rather than making it wait, and says so — a download can be postponed because the
+  film is still there tomorrow, and a live programme cannot.
+- **When a recording takes your only connection**, the player now offers two answers instead of a
+  Retry that cannot work: keep watching and stop the recording, or close. The default protects the
+  recording, because a live programme is gone forever and a rewatch is not.
+- Recording settings: keep one stream free for watching, how early to start, how long to keep going
+  after the end, and — where the device will not allow exact alarms — a plain warning that a
+  recording may begin a few minutes late.
+
+### Two fixes that only running it on a television could find
+
+- **Both apps crashed on launch.** The recordings table was added to the database in `core-1.0.36`
+  but never registered for the rest of the app to reach, so the first screen that asked for it
+  brought the app down. It only showed up on a device: it compiles, it passes every test, and it
+  fails the moment it runs.
+- **The free-space bar now follows the folder.** Point downloads at a memory stick and the bar kept
+  showing the old volume's numbers until the app was restarted — and on a screen with nothing
+  downloaded yet, it never refreshed at all.
+
+No database change: the version stays at **39**, and the "record every showing" rules use the table
+`core-1.0.36` already created.
+
+### How many streams a provider allows, measured rather than assumed
+
+Multiview and recording both ask one question before they open a stream: *does this playlist have a
+connection to spare?* The answer came from `sources.maxConnections`, which only an Xtream panel ever
+fills in. A Stalker portal or an M3U playlist left it at zero — "unknown" — so nothing was ever
+refused, and the user found out by a picture stopping.
+
+Asking the portal harder does not help, and this was measured rather than guessed at. One real
+portal answers `get_profile` with **162 fields** and not one of them is a connection limit; it hands
+out a second stream link with `error: ""`; it answers `200` to both requests. There is nothing to
+read. A provider that refuses does it by closing the older connection several seconds later, without
+an error of any kind.
+
+So the number is **found out by trying**, once.
+
+- **`ConnectionProbe`** opens streams one at a time and watches. It stops at four — Multiview's
+  largest grid — and reports "four or more" rather than a number it did not reach.
+- **A broken channel cannot cap a playlist.** A slot is retried with a *second, different* channel
+  before its failure is believed, and a limit is concluded only when two different channels fail at
+  the same slot. If even the first stream never plays, the result is **not known** rather than one:
+  a wrong low number refuses tiles the user has paid for, which is worse than not knowing.
+- **Both refusals are watched for**: a stream that never starts, and an *older* stream that stops
+  shortly after a new one begins. The second is what the measured portal actually does.
+- **HLS is held open properly.** Most M3U channels are a playlist URL — a few hundred bytes of text
+  that arrive and close at once. Read as a continuous stream, every channel looked stillborn and a
+  real playlist of working channels was "could not tell" in under a second. The probe now follows the
+  playlist to its segments and pulls those, refreshing it as a live playlist grows, which is what a
+  player does.
+- **Reads are throttled to a trickle.** The open connection is the measurement; the video is not.
+  A whole run moves a few megabytes instead of the ~45 MB a minute of unthrottled streams would.
+- The decisions live in `ConnectionProbeRun` with **nine unit tests** and no network in sight.
+
+**It runs once, and only where it is needed.** The provider is asked first, so an Xtream panel that
+publishes its limit is never measured — and that check is not redundant with the stored value,
+because on a playlist's *first* sync the panel has not been queried yet. It then runs at the front of
+that first sync, before a single channel row exists, so there is nothing playing for it to interrupt.
+`lastSyncAt == null` is the guard with teeth: without it every playlist that existed before this
+would measure on its next ordinary re-sync, minutes long, cutting off whatever was being watched.
+
+**Database v40** adds `sources.maxConnectionsProbedAt` — when it was measured, or 0. It separates
+three states that were previously one: never looked into, measured and answered, and measured
+without a conclusion. The last of those must not be retried forever on the playlists it cannot answer
+for, which is the whole reason for the column.
+
+**Backup format v22** carries the measured limit. `maxConnections` used to be deliberately excluded
+on the grounds that the Xtream sync re-derives it — true for Xtream, false for everything else. Since
+it can now also cost two minutes with playback stopped, dropping it would make a restored playlist
+forget an expensive answer and never take it again: the automatic measurement only runs on a
+playlist's first sync, and a restored playlist has already had one. It describes the *account*, not
+the device. A merge prefers whatever this device measured itself.
+
+### A playlist's Test button became Info, with Re-test behind a warning
+
+Testing a playlist answered "is this still alive?" in a fraction of a second. The measurement above
+takes minutes and stops playback, so the two cannot be the same button.
+
+- **Info** shows what is already stored — including the measured limit — and runs the same quick
+  liveness check it always did.
+- **Re-test** sits inside it, behind a confirmation that says plainly what will happen: that many
+  providers never publish the number, that anything playing will stop, and that it can take up to two
+  minutes. Playback is stopped first, and not gently — the measurement *is* the thing that cuts a
+  single-connection account off.
+- **Skip** abandons a run in progress. Cancelling closes the streams, so the provider's connections
+  come straight back; what the run had confirmed so far is discarded rather than saved, because half
+  a measurement is a guess.
+- The measurement reports its position — *"Checking how many channels this provider allows… (2 of
+  4)"* — during the add-time run as well, on whatever screen is already watching the sync. Two
+  minutes of silent spinner is indistinguishable from a hung app.
+
+### A Stalker portal's expiry date, and its status in words
+
+The Test panel said "No expiry date reported" for a portal that reports one, and "Status: 1" for one
+that does not report a word.
+
+- The expiry lives in `account_info`, not in `get_profile` — the profile's only date-shaped field is
+  `expire_billing_date`, set to `0000-00-00 00:00:00`. `StalkerAuthManager.accountInfo` fetches it and
+  the portal's own wording is shown verbatim, because re-parsing a provider's date format invents
+  wrong dates. A portal that refuses the call is not a portal that is broken.
+- A purely numeric `status` is no longer printed. `1` means active, but to a reader it is a fault
+  code, and "Connection OK" above it has already said so.
+
+### Dead code from the abandoned "copy the open stream" recording design
+
+`stream-record` was disproved on a television in the previous release and recording was rebuilt
+around the ordinary engine. What the rework left behind is now removed: `OwnTVPlayer`'s whole
+stream-record surface, `RecordingManager.beginPlayerRecording` and `endPlayerRecording`, and
+`EpgDao.programmeSummariesInWindow`, which had no callers and still carried the source filter the
+guide fix removed everywhere else.
+
+### Fixes
+
+- **A recording booked across a reboot is repaired on the next launch.** Some manufacturers' start-up
+  policies never deliver `BOOT_COMPLETED` to an app the user has not "allowed", so
+  `RecordingBootReceiver` simply does not run — which is what the owner's television does. Nothing in
+  the app can make an OEM deliver that broadcast, but `RecordingManager` already re-arms every pending
+  timer and marks what was missed the moment it is constructed; it was merely constructed lazily, so
+  on such a device the repair might never happen at all. It is now created at start-up. A recording
+  whose window passed while the device was off is still correctly *Missed* rather than stuck as
+  *Scheduled*.
+- **`add_to_multiview` is in the live menu's shared action list.** A key that is not in that list
+  cannot be reordered or hidden in Customize — and on the phone the row did not appear at all. The
+  same omission cost the phone its Record row one release ago.
+- **`common_size_mb` lost its placeholder in every translation.** A bare `%1$s` is not recognised as
+  a placeholder by the string tooling, which escaped it to `%%1$s`; wrapped in `<xliff:g>`, as every
+  other placeholder in the catalogue is, `test_i18n_tools.py` passes again.
+- **A tile that cannot be played no longer plays its sound.** The *picture* failing does not stop the
+  audio track, so a Multiview tile reading "Couldn't play this channel" went on making a noise from a
+  channel nobody could see — and could even hold the audio badge. It is now silenced, the sound moves
+  to a tile that is showing something, and handing the sound to a failed tile is refused.
+- **`LivePreviewEngine` names itself in the diagnostics log.** Every `play()` and every change of mute
+  carries the engine's identity. Several engines exist at once during Multiview, and without an id
+  their lines are indistinguishable; this is the line that finally named a stream nobody could see as
+  an engine the tile pool had never built.
+
 ## core-1.0.36 — 2026-09-12
 
 ### A download row says where the file went

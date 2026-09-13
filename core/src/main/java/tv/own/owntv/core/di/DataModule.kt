@@ -97,6 +97,10 @@ val dataModule = module {
     single { tv.own.owntv.core.stalker.StalkerEpgLoader(get(), get()) }
     // http, xtreamClient, stalkerAuth — the Test button behind each saved playlist row.
     single { tv.own.owntv.core.repository.SourceTester(get(), get(), get()) }
+    // Measuring how many streams a provider really allows, for the ones that never say.
+    single { tv.own.owntv.core.live.ConnectionProbe(get()) }
+    single { tv.own.owntv.core.live.ProbeChannelSource(get(), get(), get(), get(), get()) }
+    single { tv.own.owntv.core.live.ConnectionLimits(get(), get(), get(), get()) }
     // TMDB metadata enrichment (plan §4): one provider, three tiers resolved from SettingsRepository.
     // Opaque per-install id sent to the default Worker only, so one abusive install can be capped
     // without blocking the IP address a whole household/carrier NAT shares.
@@ -182,6 +186,7 @@ val dataModule = module {
             activityTracker = get(),
             customize = get(),
             settings = get(),
+            connectionLimits = get(),
         )
     }
     // App-wide "sync running" signal for the shell status pill (every sync funnels through SyncManager).
@@ -224,23 +229,37 @@ val dataModule = module {
     single { tv.own.owntv.core.download.DownloadActivityTracker() }
     // downloadDao, okHttpClient, sourceDao, movieDao, seriesDao, streamUrlResolver, activityTracker
     // (the middle four are D-3: Stalker downloads resolve the stored cmd at download-start time)
-    single { DownloadEngine(get(), get(), get(), get(), get(), get(), get()) }
+    single { DownloadEngine(androidContext(), get(), get(), get(), get(), get(), get(), get()) }
     // context, downloadDao, settings, engine
     single { DownloadManager(androidContext(), get(), get(), get()) }
     // The recording half of the same idea: several can run at once (D10), so the tracker keeps a
     // line per running recording rather than a single active one.
     single { tv.own.owntv.core.recording.RecordingActivityTracker() }
-    // recordingDao, okHttpClient, sourceDao, streamUrlResolver, openStreamRegistry, settings, tracker
+    // recordingDao, okHttpClient, sourceDao, streamUrlResolver, openStreamRegistry, settings,
+    // connectivity (the metered check that turns "not over mobile data" into a MISSED row rather
+    // than a silent wait), tracker
     single {
-        tv.own.owntv.core.recording.RecordingEngine(get(), get(), get(), get(), get(), get(), get())
+        tv.own.owntv.core.recording.RecordingEngine(androidContext(), get(), get(), get(), get(), get(), get(), get(), get())
     }
     // context, recordingDao — the AlarmManager half. Exact alarms where the user allows them,
     // inexact plus a bigger head start where they do not.
     single { tv.own.owntv.core.recording.RecordingScheduler(androidContext(), get()) }
-    // context, recordingDao, sourceDao, settings, openStreamRegistry, engine, scheduler
-    single {
+    // context, recordingDao, sourceDao, settings, openStreamRegistry, engine, scheduler,
+    // channelDao + epgDao (series rules: "every showing of this title on this channel" has to read
+    // the guide to find out what the showings are)
+    // `createdAtStart` is the fix for a defect the owner's television found: some manufacturers'
+    // auto-start policies never deliver BOOT_COMPLETED to an app the user has not "allowed", so
+    // RecordingBootReceiver simply does not run and a recording scheduled across a reboot is never
+    // re-armed. Nothing in the app can make an OEM deliver that broadcast — but opening the app is
+    // something the user does anyway, and `RecordingManager.init` already re-arms everything and
+    // marks what was missed. Left lazy, that only happened once a screen that injects it was opened,
+    // which on such a television could be never. Eager, every launch repairs the timers.
+    //
+    // Safe for a cold start: the constructor sets a flag and launches one background coroutine; the
+    // only database read is `recordings` — a handful of rows — and it happens off the main thread.
+    single(createdAtStart = true) {
         tv.own.owntv.core.recording.RecordingManager(
-            androidContext(), get(), get(), get(), get(), get(), get(),
+            androidContext(), get(), get(), get(), get(), get(), get(), get(), get(),
         )
     }
     // profileDao, sourceDao, settings, customizationStore, userDataResolver, epgSourceStore,

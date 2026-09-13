@@ -233,6 +233,9 @@
     <string name="content_storage_internal">Interní úložiště</string>
     <string name="content_storage_removable">Vyměnitelné úložiště</string>
     <string name="content_storage_app">Úložiště aplikace (bez nutnosti oprávnění)</string>
+    <string name="content_storage_choose_folder">Zvolit jinou složku…</string>
+    <string name="content_storage_chosen_folder">Zvolená složka</string>
+    <string name="content_storage_folder_lost">Tato složka už není dostupná. Zvolte ji znovu, nebo vyberte jinou.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> staženo</string>
     <string name="content_downloads_failure_message">Stahování se nezdařilo — zdroj nebyl dostupný. Stiskněte Zkusit znovu.</string>
     <string name="content_downloads_queued">Ve frontě…</string>

@@ -318,5 +318,6 @@
     <string name="multiview_add_to">মাল্টিভিউতে যোগ করুন</string>
     <string name="multiview_added">মাল্টিভিউয়ের জন্য রাখা হয়েছে · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>। গ্রিড খুলতে একটি চ্যানেল চালান।</string>
     <string name="multiview_tile_sound_only">শুধু শব্দ</string>
+    <string name="multiview_tile_show_picture">ছবি দেখান</string>
     <string name="multiview_sound_only_note">শুধু শব্দ — তবু প্রোভাইডারের একটি স্ট্রিম নেয়</string>
 </resources>

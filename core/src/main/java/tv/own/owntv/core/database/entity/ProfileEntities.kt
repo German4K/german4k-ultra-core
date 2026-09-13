@@ -128,6 +128,18 @@ data class SourceEntity(
      * sync time means the very first zap already behaves.
      */
     val maxConnections: Int = 0,
+    /**
+     * When [maxConnections] was measured by opening streams, or 0 if it never was.
+     *
+     * Separates the three states that matter and used to be indistinguishable: never looked into
+     * (0 here), measured and answered (a timestamp and a number), and measured without a conclusion
+     * (a timestamp and no number — every channel tried was broken, or the provider took too long).
+     * The last of those must not be retried on every sync, which is the whole reason for the column.
+     *
+     * Only the first sync after a playlist is added sets this, plus an explicit Re-test. A provider
+     * that publishes its own limit is never measured and leaves this at 0.
+     */
+    val maxConnectionsProbedAt: Long = 0,
     val createdAt: Long = System.currentTimeMillis(),
     val lastSyncAt: Long? = null,
 )

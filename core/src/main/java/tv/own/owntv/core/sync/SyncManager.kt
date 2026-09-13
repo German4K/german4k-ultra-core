@@ -43,6 +43,15 @@ class SyncManager(
     private val activityTracker: SyncActivityTracker,
     customize: CustomizationStore,
     settings: SettingsRepository,
+    /**
+     * Measures how many streams the provider allows, for the providers that never say.
+     *
+     * Runs from here rather than from either app so both get it, and runs at the *front* of a
+     * playlist's very first sync: at that moment not one channel row exists, so there is nothing the
+     * user could be watching for the measurement to interrupt — which matters, because opening a
+     * second stream on a single-connection account is precisely what kills the first.
+     */
+    private val connectionLimits: tv.own.owntv.core.live.ConnectionLimits,
 ) {
     private val support = SyncSupport(categoryDao, channelDao, movieDao, seriesDao, sourceDao, customize, settings)
     private val xtreamSyncer = XtreamSyncer(xtream, bulkInsertHelper, support)
@@ -52,6 +61,22 @@ class SyncManager(
     private val lastSyncStats = java.util.concurrent.ConcurrentHashMap<Long, SyncRunStats>()
 
     fun getLastSyncStats(sourceId: Long): SyncRunStats? = lastSyncStats[sourceId]
+
+    /**
+     * Measure and store the provider's stream limit, reporting progress as an ordinary sync stage.
+     *
+     * Never allowed to fail a sync: a playlist that imports perfectly well must not be rejected
+     * because a measurement could not be taken. The answer is optional; the catalogue is not.
+     */
+    private suspend fun measureConnections(source: SourceEntity, onProgress: (ImportStage) -> Unit) {
+        runCatching {
+            connectionLimits.measureAndStore(source) { probe ->
+                onProgress(ImportStage(measuringStream = probe.stream, measuringOf = probe.maxStreams))
+            }
+        }.onFailure { Log.w(TAG, "connection measurement failed for sourceId=${source.id}: ${it.message}") }
+        // Clear the measuring flag so the item counters take the screen back over.
+        onProgress(ImportStage())
+    }
 
     suspend fun sync(
         source: SourceEntity,
@@ -79,6 +104,16 @@ class SyncManager(
             val progress = SyncCounters(effective) { stage ->
                 activityTracker.progress(source.id, stage)
                 onProgress(stage)
+            }
+            // Only on a playlist's first sync, and only when the provider did not publish the number.
+            // `lastSyncAt == null` is the guard with teeth: without it, every playlist that existed
+            // before this feature would measure on its next ordinary re-sync — minutes long, and
+            // cutting off whatever the user happened to be watching at the time.
+            if (source.lastSyncAt == null && connectionLimits.needsMeasuring(source)) {
+                measureConnections(source) { stage ->
+                    activityTracker.progress(source.id, stage)
+                    onProgress(stage)
+                }
             }
             var result: SyncResult = SyncResult.Cancelled
             try {

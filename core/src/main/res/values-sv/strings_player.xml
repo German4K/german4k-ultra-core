@@ -318,5 +318,6 @@
     <string name="multiview_add_to">Lägg till i Multivy</string>
     <string name="multiview_added">Sparad för Multivy · <xliff:g id="count">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g>. Starta en kanal för att öppna rutnätet.</string>
     <string name="multiview_tile_sound_only">Endast ljud</string>
+    <string name="multiview_tile_show_picture">Visa bilden</string>
     <string name="multiview_sound_only_note">Endast ljud — använder ändå en av leverantörens strömmar</string>
 </resources>

@@ -318,5 +318,6 @@
     <string name="multiview_add_to">മൾട്ടിവ്യൂവിൽ ചേർക്കുക</string>
     <string name="multiview_added">മൾട്ടിവ്യൂവിനായി സൂക്ഷിച്ചു · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>. ഗ്രിഡ് തുറക്കാൻ ഒരു ചാനൽ പ്ലേ ചെയ്യുക.</string>
     <string name="multiview_tile_sound_only">ശബ്ദം മാത്രം</string>
+    <string name="multiview_tile_show_picture">ചിത്രം കാണിക്കുക</string>
     <string name="multiview_sound_only_note">ശബ്ദം മാത്രം — എന്നാലും ദാതാവിന്റെ ഒരു സ്ട്രീം ഉപയോഗിക്കുന്നു</string>
 </resources>

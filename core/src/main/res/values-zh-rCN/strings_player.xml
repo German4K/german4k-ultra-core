@@ -309,5 +309,6 @@
     <string name="multiview_add_to">加入多画面</string>
     <string name="multiview_added">已为多画面保留 · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>。播放任一频道即可打开网格。</string>
     <string name="multiview_tile_sound_only">仅声音</string>
+    <string name="multiview_tile_show_picture">显示画面</string>
     <string name="multiview_sound_only_note">仅声音 — 仍会占用供应商的一路流</string>
 </resources>

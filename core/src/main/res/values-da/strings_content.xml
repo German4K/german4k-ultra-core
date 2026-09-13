@@ -219,6 +219,9 @@
     <string name="content_storage_internal">Intern lagerplads</string>
     <string name="content_storage_removable">Flytbar lagerplads</string>
     <string name="content_storage_app">Applager (kræver ingen tilladelse)</string>
+    <string name="content_storage_choose_folder">Vælg en anden mappe…</string>
+    <string name="content_storage_chosen_folder">Valgt mappe</string>
+    <string name="content_storage_folder_lost">Den mappe er ikke længere tilgængelig. Vælg den igen, eller vælg en anden.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> downloadet</string>
     <string name="content_downloads_failure_message">Download mislykkedes — der kunne ikke oprettes forbindelse til kilden. Tryk på Prøv igen.</string>
     <string name="content_downloads_queued">I kø…</string>

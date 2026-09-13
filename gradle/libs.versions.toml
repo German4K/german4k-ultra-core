@@ -22,6 +22,7 @@ composeBom = "2026.08.00"
 tvProvider = "1.1.0"
 datastore = "1.2.1"
 work = "2.11.2"
+documentFile = "1.1.0"
 
 # --- Build tooling ---
 # KSP2 (decoupled versioning). Used by Room. Verified 2026-08-27.
@@ -82,6 +83,11 @@ androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime
 
 # Android TV launcher integration (Watch Next / preview channels)
 androidx-tvprovider = { group = "androidx.tvprovider", name = "tvprovider", version.ref = "tvProvider" }
+
+# Storage Access Framework wrapper. Not a UI artifact, so invariant 3 is untouched. Needed because a
+# phone bound for Google Play may not hold MANAGE_EXTERNAL_STORAGE, so the only folder of the user's
+# own choosing it can write to is a SAF tree — see MediaTarget.
+androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentFile" }
 
 # DataStore (theme / prefs persistence)
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }

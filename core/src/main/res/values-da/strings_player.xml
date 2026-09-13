@@ -318,5 +318,6 @@
     <string name="multiview_add_to">Føj til Multivisning</string>
     <string name="multiview_added">Gemt til Multivisning · <xliff:g id="count">%1$d</xliff:g> af <xliff:g id="total">%2$d</xliff:g>. Start en kanal for at åbne gitteret.</string>
     <string name="multiview_tile_sound_only">Kun lyd</string>
+    <string name="multiview_tile_show_picture">Vis billedet</string>
     <string name="multiview_sound_only_note">Kun lyd — bruger stadig en af udbyderens streams</string>
 </resources>

@@ -420,6 +420,7 @@
     <string name="settings_search_keywords_autoplay">automatische Wiedergabe Serien Staffel</string>
     <string name="settings_search_keywords_catchup">Archiv Zeitzone Versatz Catch-up externer Player vlc mx</string>
     <string name="settings_search_keywords_video">Decoder Untertitel Synchronisierung</string>
+    <string name="settings_search_keywords_recording">aufnahme aufnehmen aufzeichnung dvr timer planen serie speichern live</string>
     <string name="settings_search_keywords_subtitle_appearance">Untertitel Größe Farbe Position Transparenz Hintergrund Deckkraft</string>
     <string name="settings_search_keywords_latency">Live Puffer Latenz Verzögerung niedrige Latenz Sekunden nahe Live-Position</string>
     <string name="settings_search_keywords_proxy">http Datenverkehr Route</string>
@@ -770,6 +771,13 @@
     <string name="settings_sources_test_connections_max">Verbindungen: bis zu <xliff:g id="max">%1$d</xliff:g> gleichzeitig</string>
     <string name="settings_sources_test_trial">Testkonto</string>
     <string name="settings_sources_test_expiry_none">Kein Ablaufdatum gemeldet</string>
+    <string name="settings_sources_info">Info</string>
+    <string name="settings_sources_retest">Erneut testen</string>
+    <string name="settings_sources_probe_title">Diese Playlist testen?</string>
+    <string name="settings_sources_probe_warning">Viele Anbieter verraten nie, wie viele Kanäle Sie gleichzeitig sehen dürfen. OwnTV findet es deshalb heraus, indem es einige öffnet und beobachtet, welche bestehen bleiben. Alles, was gerade läuft, wird beendet, und das kann bis zu zwei Minuten dauern.</string>
+    <string name="settings_sources_probe_running">Es wird geprüft, wie viele Kanäle dieser Anbieter erlaubt… (<xliff:g id="current">%1$d</xliff:g> von <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV konnte nicht ermitteln, wie viele Kanäle dieser Anbieter erlaubt.</string>
+    <string name="settings_sources_probe_skip">Überspringen</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDARD</string>
     <string name="settings_sources_backup">Sicherung</string>
@@ -1347,8 +1355,10 @@
     <string name="more_pane_encrypted">Verschlüsselt</string>
     <string name="settings_backup_location">Speicherort</string>
     <string name="settings_multiview">Multiview</string>
-    <string name="settings_multiview_description">Bis zu vier Live-Sender gleichzeitig ansehen. Jede Kachel belegt eine Verbindung deines Anbieters.</string>
+    <string name="settings_multiview_description">Mehrere Livekanäle gleichzeitig ansehen. Wie viele es sind, entscheiden Sie jedes Mal selbst, höchstens jedoch so viele — jede Kachel belegt eine Verbindung Ihres Anbieters.</string>
     <string name="settings_multiview_tiles">Kacheln</string>
+    <string name="settings_multiview_tiles_max">Höchstzahl der Kacheln</string>
+    <string name="settings_multiview_tiles_max_value">Max. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Mehr als zwei Kacheln</string>
     <string name="settings_multiview_warning_description">Drei oder vier Kacheln brauchen drei oder vier Verbindungen deines Anbieters, und ein TV-Gerät kann nur eine begrenzte Anzahl Sender gleichzeitig dekodieren. Startet eine Kachel nicht, nennt sie den Grund — die anderen laufen weiter.</string>
     <string name="settings_multiview_keep_two">Bei 2 bleiben</string>

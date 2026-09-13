@@ -116,6 +116,12 @@ class ExternalPlayerLauncher(private val context: Context) {
     private fun uriFor(url: String): Uri? {
         val scheme = Uri.parse(url).scheme?.lowercase()
         if (scheme in NETWORK_SCHEMES) return Uri.parse(url)
+        // A download or recording saved into a folder the user picked is already a shareable URI —
+        // it needs no FileProvider, and wrapping it in one is impossible anyway. It is passed
+        // through with the read grant the intent already carries. Whether the other app is allowed
+        // to open it is then between it and the provider; before this, a document simply fell
+        // through to File(), did not exist, and the external player silently refused to start.
+        if (scheme == CONTENT_SCHEME) return Uri.parse(url)
         val file = File(url)
         if (!file.exists()) return null
         val authority = context.packageName + ".fileprovider"
@@ -148,5 +154,8 @@ class ExternalPlayerLauncher(private val context: Context) {
     private companion object {
         /** URL schemes handed to the external player as-is (everything else is a local file path). */
         val NETWORK_SCHEMES = setOf("http", "https", "rtsp", "rtmp", "udp", "mms")
+
+        /** A file saved into a folder the user picked through the system picker. */
+        const val CONTENT_SCHEME = "content"
     }
 }

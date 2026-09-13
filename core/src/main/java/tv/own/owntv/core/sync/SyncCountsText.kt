@@ -51,13 +51,21 @@ fun compactCount(res: Resources, value: Int): String {
 fun SyncProgressDisplay.primaryText(res: Resources): String = when (phase) {
     SyncProgressPhase.PREPARING -> res.getString(R.string.sync_progress_preparing)
     SyncProgressPhase.CONNECTING -> res.getString(R.string.sync_progress_connecting)
+    // Said plainly, with the position in it: this runs before a single row is written and can take
+    // two minutes, and a silent spinner for that long reads as a hung app.
+    SyncProgressPhase.MEASURING_CONNECTIONS -> res.getString(
+        R.string.settings_sources_probe_running,
+        counts?.measuringStream ?: 1,
+        counts?.measuringOf ?: 1,
+    )
     SyncProgressPhase.SYNCING ->
         counts?.displayText(res).orEmpty().ifBlank { res.getString(R.string.sync_progress_preparing) }
 }
 
 fun SyncProgressDisplay.detailText(res: Resources): String = when (phase) {
     SyncProgressPhase.SYNCING -> res.getString(R.string.sync_progress_syncing)
-    SyncProgressPhase.PREPARING, SyncProgressPhase.CONNECTING -> res.getString(R.string.sync_progress_connecting)
+    SyncProgressPhase.MEASURING_CONNECTIONS, SyncProgressPhase.PREPARING, SyncProgressPhase.CONNECTING ->
+        res.getString(R.string.sync_progress_connecting)
 }
 
 fun SyncWarning.labelText(res: Resources): String = when (phase.trim().uppercase()) {

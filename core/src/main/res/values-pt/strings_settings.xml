@@ -422,6 +422,7 @@
     <string name="settings_search_keywords_autoplay">reprodução automática séries temporada</string>
     <string name="settings_search_keywords_catchup">arquivo fuso horário deslocamento programação retroativa reprodutor externo vlc mx</string>
     <string name="settings_search_keywords_video">decodificador legendas sincronização</string>
+    <string name="settings_search_keywords_recording">gravar gravação gravações dvr temporizador agendar série salvar ao vivo</string>
     <string name="settings_search_keywords_subtitle_appearance">legenda tamanho cor posição transparência fundo opacidade</string>
     <string name="settings_search_keywords_latency">ao vivo buffer latência atraso baixa latência segundos próximo do ponto da transmissão ao vivo</string>
     <string name="settings_search_keywords_proxy">http tráfego rota</string>
@@ -776,6 +777,13 @@
     <string name="settings_sources_test_connections_max">Conexões: até <xliff:g id="max">%1$d</xliff:g> ao mesmo tempo</string>
     <string name="settings_sources_test_trial">Conta de teste</string>
     <string name="settings_sources_test_expiry_none">Nenhuma data de expiração informada</string>
+    <string name="settings_sources_info">Informações</string>
+    <string name="settings_sources_retest">Testar novamente</string>
+    <string name="settings_sources_probe_title">Testar esta lista?</string>
+    <string name="settings_sources_probe_warning">Muitos provedores nunca informam quantos canais você pode assistir ao mesmo tempo, então o OwnTV descobre abrindo alguns e vendo quais continuam. Tudo o que estiver em reprodução será interrompido, e isso pode levar até dois minutos.</string>
+    <string name="settings_sources_probe_running">Verificando quantos canais este provedor permite… (<xliff:g id="current">%1$d</xliff:g> de <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">O OwnTV não conseguiu descobrir quantos canais este provedor permite.</string>
+    <string name="settings_sources_probe_skip">Pular</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">PADRÃO</string>
     <string name="settings_sources_backup">Cópia de segurança</string>
@@ -1369,8 +1377,10 @@
     <string name="more_pane_encrypted">Criptografada</string>
     <string name="settings_backup_location">Local</string>
     <string name="settings_multiview">Multivisão</string>
-    <string name="settings_multiview_description">Assista a até quatro canais ao vivo ao mesmo tempo. Cada bloco usa uma conexão do seu provedor.</string>
+    <string name="settings_multiview_description">Assista a vários canais ao vivo ao mesmo tempo. Você escolhe quantos a cada vez, até este limite — cada quadro usa uma das conexões do seu provedor.</string>
     <string name="settings_multiview_tiles">Blocos</string>
+    <string name="settings_multiview_tiles_max">Máximo de quadros</string>
+    <string name="settings_multiview_tiles_max_value">Máx. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Mais de dois blocos</string>
     <string name="settings_multiview_warning_description">Três ou quatro blocos exigem três ou quatro conexões do seu provedor, e um aparelho de TV só consegue decodificar um certo número de canais ao mesmo tempo. Se um bloco não iniciar, ele diz o motivo e os outros continuam.</string>
     <string name="settings_multiview_keep_two">Manter 2</string>

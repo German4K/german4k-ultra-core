@@ -195,5 +195,45 @@
     <string name="recording_failed_unavailable">A csatorna nem indult el</string>
     <string name="recording_failed_channel_gone">Ez a csatorna már nincs a lejátszási listádon</string>
     <string name="recording_failed_unknown">Nem készült felvétel</string>
+    <string name="recording_title">Felvételek</string>
+    <string name="recording_description">Az eszközre mentett élő TV.</string>
+    <string name="recording_empty">Még nincs felvétel. Nyisd meg a műsorújságot, válassz egy műsort, és nyomd meg a Felvétel gombot.</string>
+    <string name="recording_group_now">Most rögzít</string>
+    <string name="recording_group_scheduled">Ütemezve</string>
+    <string name="recording_group_completed">Rögzítve</string>
+    <string name="recording_group_failed">Sikertelen</string>
+    <string name="recording_group_missed">Kimaradt</string>
+    <string name="recording_record">Felvétel</string>
+    <string name="recording_stop">Felvétel leállítása</string>
+    <string name="recording_record_series">Minden adás felvétele</string>
+    <string name="recording_stop_series">Ne vegye fel minden adását</string>
+    <string name="recording_from_archive">Felvétel az archívumból</string>
+    <string name="recording_scheduled_for">Rögzíti: <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line"><xliff:g id="title">%1$s</xliff:g> rögzítése</string>
+    <string name="recording_clash_with">Ütközik ezzel: <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Felvétel</string>
+    <string name="settings_recording_reserve">Egy adatfolyam maradjon szabadon a nézéshez</string>
+    <string name="settings_recording_reserve_description">A felvételek szabadon hagyják a szolgáltatód egyik kapcsolatát, hogy mindig legyen min nézni. Kapcsold ki, ha mindegyiken szeretnél rögzíteni.</string>
+    <string name="settings_recording_pre_roll">Korábbi kezdés</string>
+    <string name="settings_recording_pre_roll_description">Ennyivel a megadott kezdés előtt induljon, hogy egy kissé siető műsorújság se vágja le az elejét.</string>
+    <string name="settings_recording_post_roll">Folytatás a vége után</string>
+    <string name="settings_recording_post_roll_description">Ennyivel a megadott befejezés után folytassa, hogy egy elhúzódó műsor ne szakadjon félbe.</string>
+    <string name="settings_recording_timers_inexact">Ez az eszköz nem engedi az OwnTV-nek a pontos ébresztők beállítását, ezért egy felvétel néhány perccel később indulhat. A felvételek emiatt korábban kezdődnek.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> perc</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> perc</item>
+    </plurals>
     <string name="recording_failed_encrypted">Ez a csatorna titkosított, nem rögzíthető</string>
+    <string name="recording_failed_metered">Nem készült felvétel mobiladaton</string>
+    <string name="settings_recording_mobile_data">Felvétel mobiladaton</string>
+    <string name="settings_recording_mobile_data_description">Kikapcsolva: a Wi-Fi-n kívülre eső felvétel kimarad ahelyett, hogy várna — egy élő műsor nem jön vissza.</string>
+    <string name="settings_record_watching">Rögzítsd, amit nézek</string>
+    <string name="settings_record_watching_description">Felvétel gombot tesz a lejátszóba, amely elmenti a nézett csatornát. Magát a csatornát tölti le, ezért közben lefoglalja a szolgáltató egyik kapcsolatát, és csatornaváltás vagy a lejátszó elhagyása után is tovább rögzít.</string>
+    <string name="settings_record_watching_warning_title">Csak egy kapcsolat</string>
+    <string name="settings_record_watching_warning_description">A felvétel másodszor is letölti a csatornát, így a szolgáltató egy további kapcsolatát foglalja. Olyan fióknál, amely csak egyet enged, a felvétel nézés közben elutasításra kerül. Ha egyszer elindult, magától fut tovább — válts csatornát, hagyd el a lejátszót, és megy tovább a műsor végéig, vagy amíg le nem állítod a Felvételeknél.</string>
+    <string name="settings_record_watching_keep_off">Maradjon kikapcsolva</string>
+    <string name="settings_record_watching_turn_on">Bekapcsolás</string>
+    <string name="player_recording_conflict">A szolgáltatód egyszerre csak egy adatfolyamot enged, és most a felvétel használja.</string>
+    <string name="player_keep_watching_stop_recording">Nézem tovább (leállítja a felvételt)</string>
 </resources>

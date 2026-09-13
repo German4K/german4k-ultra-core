@@ -124,6 +124,8 @@
     <string name="sync_error_secure">Sichere Verbindung fehlgeschlagen — das Zertifikat des Servers ist möglicherweise ungültig.</string>
     <string name="sync_error_malformed_guide">Die Daten der Programmübersicht vom Server waren fehlerhaft. Ein Teil davon wurde möglicherweise trotzdem geladen — bitte versuchen Sie es erneut oder prüfen Sie die EPG-URL.</string>
     <string name="common_items_per_skip">Elemente pro Sprung</string>
+    <string name="common_minutes">Minuten</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Ausblenden</string>

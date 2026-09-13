@@ -203,5 +203,46 @@
     <string name="recording_failed_unavailable">Il canale non è partito</string>
     <string name="recording_failed_channel_gone">Quel canale non è più nella tua playlist</string>
     <string name="recording_failed_unknown">Non è stato registrato</string>
+    <string name="recording_title">Registrazioni</string>
+    <string name="recording_description">La TV in diretta salvata su questo dispositivo.</string>
+    <string name="recording_empty">Nessuna registrazione. Apri la guida TV, scegli un programma e premi Registra.</string>
+    <string name="recording_group_now">Registrazione in corso</string>
+    <string name="recording_group_scheduled">Programmata</string>
+    <string name="recording_group_completed">Registrato</string>
+    <string name="recording_group_failed">Non riuscita</string>
+    <string name="recording_group_missed">Persa</string>
+    <string name="recording_record">Registra</string>
+    <string name="recording_stop">Interrompi la registrazione</string>
+    <string name="recording_record_series">Registra ogni trasmissione</string>
+    <string name="recording_stop_series">Non registrare più ogni trasmissione</string>
+    <string name="recording_from_archive">Registra dall’archivio</string>
+    <string name="recording_scheduled_for">Registrerà <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Registrazione di <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">In conflitto con <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Registrazione</string>
+    <string name="settings_recording_reserve">Tieni libera una connessione per guardare</string>
+    <string name="settings_recording_reserve_description">Le registrazioni lasciano libera una connessione del tuo provider, così ce n’è sempre una per guardare. Disattiva per registrare su tutte.</string>
+    <string name="settings_recording_pre_roll">Inizia in anticipo</string>
+    <string name="settings_recording_pre_roll_description">Inizia questo tempo prima dell’orario indicato, così una guida un po’ in anticipo non perde l’inizio.</string>
+    <string name="settings_recording_post_roll">Continua dopo la fine</string>
+    <string name="settings_recording_post_roll_description">Continua questo tempo oltre l’orario di fine indicato, così un programma che sfora non viene tagliato.</string>
+    <string name="settings_recording_timers_inexact">Questo dispositivo non permette a OwnTV di impostare sveglie esatte, quindi una registrazione può partire con qualche minuto di ritardo. Le registrazioni iniziano prima per compensare.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minuto</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> minuti</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minuti</item>
+    </plurals>
     <string name="recording_failed_encrypted">Questo canale è criptato e non può essere registrato</string>
+    <string name="recording_failed_metered">Non registrato con i dati mobili</string>
+    <string name="settings_recording_mobile_data">Registra con i dati mobili</string>
+    <string name="settings_recording_mobile_data_description">Disattivato: una registrazione prevista fuori dal Wi-Fi viene saltata invece di attendere — un programma in diretta non torna.</string>
+    <string name="settings_record_watching">Registra quello che sto guardando</string>
+    <string name="settings_record_watching_description">Aggiunge al lettore un pulsante di registrazione che salva il canale che stai guardando. Scarica il canale per conto suo, quindi occupa una delle connessioni del tuo provider mentre è in corso, e continua a registrare se cambi canale o esci dal lettore.</string>
+    <string name="settings_record_watching_warning_title">Una sola connessione</string>
+    <string name="settings_record_watching_warning_description">La registrazione scarica il canale una seconda volta, quindi occupa un’altra connessione del tuo provider. Su un account che ne consente una sola, la registrazione viene rifiutata mentre stai guardando. Una volta avviata prosegue da sola: cambia canale, esci dal lettore, e continua fino alla fine del programma o finché non la fermi da Registrazioni.</string>
+    <string name="settings_record_watching_keep_off">Lascia disattivato</string>
+    <string name="settings_record_watching_turn_on">Attiva</string>
+    <string name="player_recording_conflict">Il tuo provider consente un solo flusso alla volta, e la registrazione lo sta usando.</string>
+    <string name="player_keep_watching_stop_recording">Continua a guardare (ferma la registrazione)</string>
 </resources>

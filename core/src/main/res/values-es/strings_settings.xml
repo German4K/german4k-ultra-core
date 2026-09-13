@@ -422,6 +422,7 @@
     <string name="settings_search_keywords_autoplay">reproducción automática series temporada</string>
     <string name="settings_search_keywords_catchup">archivo zona horaria desfase en diferido reproductor externo VLC MX</string>
     <string name="settings_search_keywords_video">descodificador subtítulos sincronización</string>
+    <string name="settings_search_keywords_recording">grabar grabación grabaciones dvr temporizador programar serie guardar directo</string>
     <string name="settings_search_keywords_subtitle_appearance">subtítulo tamaño color posición transparencia fondo opacidad</string>
     <string name="settings_search_keywords_latency">directo búfer latencia retardo baja latencia segundos cerca punto del directo</string>
     <string name="settings_search_keywords_proxy">http tráfico ruta</string>
@@ -776,6 +777,13 @@
     <string name="settings_sources_test_connections_max">Conexiones: hasta <xliff:g id="max">%1$d</xliff:g> a la vez</string>
     <string name="settings_sources_test_trial">Cuenta de prueba</string>
     <string name="settings_sources_test_expiry_none">No se indica fecha de caducidad</string>
+    <string name="settings_sources_info">Información</string>
+    <string name="settings_sources_retest">Volver a probar</string>
+    <string name="settings_sources_probe_title">¿Probar esta lista?</string>
+    <string name="settings_sources_probe_warning">Muchos proveedores nunca indican cuántos canales puedes ver a la vez, así que OwnTV lo averigua abriendo algunos y viendo cuáles resisten. Todo lo que se esté reproduciendo se detendrá, y esto puede tardar hasta dos minutos.</string>
+    <string name="settings_sources_probe_running">Comprobando cuántos canales permite este proveedor… (<xliff:g id="current">%1$d</xliff:g> de <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV no pudo determinar cuántos canales permite este proveedor.</string>
+    <string name="settings_sources_probe_skip">Omitir</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">PREDETERMINADA</string>
     <string name="settings_sources_backup">Copia de seguridad</string>
@@ -1369,8 +1377,10 @@
     <string name="more_pane_encrypted">Cifrada</string>
     <string name="settings_backup_location">Ubicación</string>
     <string name="settings_multiview">Multivista</string>
-    <string name="settings_multiview_description">Mira hasta cuatro canales en directo a la vez. Cada mosaico usa una conexión de tu proveedor.</string>
+    <string name="settings_multiview_description">Ve varios canales en directo a la vez. Tú eliges cuántos cada vez, hasta este límite: cada recuadro usa una de las conexiones de tu proveedor.</string>
     <string name="settings_multiview_tiles">Mosaicos</string>
+    <string name="settings_multiview_tiles_max">Máximo de recuadros</string>
+    <string name="settings_multiview_tiles_max_value">Máx. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Más de dos mosaicos</string>
     <string name="settings_multiview_warning_description">Tres o cuatro mosaicos necesitan tres o cuatro conexiones de tu proveedor, y un aparato de TV solo puede decodificar cierto número de canales a la vez. Si un mosaico no arranca, dice por qué y los demás siguen.</string>
     <string name="settings_multiview_keep_two">Dejar 2</string>

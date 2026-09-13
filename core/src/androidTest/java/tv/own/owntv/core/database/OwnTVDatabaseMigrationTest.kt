@@ -170,6 +170,12 @@ class OwnTVDatabaseMigrationTest {
             assertTableExists(sqlite, "recording_rules")
             assertIndexExists(sqlite, "index_recording_rules_profileId_channelId_titleKey")
             assertCount(sqlite, "recording_rules", 0)
+            // v40: when the app measured how many streams the provider allows. Every upgraded
+            // playlist must arrive at 0 — "never measured" — so the measurement runs once for them
+            // rather than being assumed to have already happened. Crucially it must NOT disturb
+            // maxConnections: a playlist whose Xtream panel already published its limit keeps it.
+            assertColumnExists(sqlite, "sources", "maxConnectionsProbedAt")
+            assertColumnValue(sqlite, "sources", "maxConnectionsProbedAt", 10, 0L)
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")

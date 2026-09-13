@@ -219,6 +219,9 @@
     <string name="content_storage_internal">অভ্যন্তরীণ স্টোরেজ</string>
     <string name="content_storage_removable">অপসারণযোগ্য স্টোরেজ</string>
     <string name="content_storage_app">অ্যাপ স্টোরেজ (অনুমতির প্রয়োজন নেই)</string>
+    <string name="content_storage_choose_folder">অন্য ফোল্ডার বেছে নিন…</string>
+    <string name="content_storage_chosen_folder">বেছে নেওয়া ফোল্ডার</string>
+    <string name="content_storage_folder_lost">সেই ফোল্ডারটি আর পাওয়া যাচ্ছে না। এটি আবার বেছে নিন, বা অন্য একটি বেছে নিন।</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> ডাউনলোড হয়েছে</string>
     <string name="content_downloads_failure_message">ডাউনলোড ব্যর্থ হয়েছে — উৎসে পৌঁছানো যায়নি। আবার চেষ্টা করুন-এ ট্যাপ করুন।</string>
     <string name="content_downloads_queued">সারিতে আছে…</string>

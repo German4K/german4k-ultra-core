@@ -100,15 +100,26 @@ fun SourceTestResult.headline(res: Resources): String = when (this) {
  * The status word is deliberately **not** translated: panels invent their own vocabulary there, and a
  * wrong translation of "Banned" would be worse than the English original.
  */
-fun SourceTestResult.detailLines(res: Resources): List<String> {
+fun SourceTestResult.detailLines(
+    res: Resources,
+    /**
+     * What the playlist has stored about its stream limit. Shown when the provider itself did not
+     * report one in this test — which is the usual case for a Stalker portal or an M3U, and exactly
+     * why the number was measured and saved in the first place.
+     */
+    limit: tv.own.owntv.core.live.ConnectionLimit? = null,
+): List<String> {
     val ok = this as? SourceTestResult.Ok
     val expiryMs = ok?.expiryMs ?: (this as? SourceTestResult.Expired)?.expiryMs
     return buildList {
         ok?.status?.takeIf { it.isNotBlank() }?.let { add(res.getString(R.string.settings_sources_test_status, it)) }
         if (ok?.trial == true) add(res.getString(R.string.settings_sources_test_trial))
         if (this@detailLines !is SourceTestResult.Unreachable && this@detailLines !== SourceTestResult.AuthFailed) {
+            // A portal's own wording first, then a timestamp, then "none reported".
+            val expiry = ok?.expiryText?.takeIf { it.isNotBlank() }
+                ?: expiryMs?.let { formatTestDate(it) }
             add(
-                expiryMs?.let { res.getString(R.string.settings_sources_expiry, formatTestDate(it)) }
+                expiry?.let { res.getString(R.string.settings_sources_expiry, it) }
                     ?: res.getString(R.string.settings_sources_test_expiry_none),
             )
         }
@@ -120,6 +131,16 @@ fun SourceTestResult.detailLines(res: Resources): List<String> {
                     res.getString(R.string.settings_sources_test_connections_max, ok.maxConnections)
                 },
             )
+        } else if (limit != null) {
+            // The provider said nothing this time, so fall back to what was measured. Silence about a
+            // measurement that ran and could not tell is worse than saying so: the user would press
+            // Re-test forever waiting for a line that is never going to appear.
+            // Nothing measured yet says nothing worth printing — Re-test is the answer to that, and
+            // it is on the same panel.
+            when {
+                limit.isKnown -> add(res.getString(R.string.settings_sources_test_connections_max, limit.streams))
+                limit.measuredWithoutAnswer -> add(res.getString(R.string.settings_sources_probe_unknown))
+            }
         }
     }
 }

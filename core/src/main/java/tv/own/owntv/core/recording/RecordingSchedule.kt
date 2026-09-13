@@ -19,6 +19,16 @@ object RecordingSchedule {
     const val MAX_ROLL_MINUTES = 30
 
     /**
+     * How long "record what I'm watching" runs on a channel with **no guide data**.
+     *
+     * With a programme on screen the recording ends when that programme does, padding included.
+     * Without one there is nothing to end on, and a recording with no end time fills the disk — so it
+     * gets a generous fixed run instead. Two hours covers a film or a match, and the user can stop it
+     * at any moment from the player or the Recordings screen, which is the normal way it ends.
+     */
+    const val NO_GUIDE_RUNTIME_MINUTES = 120
+
+    /**
      * The extra head start taken when exact alarms are not available.
      *
      * Without `SCHEDULE_EXACT_ALARM` the alarm is inexact and Android may run it minutes late — and

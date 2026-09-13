@@ -226,6 +226,9 @@
     <string name="content_storage_internal">Almacenamiento interno</string>
     <string name="content_storage_removable">Almacenamiento extraíble</string>
     <string name="content_storage_app">Almacenamiento de la aplicación (no requiere permisos)</string>
+    <string name="content_storage_choose_folder">Elegir otra carpeta…</string>
+    <string name="content_storage_chosen_folder">Carpeta elegida</string>
+    <string name="content_storage_folder_lost">Esa carpeta ya no está disponible. Vuelve a elegirla o selecciona otra.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> descargados</string>
     <string name="content_downloads_failure_message">La descarga ha fallado: no se ha podido acceder a la fuente. Pulsa Reintentar.</string>
     <string name="content_downloads_queued">En cola…</string>

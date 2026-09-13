@@ -102,6 +102,74 @@ object StorageAccess {
         }
     }
 
+    /**
+     * Keep something the user just picked — a download folder, or a file they exported to — across
+     * reboots.
+     *
+     * A URI handed back by the system picker is granted **only to the activity that asked**, and
+     * only until the process dies. What it points at outlives both: a transfer runs in a foreground
+     * service, a scheduled recording starts days later, and an exported film is meant to be played
+     * next week. So the grant has to be made persistable or the file is silently unreachable the
+     * next time the app starts.
+     *
+     * Returns false when the system refuses — which happens when the picker was not asked for a
+     * persistable grant in the first place. A caller must then treat the choice as **not made**
+     * rather than made and quietly broken tomorrow.
+     */
+    fun persistAccess(context: Context, uri: Uri): Boolean = runCatching {
+        context.contentResolver.takePersistableUriPermission(
+            uri,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+        )
+        true
+    }.getOrDefault(false)
+
+    /**
+     * Whether a folder chosen earlier is still ours to write to.
+     *
+     * The user can withdraw it from system settings, and the volume it lives on can be unmounted, so
+     * a stored URI is a claim rather than a fact and is checked before it is relied on. A stored
+     * value that is not a document at all — an ordinary path, which is what a television uses — is
+     * always "granted": there is no grant involved.
+     */
+    fun hasTree(context: Context, stored: String?): Boolean {
+        if (!MediaTarget.isDocument(stored)) return true
+        val value = stored ?: return false
+        return runCatching {
+            context.contentResolver.persistedUriPermissions.any {
+                it.isWritePermission && it.uri.toString() == value
+            }
+        }.getOrDefault(false)
+    }
+
+    /**
+     * Give a folder back when it stops being the download folder, so the app does not sit on a pile
+     * of grants the user can see in system settings and did not ask to keep.
+     */
+    fun releaseTree(context: Context, stored: String?) {
+        if (!MediaTarget.isDocument(stored)) return
+        runCatching {
+            context.contentResolver.releasePersistableUriPermission(
+                Uri.parse(stored),
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
+            )
+        }
+    }
+
+    /**
+     * The chosen folder as something to show a person: `Films/OwnTV` rather than
+     * `content://com.android.externalstorage.documents/tree/primary%3AFilms%2FOwnTV`.
+     *
+     * A path is returned unchanged, because a path already reads as one.
+     */
+    fun folderLabel(stored: String?): String? {
+        val value = stored?.takeIf { it.isNotBlank() } ?: return null
+        if (!MediaTarget.isDocument(value)) return value
+        val id = runCatching { java.net.URLDecoder.decode(value.substringAfterLast('/'), "UTF-8") }
+            .getOrDefault(value.substringAfterLast('/'))
+        return id.substringAfter(':').takeIf { it.isNotBlank() } ?: id
+    }
+
     /** Strips characters that are illegal in file/folder names. */
     fun sanitize(name: String): String =
         name.replace(Regex("[\\\\/:*?\"<>|]"), " ").trim().ifBlank { "untitled" }.take(120)

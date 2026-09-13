@@ -118,6 +118,7 @@ object RecordingRules {
         RecordingFailure.STREAM_UNAVAILABLE -> res.getString(R.string.recording_failed_unavailable)
         RecordingFailure.CHANNEL_GONE -> res.getString(R.string.recording_failed_channel_gone)
         RecordingFailure.ENCRYPTED -> res.getString(R.string.recording_failed_encrypted)
+        RecordingFailure.METERED_CONNECTION -> res.getString(R.string.recording_failed_metered)
         RecordingFailure.UNKNOWN -> res.getString(R.string.recording_failed_unknown)
     }
 

@@ -318,5 +318,6 @@
     <string name="multiview_add_to">Çoklu görünüme ekle</string>
     <string name="multiview_added">Çoklu görünüm için tutuldu · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>. Izgarayı açmak için bir kanal başlatın.</string>
     <string name="multiview_tile_sound_only">Yalnızca ses</string>
+    <string name="multiview_tile_show_picture">Görüntüyü göster</string>
     <string name="multiview_sound_only_note">Yalnızca ses — yine de sağlayıcınızın bir yayınını kullanır</string>
 </resources>

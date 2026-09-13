@@ -422,6 +422,7 @@
     <string name="settings_search_keywords_autoplay">riproduzione automatica serie stagione</string>
     <string name="settings_search_keywords_catchup">archivio fuso orario differenza visione in differita player esterno VLC MX</string>
     <string name="settings_search_keywords_video">decoder sottotitoli sincronizzazione</string>
+    <string name="settings_search_keywords_recording">registra registrazione registrazioni dvr timer programma serie salva diretta</string>
     <string name="settings_search_keywords_subtitle_appearance">sottotitolo dimensione colore posizione trasparenza sfondo opacità</string>
     <string name="settings_search_keywords_latency">diretta buffer latenza ritardo bassa latenza secondi vicino al punto più recente della diretta</string>
     <string name="settings_search_keywords_proxy">http traffico instradamento</string>
@@ -776,6 +777,13 @@
     <string name="settings_sources_test_connections_max">Connessioni: fino a <xliff:g id="max">%1$d</xliff:g> contemporaneamente</string>
     <string name="settings_sources_test_trial">Account di prova</string>
     <string name="settings_sources_test_expiry_none">Nessuna data di scadenza indicata</string>
+    <string name="settings_sources_info">Informazioni</string>
+    <string name="settings_sources_retest">Riprova test</string>
+    <string name="settings_sources_probe_title">Testare questa playlist?</string>
+    <string name="settings_sources_probe_warning">Molti provider non dicono mai quanti canali puoi guardare contemporaneamente, così OwnTV lo scopre aprendone alcuni e vedendo quali resistono. Tutto ciò che è in riproduzione si fermerà e l’operazione può richiedere fino a due minuti.</string>
+    <string name="settings_sources_probe_running">Verifica di quanti canali consente questo provider… (<xliff:g id="current">%1$d</xliff:g> di <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV non è riuscito a stabilire quanti canali consente questo provider.</string>
+    <string name="settings_sources_probe_skip">Salta</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">PREDEFINITA</string>
     <string name="settings_sources_backup">Backup</string>
@@ -1369,8 +1377,10 @@
     <string name="more_pane_encrypted">Crittografato</string>
     <string name="settings_backup_location">Posizione</string>
     <string name="settings_multiview">Multivista</string>
-    <string name="settings_multiview_description">Guarda fino a quattro canali in diretta insieme. Ogni riquadro usa una connessione del tuo fornitore.</string>
+    <string name="settings_multiview_description">Guarda più canali in diretta contemporaneamente. Ogni volta decidi tu quanti, fino a questo limite: ogni riquadro usa una delle connessioni del tuo provider.</string>
     <string name="settings_multiview_tiles">Riquadri</string>
+    <string name="settings_multiview_tiles_max">Numero massimo di riquadri</string>
+    <string name="settings_multiview_tiles_max_value">Max <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Più di due riquadri</string>
     <string name="settings_multiview_warning_description">Tre o quattro riquadri richiedono tre o quattro connessioni al tuo fornitore, e un apparecchio TV può decodificare solo un certo numero di canali insieme. Se un riquadro non parte ne spiega il motivo, e gli altri continuano.</string>
     <string name="settings_multiview_keep_two">Tieni 2</string>

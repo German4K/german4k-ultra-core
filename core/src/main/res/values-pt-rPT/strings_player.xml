@@ -327,5 +327,6 @@
     <string name="multiview_add_to">Adicionar à Multivisão</string>
     <string name="multiview_added">Guardado para a Multivisão · <xliff:g id="count">%1$d</xliff:g> de <xliff:g id="total">%2$d</xliff:g>. Reproduza um canal para abrir a grelha.</string>
     <string name="multiview_tile_sound_only">Só som</string>
+    <string name="multiview_tile_show_picture">Mostrar a imagem</string>
     <string name="multiview_sound_only_note">Só som — continua a usar uma emissão do seu fornecedor</string>
 </resources>

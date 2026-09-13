@@ -133,6 +133,8 @@
     <string name="sync_error_secure">Connessione sicura non riuscita: il certificato del server potrebbe non essere valido.</string>
     <string name="sync_error_malformed_guide">I dati della guida ricevuti dal server non erano formattati correttamente. Alcuni dati potrebbero comunque essere stati caricati: riprova oppure controlla l\'URL dell\'EPG.</string>
     <string name="common_items_per_skip">Elementi per salto</string>
+    <string name="common_minutes">Minuti</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Nascondi</string>

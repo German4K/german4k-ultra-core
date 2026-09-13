@@ -9,13 +9,17 @@ data class SyncProgressCounts(
     val liveActive: Boolean,
     val moviesActive: Boolean,
     val seriesActive: Boolean,
+    /** The connection measurement's position, when it is the thing currently running. */
+    val measuringStream: Int = 0,
+    val measuringOf: Int = 0,
 ) {
     val hasItems: Boolean
         get() = live > 0 || movies > 0 || series > 0
 
+    val measuringConnections: Boolean get() = measuringOf > 0
 }
 
-enum class SyncProgressPhase { PREPARING, CONNECTING, SYNCING }
+enum class SyncProgressPhase { PREPARING, CONNECTING, SYNCING, MEASURING_CONNECTIONS }
 
 data class SyncProgressDisplay(
     val counts: SyncProgressCounts?,
@@ -29,6 +33,8 @@ fun ImportStage.progressCounts(): SyncProgressCounts = SyncProgressCounts(
     liveActive = liveActive,
     moviesActive = moviesActive,
     seriesActive = seriesActive,
+    measuringStream = measuringStream,
+    measuringOf = measuringOf,
 )
 
 fun ImportStage.importProgressDisplay(): SyncProgressDisplay =
@@ -89,6 +95,8 @@ fun importProgressDisplay(counts: SyncProgressCounts?): SyncProgressDisplay = Sy
     counts = counts,
     phase = when {
         counts == null -> SyncProgressPhase.PREPARING
+        // Before anything has been fetched, so it is checked before the item counts.
+        counts.measuringConnections -> SyncProgressPhase.MEASURING_CONNECTIONS
         counts.hasItems -> SyncProgressPhase.SYNCING
         else -> SyncProgressPhase.CONNECTING
     },

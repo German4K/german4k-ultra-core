@@ -301,5 +301,6 @@
     <string name="multiview_add_to">Hozzáadás a Többnézethez</string>
     <string name="multiview_added">Eltéve a Többnézethez · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>. Indíts el egy csatornát a rács megnyitásához.</string>
     <string name="multiview_tile_sound_only">Csak hang</string>
+    <string name="multiview_tile_show_picture">Kép megjelenítése</string>
     <string name="multiview_sound_only_note">Csak hang — ettől még egy szolgáltatói adást használ</string>
 </resources>

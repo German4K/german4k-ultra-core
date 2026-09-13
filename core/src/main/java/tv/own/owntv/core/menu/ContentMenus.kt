@@ -34,6 +34,15 @@ private val LIVE_ACTIONS = listOf(
     MenuActionRef("match_epg", R.string.content_match_epg),
     MenuActionRef("epg_offset", R.string.content_epg_time_offset),
     MenuActionRef("catchup", R.string.content_catchup),
+    // Record this channel from now. It belongs in the list rather than being added by an app,
+    // because this list is what both apps arrange by and what Customize lets the user reorder and
+    // hide — a key that is not here is dropped by the arrangement, which is exactly what happened
+    // to the phone's Record row while the television's happened to survive.
+    MenuActionRef("record", R.string.recording_record),
+    // Keep this channel for the Multiview grid. Same reason as `record` above, and the same symptom:
+    // absent from this list, the phone's row was silently dropped by the arrangement while the
+    // television's survived — and it is the only way to *start* a grid from the channel list.
+    MenuActionRef("add_to_multiview", R.string.multiview_add_to),
     MenuActionRef("play_external", R.string.content_play_external),
     MenuActionRef("move", R.string.content_move),
     MenuActionRef("move_to_category", R.string.content_move_to_category),

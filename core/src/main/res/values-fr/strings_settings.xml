@@ -422,6 +422,7 @@
     <string name="settings_search_keywords_autoplay">lecture automatique séries saison</string>
     <string name="settings_search_keywords_catchup">archive fuseau horaire décalage rattrapage lecteur externe vlc mx</string>
     <string name="settings_search_keywords_video">décodeur sous-titres synchronisation</string>
+    <string name="settings_search_keywords_recording">enregistrer enregistrement enregistrements dvr minuteur programmer série sauvegarder direct</string>
     <string name="settings_search_keywords_subtitle_appearance">sous-titre taille couleur position transparence arrière-plan opacité</string>
     <string name="settings_search_keywords_latency">direct tampon latence délai faible latence secondes point du direct</string>
     <string name="settings_search_keywords_proxy">http trafic routage</string>
@@ -776,6 +777,13 @@
     <string name="settings_sources_test_connections_max">Connexions : jusqu’à <xliff:g id="max">%1$d</xliff:g> simultanées</string>
     <string name="settings_sources_test_trial">Compte d’essai</string>
     <string name="settings_sources_test_expiry_none">Aucune date d’expiration communiquée</string>
+    <string name="settings_sources_info">Infos</string>
+    <string name="settings_sources_retest">Retester</string>
+    <string name="settings_sources_probe_title">Tester cette liste ?</string>
+    <string name="settings_sources_probe_warning">Beaucoup de fournisseurs n’indiquent jamais combien de chaînes vous pouvez regarder en même temps ; OwnTV le découvre donc en en ouvrant quelques-unes et en observant lesquelles tiennent. Tout ce qui est en cours de lecture s’arrêtera, et cela peut prendre jusqu’à deux minutes.</string>
+    <string name="settings_sources_probe_running">Recherche du nombre de chaînes autorisées par ce fournisseur… (<xliff:g id="current">%1$d</xliff:g> sur <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV n’a pas pu déterminer combien de chaînes ce fournisseur autorise.</string>
+    <string name="settings_sources_probe_skip">Ignorer</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">PAR DÉFAUT</string>
     <string name="settings_sources_backup">Sauvegarde</string>
@@ -1369,8 +1377,10 @@
     <string name="more_pane_encrypted">Chiffrée</string>
     <string name="settings_backup_location">Emplacement</string>
     <string name="settings_multiview">Multivue</string>
-    <string name="settings_multiview_description">Regardez jusqu\'à quatre chaînes en direct à la fois. Chaque tuile utilise une connexion de votre fournisseur.</string>
+    <string name="settings_multiview_description">Regardez plusieurs chaînes en direct à la fois. Vous décidez du nombre à chaque fois, dans la limite indiquée — chaque vignette utilise une connexion de votre fournisseur.</string>
     <string name="settings_multiview_tiles">Tuiles</string>
+    <string name="settings_multiview_tiles_max">Nombre maximal de vignettes</string>
+    <string name="settings_multiview_tiles_max_value"><xliff:g id="count">%1$d</xliff:g> max.</string>
     <string name="settings_multiview_warning_title">Plus de deux tuiles</string>
     <string name="settings_multiview_warning_description">Trois ou quatre tuiles demandent trois ou quatre connexions à votre fournisseur, et un boîtier TV ne peut décoder qu\'un nombre limité de chaînes à la fois. Si une tuile ne démarre pas, elle en donne la raison et les autres continuent.</string>
     <string name="settings_multiview_keep_two">Garder 2</string>

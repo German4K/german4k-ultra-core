@@ -309,5 +309,6 @@
     <string name="multiview_add_to">マルチビューに追加</string>
     <string name="multiview_added">マルチビュー用に保存 · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>。チャンネルを再生するとグリッドが開きます。</string>
     <string name="multiview_tile_sound_only">音声のみ</string>
+    <string name="multiview_tile_show_picture">映像を表示</string>
     <string name="multiview_sound_only_note">音声のみ — それでもプロバイダーのストリームを1つ使います</string>
 </resources>

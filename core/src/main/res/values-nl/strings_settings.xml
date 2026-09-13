@@ -420,6 +420,7 @@
     <string name="settings_search_keywords_autoplay">automatisch afspelen series seizoen</string>
     <string name="settings_search_keywords_catchup">archief tijdzone afwijking terugkijken externe speler vlc mx</string>
     <string name="settings_search_keywords_video">decoder ondertiteling synchronisatie</string>
+    <string name="settings_search_keywords_recording">opnemen opname opnames dvr timer plannen serie opslaan live</string>
     <string name="settings_search_keywords_subtitle_appearance">ondertiteling grootte kleur positie transparantie achtergrond dekking</string>
     <string name="settings_search_keywords_latency">live buffer vertraging lage vertraging seconden dicht bij livepunt</string>
     <string name="settings_search_keywords_proxy">http verkeer route</string>
@@ -770,6 +771,13 @@
     <string name="settings_sources_test_connections_max">Verbindingen: maximaal <xliff:g id="max">%1$d</xliff:g> tegelijk</string>
     <string name="settings_sources_test_trial">Proefaccount</string>
     <string name="settings_sources_test_expiry_none">Geen vervaldatum opgegeven</string>
+    <string name="settings_sources_info">Info</string>
+    <string name="settings_sources_retest">Opnieuw testen</string>
+    <string name="settings_sources_probe_title">Deze afspeellijst testen?</string>
+    <string name="settings_sources_probe_warning">Veel providers zeggen nooit hoeveel kanalen je tegelijk mag kijken, dus OwnTV zoekt het uit door er een paar te openen en te kijken welke blijven werken. Alles wat nu speelt, stopt en dit kan tot twee minuten duren.</string>
+    <string name="settings_sources_probe_running">Bezig met nagaan hoeveel kanalen deze provider toestaat… (<xliff:g id="current">%1$d</xliff:g> van <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV kon niet achterhalen hoeveel kanalen deze provider toestaat.</string>
+    <string name="settings_sources_probe_skip">Overslaan</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">STANDAARD</string>
     <string name="settings_sources_backup">Back-up</string>
@@ -1347,8 +1355,10 @@
     <string name="more_pane_encrypted">Versleuteld</string>
     <string name="settings_backup_location">Locatie</string>
     <string name="settings_multiview">Multiview</string>
-    <string name="settings_multiview_description">Kijk naar maximaal vier livekanalen tegelijk. Elke tegel gebruikt een verbinding van je provider.</string>
+    <string name="settings_multiview_description">Kijk naar meerdere livekanalen tegelijk. Je bepaalt elke keer hoeveel, tot deze limiet — elke tegel gebruikt een verbinding van je provider.</string>
     <string name="settings_multiview_tiles">Tegels</string>
+    <string name="settings_multiview_tiles_max">Meeste tegels</string>
+    <string name="settings_multiview_tiles_max_value">Max. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Meer dan twee tegels</string>
     <string name="settings_multiview_warning_description">Drie of vier tegels vragen drie of vier verbindingen van je provider, en een tv-kastje kan maar een beperkt aantal kanalen tegelijk decoderen. Start een tegel niet, dan vertelt hij waarom en blijven de andere gewoon spelen.</string>
     <string name="settings_multiview_keep_two">Hou 2</string>

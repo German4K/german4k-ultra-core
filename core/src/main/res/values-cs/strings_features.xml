@@ -211,5 +211,47 @@
     <string name="recording_failed_unavailable">Kanál se nepodařilo přehrát</string>
     <string name="recording_failed_channel_gone">Tento kanál už není ve vašem seznamu</string>
     <string name="recording_failed_unknown">Nenahrálo se</string>
+    <string name="recording_title">Nahrávky</string>
+    <string name="recording_description">Živé vysílání uložené v tomto zařízení.</string>
+    <string name="recording_empty">Zatím nic nenahráno. Otevřete TV průvodce, vyberte pořad a stiskněte Nahrát.</string>
+    <string name="recording_group_now">Právě se nahrává</string>
+    <string name="recording_group_scheduled">Naplánováno</string>
+    <string name="recording_group_completed">Nahráno</string>
+    <string name="recording_group_failed">Nezdařilo se</string>
+    <string name="recording_group_missed">Zmeškáno</string>
+    <string name="recording_record">Nahrát</string>
+    <string name="recording_stop">Zastavit nahrávání</string>
+    <string name="recording_record_series">Nahrávat každé uvedení</string>
+    <string name="recording_stop_series">Přestat nahrávat každé uvedení</string>
+    <string name="recording_from_archive">Nahrát z archivu</string>
+    <string name="recording_scheduled_for">Nahraje se <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Nahrává se <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">Koliduje s <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Nahrávání</string>
+    <string name="settings_recording_reserve">Ponechat jeden stream volný pro sledování</string>
+    <string name="settings_recording_reserve_description">Nahrávání nechá jedno připojení vašeho poskytovatele volné, aby vždy zbylo jedno ke sledování. Vypněte, chcete-li nahrávat na všech.</string>
+    <string name="settings_recording_pre_roll">Začít dříve</string>
+    <string name="settings_recording_pre_roll_description">Začít takto dlouho před uvedeným začátkem, aby průvodce, který jde trochu napřed, nezmeškal úvod.</string>
+    <string name="settings_recording_post_roll">Pokračovat po konci</string>
+    <string name="settings_recording_post_roll_description">Pokračovat takto dlouho po uvedeném konci, aby pořad, který se protáhne, nebyl uříznut.</string>
+    <string name="settings_recording_timers_inexact">Toto zařízení nedovoluje aplikaci OwnTV nastavovat přesné budíky, takže nahrávání může začít o pár minut později. Nahrávky proto začínají dříve.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minuta</item>
+        <item quantity="few"><xliff:g id="count">%1$d</xliff:g> minuty</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> minuty</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minut</item>
+    </plurals>
     <string name="recording_failed_encrypted">Tento kanál je šifrovaný a nelze jej nahrát</string>
+    <string name="recording_failed_metered">Nenahráno přes mobilní data</string>
+    <string name="settings_recording_mobile_data">Nahrávat přes mobilní data</string>
+    <string name="settings_recording_mobile_data_description">Vypnuto: nahrávání, které vyjde mimo Wi-Fi, se přeskočí místo čekání — živý pořad se neopakuje.</string>
+    <string name="settings_record_watching">Nahrát to, co právě sleduji</string>
+    <string name="settings_record_watching_description">Přidá do přehrávače tlačítko nahrávání, které uloží sledovaný kanál. Kanál si stahuje sám, takže po dobu nahrávání zabírá jedno z připojení vašeho poskytovatele, a nahrává dál i po přepnutí kanálu nebo opuštění přehrávače.</string>
+    <string name="settings_record_watching_warning_title">Jen jedno připojení</string>
+    <string name="settings_record_watching_warning_description">Nahrávání si kanál stáhne podruhé, takže zabere další připojení poskytovatele. U účtu, který povoluje jen jedno, bude nahrávání během sledování odmítnuto. Jakmile začne, běží samo — přepněte kanál, opusťte přehrávač a nahrává dál, dokud pořad neskončí nebo jej nezastavíte v Nahrávkách.</string>
+    <string name="settings_record_watching_keep_off">Nechat vypnuté</string>
+    <string name="settings_record_watching_turn_on">Zapnout</string>
+    <string name="player_recording_conflict">Váš poskytovatel povoluje jen jeden stream naráz a nahrávání ho právě používá.</string>
+    <string name="player_keep_watching_stop_recording">Sledovat dál (zastaví nahrávání)</string>
 </resources>

@@ -1,5 +1,6 @@
 package tv.own.owntv.core.download
 
+import android.content.Context
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
@@ -19,7 +20,7 @@ import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.network.HttpClient
 import tv.own.owntv.core.stalker.StalkerClient
 import tv.own.owntv.core.stalker.StreamUrlResolver
-import java.io.File
+import tv.own.owntv.core.storage.MediaTarget
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 
@@ -35,6 +36,8 @@ data class DownloadProgress(val title: String, val downloadedBytes: Long, val to
  * drains whatever rows are QUEUED/RUNNING, one at a time, until none are left.
  */
 class DownloadEngine(
+    /** Only to resolve a stored `filePath` into something writable — a document needs a resolver. */
+    private val context: Context,
     private val downloadDao: DownloadDao,
     private val client: OkHttpClient,
     private val sourceDao: SourceDao,
@@ -107,10 +110,11 @@ class DownloadEngine(
 
     private suspend fun runDownload(id: Long, onProgress: (DownloadProgress) -> Unit) {
         val d = downloadDao.getById(id) ?: return
-        val file = d.filePath?.let { File(it) }
-        // A download folder on removable storage can simply be gone (card pulled, USB unplugged).
+        val target = MediaTarget.of(context, d.filePath)
+        // A download folder on removable storage can simply be gone (card pulled, USB unplugged),
+        // and a folder the user picked through the system picker can have its grant revoked.
         // Fail loudly rather than silently re-homing gigabytes onto internal storage.
-        if (file == null || !ensureWritable(file)) {
+        if (target == null || !target.ensureWritable()) {
             android.util.Log.w(TAG, "download target unavailable id=$id path=${d.filePath}")
             markFailed(id, 0, d.totalBytes)
             return
@@ -118,7 +122,7 @@ class DownloadEngine(
         // Resume whenever a partial file is on disk — including a RUNNING row left behind by a
         // process death — instead of only after an explicit pause. retry() deletes the file first,
         // so a deliberate restart still starts from zero.
-        if (file.exists() && file.length() == 0L) runCatching { file.delete() }
+        if (target.exists() && target.length() == 0L) target.truncate()
         // Attempt loop (plan D-3): a Stalker `create_link` URL dies after ~2-4 h, so a long download
         // can fail mid-stream. Each attempt re-resolves a FRESH URL from the stored cmd and resumes
         // with an HTTP Range from the bytes already written; a server that ignores Range restarts the
@@ -128,7 +132,7 @@ class DownloadEngine(
         while (currentCoroutineContext().isActive) {
             attempt++
             val done = try {
-                attemptDownload(id, d, file, onProgress)
+                attemptDownload(id, d, target, onProgress)
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -137,30 +141,23 @@ class DownloadEngine(
             }
             if (done) return
             if (!currentCoroutineContext().isActive) return // paused/deleted — status already set by caller
-            if (attempt >= MAX_ATTEMPTS) { markFailed(id, file.length(), d.totalBytes); return }
+            if (attempt >= MAX_ATTEMPTS) { markFailed(id, target.length(), d.totalBytes); return }
             delay(RETRY_DELAY_MS * attempt)
         }
-    }
-
-    /** True when the file's directory exists and is writable — i.e. the volume is actually mounted. */
-    private fun ensureWritable(file: File): Boolean {
-        val parent = file.parentFile ?: return false
-        if (!parent.exists()) runCatching { parent.mkdirs() }
-        return parent.isDirectory && parent.canWrite()
     }
 
     /** One download attempt. Returns true when the file completed; false/throws = retryable failure. */
     private suspend fun attemptDownload(
         id: Long,
         d: DownloadEntity,
-        file: File,
+        target: MediaTarget,
         onProgress: (DownloadProgress) -> Unit,
     ): Boolean {
         // Resolve at download-start time, fresh every attempt — the row keeps the stored cmd as the
         // item's identity; only this attempt's HTTP request sees the minted URL. A resolve failure
         // (portal down / bad auth) is a retryable attempt like any HTTP failure.
         val (url, userAgent) = resolveTarget(d)
-        val existing = DownloadResume.resumeOffset(file)
+        val existing = DownloadResume.resumeOffset(target)
         val rb = Request.Builder().url(url).header("User-Agent", userAgent)
         if (existing > 0) rb.header("Range", "bytes=$existing-")
         client.newCall(rb.build()).execute().use { resp ->
@@ -179,7 +176,7 @@ class DownloadEngine(
             downloadDao.updateProgress(id, DownloadStatus.RUNNING, done, total, System.currentTimeMillis())
             onProgress(DownloadProgress(d.title, done, total))
             body.byteStream().use { input ->
-                java.io.FileOutputStream(file, append).use { out ->
+                target.openOutput(append).use { out ->
                     val buf = ByteArray(128 * 1024)
                     var lastTick = 0L
                     while (true) {
@@ -197,7 +194,7 @@ class DownloadEngine(
                     }
                 }
             }
-            val size = file.length()
+            val size = target.length()
             downloadDao.upsert(d.copy(status = DownloadStatus.COMPLETED, downloadedBytes = size, totalBytes = size, updatedAt = System.currentTimeMillis()))
             return true
         }

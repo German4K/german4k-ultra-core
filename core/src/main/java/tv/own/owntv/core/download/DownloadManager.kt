@@ -14,9 +14,10 @@ import tv.own.owntv.core.database.dao.DownloadDao
 import tv.own.owntv.core.database.entity.DownloadEntity
 import tv.own.owntv.core.model.DownloadStatus
 import tv.own.owntv.core.model.MediaType
+import tv.own.owntv.core.storage.MediaRoot
+import tv.own.owntv.core.storage.MediaTarget
 import tv.own.owntv.core.storage.StorageAccess
 import tv.own.owntv.core.settings.SettingsRepository
-import java.io.File
 
 /** Free/total bytes of the volume backing the download root. */
 data class DownloadStorageInfo(val freeBytes: Long, val totalBytes: Long) {
@@ -63,23 +64,37 @@ class DownloadManager(
 
     /** Free/total space of the volume holding the current download root (for the Downloads storage bar). */
     suspend fun storageInfo(): DownloadStorageInfo = withContext(Dispatchers.IO) {
-        val root = runCatching { StorageAccess.resolveRoot(context, settings.downloadRoot.first()) }
-            .getOrNull() ?: StorageAccess.defaultRoot(context)
-        DownloadStorageInfo(freeBytes = root.usableSpace, totalBytes = root.totalSpace)
+        val space = runCatching { MediaRoot.of(context, settings.downloadRoot.first()).space() }
+            .getOrNull() ?: MediaRoot.Path(StorageAccess.defaultRoot(context)).space()
+        DownloadStorageInfo(freeBytes = space.freeBytes, totalBytes = space.totalBytes)
     }
 
-    /** Queue a download into `<root>/<relativeDir>/<fileName>`. */
+    /**
+     * Queue a download into `<root>/<relativeDir>/<fileName>`.
+     *
+     * The destination is made now rather than when the transfer starts, because that is the moment
+     * the row's `filePath` has to name something real — a SAF document has to be created before it
+     * has a URI at all, where a path could simply be written down.
+     *
+     * A root that cannot produce one — an unmounted card, a folder grant the user has withdrawn —
+     * still gets a row, with no path. The engine then fails it in the ordinary way and the user sees
+     * a failed download saying so, which is what happened before this could fail at all. Queuing
+     * nothing would leave the Download button looking broken.
+     */
     fun enqueue(
         profileId: Long, mediaType: MediaType, itemId: Long, title: String, posterUrl: String?,
         streamUrl: String, relativeDir: String, fileName: String,
     ) {
         scope.launch {
-            val root = StorageAccess.resolveRoot(context, settings.downloadRoot.first())
-            val target = File(File(root, relativeDir).apply { mkdirs() }, fileName)
+            val root = MediaRoot.of(context, settings.downloadRoot.first())
+            val target = root.child(relativeDir, fileName)
+            if (target == null) {
+                android.util.Log.w(TAG, "cannot create download target in ${root.stored} for $fileName")
+            }
             downloadDao.upsert(
                 DownloadEntity(
                     profileId = profileId, mediaType = mediaType, itemId = itemId, title = title,
-                    posterUrl = posterUrl, streamUrl = streamUrl, filePath = target.absolutePath,
+                    posterUrl = posterUrl, streamUrl = streamUrl, filePath = target?.stored,
                     status = DownloadStatus.QUEUED,
                 ),
             )
@@ -93,7 +108,10 @@ class DownloadManager(
             // streaming into the unlinked file and "completes" a download that no longer exists.
             engine.suspendTransfer(download.id)
             try {
-                download.filePath?.let { runCatching { File(it).delete() } } // start fresh
+                // Start fresh. Truncated rather than deleted: dropping a SAF document would throw
+                // away the entry the user's folder grant points at, and the retry would then have
+                // nowhere to write at all. For an ordinary file the two are the same thing.
+                MediaTarget.of(context, download.filePath)?.truncate()
                 downloadDao.updateProgress(download.id, DownloadStatus.QUEUED, 0, download.totalBytes, System.currentTimeMillis())
             } finally {
                 engine.release(download.id)
@@ -110,7 +128,7 @@ class DownloadManager(
             engine.suspendTransfer(download.id)
             try {
                 val d = downloadDao.getById(download.id) ?: download
-                val bytes = DownloadResume.bytesOnDisk(d.filePath?.let(::File), d.downloadedBytes)
+                val bytes = DownloadResume.bytesOnDisk(MediaTarget.of(context, d.filePath), d.downloadedBytes)
                 downloadDao.updateProgress(d.id, DownloadStatus.PAUSED, bytes, d.totalBytes, System.currentTimeMillis())
             } finally {
                 engine.release(download.id)
@@ -122,7 +140,7 @@ class DownloadManager(
     fun resume(download: DownloadEntity) {
         scope.launch {
             val d = downloadDao.getById(download.id) ?: download
-            val bytes = DownloadResume.bytesOnDisk(d.filePath?.let(::File), d.downloadedBytes)
+            val bytes = DownloadResume.bytesOnDisk(MediaTarget.of(context, d.filePath), d.downloadedBytes)
             downloadDao.updateProgress(d.id, DownloadStatus.QUEUED, bytes, d.totalBytes, System.currentTimeMillis())
             kick()
         }
@@ -132,7 +150,7 @@ class DownloadManager(
         scope.launch {
             engine.suspendTransfer(download.id)
             try {
-                download.filePath?.let { runCatching { File(it).delete() } }
+                MediaTarget.of(context, download.filePath)?.delete()
                 downloadDao.delete(download)
             } finally {
                 engine.release(download.id)
@@ -144,5 +162,9 @@ class DownloadManager(
     private fun kick() {
         engine.markQueued()
         scope.launch { DownloadWorker.kick(context, settings.downloadsWifiOnlyNow()) }
+    }
+
+    private companion object {
+        const val TAG = "DownloadManager"
     }
 }

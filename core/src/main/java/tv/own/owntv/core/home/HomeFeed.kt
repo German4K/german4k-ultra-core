@@ -462,14 +462,12 @@ class HomeFeedReader(
         val windowEnd = windowStart + SLICE_WINDOW_MS
         if (channels.isEmpty()) return GuideSliceState(now = now, windowStart = windowStart, windowEnd = windowEnd)
 
-        val sourceIds = (activeIds.toList() + guide.guideSourceIds()).distinct()
         return GuideSliceState(
             channels = channels,
             programmes = guide.slice(
                 channels = channels,
                 cust = customize.observe(profileId, MediaType.LIVE).first(),
                 globalShiftMinutes = settings.epgOffsetMinutes.first(),
-                sourceIds = sourceIds,
                 from = windowStart,
                 to = windowEnd,
             ),

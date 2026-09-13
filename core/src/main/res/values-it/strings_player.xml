@@ -327,5 +327,6 @@
     <string name="multiview_add_to">Aggiungi alla Multivista</string>
     <string name="multiview_added">Tenuto per la Multivista · <xliff:g id="count">%1$d</xliff:g> di <xliff:g id="total">%2$d</xliff:g>. Avvia un canale per aprire la griglia.</string>
     <string name="multiview_tile_sound_only">Solo audio</string>
+    <string name="multiview_tile_show_picture">Mostra l’immagine</string>
     <string name="multiview_sound_only_note">Solo audio: occupa comunque un flusso del tuo fornitore</string>
 </resources>

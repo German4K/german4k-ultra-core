@@ -336,5 +336,6 @@
     <string name="multiview_add_to">Přidat do Multiview</string>
     <string name="multiview_added">Uloženo pro Multiview · <xliff:g id="count">%1$d</xliff:g> ze <xliff:g id="total">%2$d</xliff:g>. Spusťte kanál a mřížka se otevře.</string>
     <string name="multiview_tile_sound_only">Jen zvuk</string>
+    <string name="multiview_tile_show_picture">Zobrazit obraz</string>
     <string name="multiview_sound_only_note">Jen zvuk — stále zabírá jeden stream poskytovatele</string>
 </resources>

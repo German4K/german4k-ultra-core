@@ -318,5 +318,6 @@
     <string name="multiview_add_to">Aan Multiview toevoegen</string>
     <string name="multiview_added">Bewaard voor Multiview · <xliff:g id="count">%1$d</xliff:g> van <xliff:g id="total">%2$d</xliff:g>. Start een kanaal om het raster te openen.</string>
     <string name="multiview_tile_sound_only">Alleen geluid</string>
+    <string name="multiview_tile_show_picture">Beeld tonen</string>
     <string name="multiview_sound_only_note">Alleen geluid — gebruikt nog steeds een stream van je provider</string>
 </resources>

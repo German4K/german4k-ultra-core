@@ -327,5 +327,6 @@
     <string name="multiview_add_to">Ajouter à la Multivue</string>
     <string name="multiview_added">Gardée pour la Multivue · <xliff:g id="count">%1$d</xliff:g> sur <xliff:g id="total">%2$d</xliff:g>. Lancez une chaîne pour ouvrir la grille.</string>
     <string name="multiview_tile_sound_only">Son seul</string>
+    <string name="multiview_tile_show_picture">Afficher l’image</string>
     <string name="multiview_sound_only_note">Son seul — occupe quand même un flux de votre fournisseur</string>
 </resources>

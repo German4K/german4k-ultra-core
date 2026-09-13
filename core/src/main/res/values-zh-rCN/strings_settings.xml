@@ -418,6 +418,7 @@
     <string name="settings_search_keywords_autoplay">自动播放 剧集 季</string>
     <string name="settings_search_keywords_catchup">存档 时区 时差 回看 外部播放器 vlc mx</string>
     <string name="settings_search_keywords_video">解码器 字幕 同步</string>
+    <string name="settings_search_keywords_recording">录制 录像 录影 定时 预约 剧集 保存 直播</string>
     <string name="settings_search_keywords_subtitle_appearance">字幕 大小 颜色 色彩 位置 透明度 背景 不透明度</string>
     <string name="settings_search_keywords_latency">直播 缓冲 延迟 低延迟 秒 接近直播最新位置</string>
     <string name="settings_search_keywords_proxy">http 流量 路由</string>
@@ -764,6 +765,13 @@
     <string name="settings_sources_test_connections_max">连接：最多可同时使用 <xliff:g id="max">%1$d</xliff:g> 个</string>
     <string name="settings_sources_test_trial">试用账号</string>
     <string name="settings_sources_test_expiry_none">未提供到期日期</string>
+    <string name="settings_sources_info">信息</string>
+    <string name="settings_sources_retest">重新测试</string>
+    <string name="settings_sources_probe_title">测试此播放列表？</string>
+    <string name="settings_sources_probe_warning">许多运营商从不说明你可以同时观看多少个频道，因此 OwnTV 会打开几个频道，看哪些能够持续播放，以此来确定。当前正在播放的内容会停止，此过程最多需要两分钟。</string>
+    <string name="settings_sources_probe_running">正在检测此运营商允许的频道数量…（<xliff:g id="current">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g>）</string>
+    <string name="settings_sources_probe_unknown">OwnTV 无法确定此运营商允许多少个频道。</string>
+    <string name="settings_sources_probe_skip">跳过</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">默认</string>
     <string name="settings_sources_backup">备份</string>
@@ -1325,8 +1333,10 @@
     <string name="more_pane_encrypted">已加密</string>
     <string name="settings_backup_location">位置</string>
     <string name="settings_multiview">多画面</string>
-    <string name="settings_multiview_description">最多同时观看四个直播频道。每个画面占用一个供应商连接。</string>
+    <string name="settings_multiview_description">同时观看多个直播频道。每次由你决定几个，最多不超过此上限——每个画面占用运营商的一个连接。</string>
     <string name="settings_multiview_tiles">画面数</string>
+    <string name="settings_multiview_tiles_max">最多画面数</string>
+    <string name="settings_multiview_tiles_max_value">最多 <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">超过两个画面</string>
     <string name="settings_multiview_warning_description">三或四个画面需要供应商提供三或四个连接，电视设备同时能解码的频道数量也有限。某个画面无法启动时会说明原因，其他画面照常播放。</string>
     <string name="settings_multiview_keep_two">保持 2 个</string>

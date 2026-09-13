@@ -219,6 +219,9 @@
     <string name="content_storage_internal">Intern lagring</string>
     <string name="content_storage_removable">Flyttbar lagring</string>
     <string name="content_storage_app">Applagring (ingen behörighet krävs)</string>
+    <string name="content_storage_choose_folder">Välj en annan mapp…</string>
+    <string name="content_storage_chosen_folder">Vald mapp</string>
+    <string name="content_storage_folder_lost">Den mappen är inte längre tillgänglig. Välj den igen eller välj en annan.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> har laddats ned</string>
     <string name="content_downloads_failure_message">Nedladdningen misslyckades — det gick inte att nå källan. Tryck på Försök igen.</string>
     <string name="content_downloads_queued">I kö…</string>

@@ -115,6 +115,8 @@
     <string name="sync_error_secure">安全连接失败——服务器证书可能无效。</string>
     <string name="sync_error_malformed_guide">服务器返回的节目指南数据格式有误。部分数据可能仍已成功加载——请重试，或检查电子节目指南（EPG）URL。</string>
     <string name="common_items_per_skip">每次跳过的项目数</string>
+    <string name="common_minutes">分钟</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">隐藏</string>

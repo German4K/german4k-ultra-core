@@ -424,6 +424,7 @@
     <string name="settings_search_keywords_autoplay">automatické přehrávání seriály řada</string>
     <string name="settings_search_keywords_catchup">archiv časové pásmo posun TV archiv externí přehrávač vlc mx</string>
     <string name="settings_search_keywords_video">dekodér titulky synchronizace</string>
+    <string name="settings_search_keywords_recording">nahrávání nahrávka dvr časovač plán seriál uložit živě</string>
     <string name="settings_search_keywords_subtitle_appearance">titulek velikost barva poloha průhlednost pozadí krytí</string>
     <string name="settings_search_keywords_latency">živé vysílání vyrovnávací paměť latence zpoždění nízká latence sekundy blízko aktuálního bodu živého vysílání</string>
     <string name="settings_search_keywords_proxy">http provoz směrování</string>
@@ -782,6 +783,13 @@
     <string name="settings_sources_test_connections_max">Připojení: až <xliff:g id="max">%1$d</xliff:g> najednou</string>
     <string name="settings_sources_test_trial">Zkušební účet</string>
     <string name="settings_sources_test_expiry_none">Datum vypršení nebylo uvedeno</string>
+    <string name="settings_sources_info">Informace</string>
+    <string name="settings_sources_retest">Otestovat znovu</string>
+    <string name="settings_sources_probe_title">Otestovat tento seznam?</string>
+    <string name="settings_sources_probe_warning">Mnozí poskytovatelé nikdy neuvedou, kolik kanálů můžete sledovat najednou, a tak to OwnTV zjistí tím, že jich několik otevře a sleduje, které vydrží. Vše, co právě běží, se zastaví a může to trvat až dvě minuty.</string>
+    <string name="settings_sources_probe_running">Zjišťuje se, kolik kanálů tento poskytovatel dovolí… (<xliff:g id="current">%1$d</xliff:g> z <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV nedokázal zjistit, kolik kanálů tento poskytovatel dovolí.</string>
+    <string name="settings_sources_probe_skip">Přeskočit</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">VÝCHOZÍ</string>
     <string name="settings_sources_backup">Záloha</string>
@@ -1391,8 +1399,10 @@
     <string name="more_pane_encrypted">Zašifrováno</string>
     <string name="settings_backup_location">Umístění</string>
     <string name="settings_multiview">Multiview</string>
-    <string name="settings_multiview_description">Sledujte až čtyři živé kanály najednou. Každá dlaždice zabere jedno připojení u poskytovatele.</string>
+    <string name="settings_multiview_description">Sledujte několik živých kanálů najednou. Kolik jich bude, určujete pokaždé sami, nejvýše však tolik — každá dlaždice využívá jedno připojení poskytovatele.</string>
     <string name="settings_multiview_tiles">Dlaždice</string>
+    <string name="settings_multiview_tiles_max">Nejvíce dlaždic</string>
+    <string name="settings_multiview_tiles_max_value">Max. <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Více než dvě dlaždice</string>
     <string name="settings_multiview_warning_description">Tři nebo čtyři dlaždice potřebují tři nebo čtyři připojení u poskytovatele a televizní zařízení zvládne dekódovat jen omezený počet kanálů najednou. Pokud se dlaždice nespustí, řekne proč, a ostatní hrají dál.</string>
     <string name="settings_multiview_keep_two">Nechat 2</string>

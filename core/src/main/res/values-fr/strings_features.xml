@@ -203,5 +203,46 @@
     <string name="recording_failed_unavailable">La chaîne n’a pas démarré</string>
     <string name="recording_failed_channel_gone">Cette chaîne ne figure plus dans votre liste</string>
     <string name="recording_failed_unknown">Rien n’a été enregistré</string>
+    <string name="recording_title">Enregistrements</string>
+    <string name="recording_description">La télévision en direct enregistrée sur cet appareil.</string>
+    <string name="recording_empty">Rien d’enregistré pour l’instant. Ouvrez le guide, choisissez un programme et appuyez sur Enregistrer.</string>
+    <string name="recording_group_now">Enregistrement en cours</string>
+    <string name="recording_group_scheduled">Programmé</string>
+    <string name="recording_group_completed">Enregistré</string>
+    <string name="recording_group_failed">Échec</string>
+    <string name="recording_group_missed">Manqué</string>
+    <string name="recording_record">Enregistrer</string>
+    <string name="recording_stop">Arrêter l’enregistrement</string>
+    <string name="recording_record_series">Enregistrer chaque diffusion</string>
+    <string name="recording_stop_series">Ne plus enregistrer chaque diffusion</string>
+    <string name="recording_from_archive">Enregistrer depuis le replay</string>
+    <string name="recording_scheduled_for">Enregistrera <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Enregistrement de <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">En conflit avec <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Enregistrement</string>
+    <string name="settings_recording_reserve">Garder une connexion libre pour regarder</string>
+    <string name="settings_recording_reserve_description">Les enregistrements laissent une connexion de votre fournisseur libre, pour qu’il en reste toujours une pour regarder. Désactivez pour enregistrer sur toutes les connexions.</string>
+    <string name="settings_recording_pre_roll">Commencer en avance</string>
+    <string name="settings_recording_pre_roll_description">Commencer ce temps avant l’heure annoncée, pour qu’un guide un peu en avance ne rate pas le début.</string>
+    <string name="settings_recording_post_roll">Continuer après la fin</string>
+    <string name="settings_recording_post_roll_description">Continuer ce temps après l’heure de fin annoncée, pour qu’un programme qui déborde ne soit pas coupé.</string>
+    <string name="settings_recording_timers_inexact">Cet appareil n’autorise pas OwnTV à programmer des alarmes exactes, donc un enregistrement peut démarrer avec quelques minutes de retard. Les enregistrements commencent plus tôt pour compenser.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minute</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> minutes</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minutes</item>
+    </plurals>
     <string name="recording_failed_encrypted">Cette chaîne est chiffrée et ne peut pas être enregistrée</string>
+    <string name="recording_failed_metered">Non enregistré sur les données mobiles</string>
+    <string name="settings_recording_mobile_data">Enregistrer sur les données mobiles</string>
+    <string name="settings_recording_mobile_data_description">Désactivé : un enregistrement prévu hors Wi-Fi est ignoré au lieu d’attendre — une émission ne repasse pas.</string>
+    <string name="settings_record_watching">Enregistrer ce que je regarde</string>
+    <string name="settings_record_watching_description">Ajoute au lecteur un bouton d’enregistrement qui sauvegarde la chaîne que vous regardez. Il récupère la chaîne lui-même : il occupe donc l’une des connexions de votre fournisseur pendant ce temps, et continue d’enregistrer si vous changez de chaîne ou quittez le lecteur.</string>
+    <string name="settings_record_watching_warning_title">Une seule connexion</string>
+    <string name="settings_record_watching_warning_description">L’enregistrement récupère la chaîne une seconde fois et occupe donc une autre connexion de votre fournisseur. Sur un compte qui n’en autorise qu’une, l’enregistrement est refusé pendant que vous regardez. Une fois lancé il continue seul : changez de chaîne, quittez le lecteur, il poursuit jusqu’à la fin de l’émission ou jusqu’à ce que vous l’arrêtiez depuis Enregistrements.</string>
+    <string name="settings_record_watching_keep_off">Laisser désactivé</string>
+    <string name="settings_record_watching_turn_on">Activer</string>
+    <string name="player_recording_conflict">Votre fournisseur n’autorise qu’un flux à la fois, et l’enregistrement l’utilise.</string>
+    <string name="player_keep_watching_stop_recording">Continuer à regarder (arrête l’enregistrement)</string>
 </resources>

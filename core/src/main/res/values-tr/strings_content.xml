@@ -219,6 +219,9 @@
     <string name="content_storage_internal">Dahili depolama</string>
     <string name="content_storage_removable">Çıkarılabilir depolama</string>
     <string name="content_storage_app">Uygulama depolama alanı (izin gerekmez)</string>
+    <string name="content_storage_choose_folder">Başka bir klasör seç…</string>
+    <string name="content_storage_chosen_folder">Seçilen klasör</string>
+    <string name="content_storage_folder_lost">Bu klasör artık kullanılamıyor. Yeniden seçin ya da başka bir klasör seçin.</string>
     <string name="content_downloads_completed"><xliff:g id="size">%1$s</xliff:g> indirildi</string>
     <string name="content_downloads_failure_message">İndirme başarısız oldu — kaynağa ulaşılamadı. Yeniden Dene\'ye dokunun.</string>
     <string name="content_downloads_queued">Kuyrukta…</string>

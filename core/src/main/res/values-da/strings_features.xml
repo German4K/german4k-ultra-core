@@ -195,5 +195,45 @@
     <string name="recording_failed_unavailable">Kanalen kunne ikke afspilles</string>
     <string name="recording_failed_channel_gone">Kanalen findes ikke længere på din playliste</string>
     <string name="recording_failed_unknown">Der blev ikke optaget</string>
+    <string name="recording_title">Optagelser</string>
+    <string name="recording_description">Live-tv gemt på denne enhed.</string>
+    <string name="recording_empty">Der er ikke optaget noget endnu. Åbn tv-guiden, vælg et program, og tryk på Optag.</string>
+    <string name="recording_group_now">Optager nu</string>
+    <string name="recording_group_scheduled">Planlagt</string>
+    <string name="recording_group_completed">Optaget</string>
+    <string name="recording_group_failed">Mislykkedes</string>
+    <string name="recording_group_missed">Gik glip af</string>
+    <string name="recording_record">Optag</string>
+    <string name="recording_stop">Stop optagelsen</string>
+    <string name="recording_record_series">Optag alle visninger</string>
+    <string name="recording_stop_series">Stop med at optage alle visninger</string>
+    <string name="recording_from_archive">Optag fra arkivet</string>
+    <string name="recording_scheduled_for">Optager <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Optager <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">Overlapper med <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Optagelse</string>
+    <string name="settings_recording_reserve">Hold én stream fri til at se på</string>
+    <string name="settings_recording_reserve_description">Optagelser lader én af din udbyders forbindelser være fri, så der altid er én at se på. Slå fra for at optage på alle forbindelser.</string>
+    <string name="settings_recording_pre_roll">Start tidligere</string>
+    <string name="settings_recording_pre_roll_description">Begynd så lang tid før det angivne starttidspunkt, så en guide der går lidt forud stadig når begyndelsen.</string>
+    <string name="settings_recording_post_roll">Fortsæt efter slutningen</string>
+    <string name="settings_recording_post_roll_description">Fortsæt så lang tid efter det angivne sluttidspunkt, så et program der trækker ud ikke bliver klippet af.</string>
+    <string name="settings_recording_timers_inexact">Denne enhed tillader ikke OwnTV at sætte præcise alarmer, så en optagelse kan starte et par minutter for sent. Optagelser starter tidligere for at opveje det.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minut</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minutter</item>
+    </plurals>
     <string name="recording_failed_encrypted">Denne kanal er krypteret og kan ikke optages</string>
+    <string name="recording_failed_metered">Ikke optaget på mobildata</string>
+    <string name="settings_recording_mobile_data">Optag på mobildata</string>
+    <string name="settings_recording_mobile_data_description">Fra: en optagelse, der falder uden for Wi-Fi, springes over i stedet for at vente — et direkte program kommer ikke igen.</string>
+    <string name="settings_record_watching">Optag det, jeg ser</string>
+    <string name="settings_record_watching_description">Sætter en optageknap i afspilleren, som gemmer den kanal, du ser. Den henter kanalen selv, så den bruger en af din udbyders forbindelser imens, og den optager videre, når du skifter kanal eller forlader afspilleren.</string>
+    <string name="settings_record_watching_warning_title">Kun én forbindelse</string>
+    <string name="settings_record_watching_warning_description">Optagelsen henter kanalen en gang til og bruger derfor endnu en af din udbyders forbindelser. På en konto med kun én afvises optagelsen, mens du ser med. Når den først er i gang, kører den selv — skift kanal, forlad afspilleren, og den fortsætter, til programmet slutter, eller du stopper den under Optagelser.</string>
+    <string name="settings_record_watching_keep_off">Lad være slået fra</string>
+    <string name="settings_record_watching_turn_on">Slå til</string>
+    <string name="player_recording_conflict">Din udbyder tillader kun én stream ad gangen, og optagelsen bruger den.</string>
+    <string name="player_keep_watching_stop_recording">Bliv ved med at se (stopper optagelsen)</string>
 </resources>

@@ -5,6 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import tv.own.owntv.core.model.MediaType
 
 /**
  * The one thing this phase must not do is move anybody's files: every path here has to come out
@@ -20,6 +21,26 @@ class MediaFoldersTest {
         assertEquals("TV", MediaFolders.TV)
         assertEquals("Movies", MediaFolders.MOVIES)
         assertEquals("Series", MediaFolders.SERIES)
+    }
+
+    /**
+     * The bug this pins: a download of an episode is filed as EPISODE, never SERIES, and both apps
+     * had independently written `mediaType == SERIES` for their Series tab. An episode downloaded,
+     * reported progress, wrote itself to the right folder, and appeared in no list at all.
+     */
+    @Test
+    fun `an episode belongs under Series, which is what both apps got wrong`() {
+        assertEquals(MediaFolders.SERIES, MediaFolders.folderFor(MediaType.EPISODE))
+        assertEquals(MediaFolders.SERIES, MediaFolders.folderFor(MediaType.SERIES))
+        assertEquals(MediaFolders.MOVIES, MediaFolders.folderFor(MediaType.MOVIE))
+        assertEquals(MediaFolders.TV, MediaFolders.folderFor(MediaType.LIVE))
+    }
+
+    @Test
+    fun `every media type has a folder, so a new one cannot be silently unlisted`() {
+        MediaType.entries.forEach { type ->
+            assertTrue("$type has no folder", MediaFolders.folderFor(type).isNotBlank())
+        }
     }
 
     @Test
@@ -47,6 +68,43 @@ class MediaFoldersTest {
         )
         // A film sits directly in Movies, so its trail is that one step.
         assertEquals("Movies", MediaFolders.crumb("/sdcard/OwnTV/Movies/Interstellar.mp4", " › "))
+    }
+
+    /**
+     * The same row, for a file in a folder the user picked through the system picker. It has to read
+     * identically — a download does not change what it is because of where it was saved.
+     */
+    @Test
+    fun `a document URI produces the same crumb as the path it describes`() {
+        assertEquals(
+            "Series › The Wire › Season 3",
+            MediaFolders.crumb(
+                "content://com.android.externalstorage.documents/tree/primary%3AOwnTV/document/" +
+                    "primary%3AOwnTV%2FSeries%2FThe%20Wire%2FSeason%203%2Fep1.mkv",
+                " › ",
+            ),
+        )
+        assertEquals(
+            "Movies",
+            MediaFolders.crumb(
+                "content://com.android.externalstorage.documents/tree/primary%3AOwnTV/document/" +
+                    "primary%3AOwnTV%2FMovies%2FInterstellar.mp4",
+                " › ",
+            ),
+        )
+    }
+
+    @Test
+    fun `a document on a card names the folders, never the volume`() {
+        // The volume ("1B0A-4C2D") sits before the colon and says nothing about where to look.
+        assertEquals(
+            "TV › BBC One",
+            MediaFolders.crumb(
+                "content://com.android.externalstorage.documents/tree/1B0A-4C2D%3AOwnTV/document/" +
+                    "1B0A-4C2D%3AOwnTV%2FTV%2FBBC%20One%2Fnews.ts",
+                " › ",
+            ),
+        )
     }
 
     @Test

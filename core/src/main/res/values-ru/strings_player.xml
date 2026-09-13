@@ -336,5 +336,6 @@
     <string name="multiview_add_to">Добавить в мультиэкран</string>
     <string name="multiview_added">Сохранено для мультиэкрана · <xliff:g id="count">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g>. Включите канал, чтобы открыть сетку.</string>
     <string name="multiview_tile_sound_only">Только звук</string>
+    <string name="multiview_tile_show_picture">Показать изображение</string>
     <string name="multiview_sound_only_note">Только звук — всё равно занимает один поток провайдера</string>
 </resources>

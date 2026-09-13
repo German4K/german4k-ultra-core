@@ -203,5 +203,46 @@
     <string name="recording_failed_unavailable">O canal não foi reproduzido</string>
     <string name="recording_failed_channel_gone">Esse canal não está mais na sua lista</string>
     <string name="recording_failed_unknown">Não foi gravado</string>
+    <string name="recording_title">Gravações</string>
+    <string name="recording_description">TV ao vivo salva neste dispositivo.</string>
+    <string name="recording_empty">Nada gravado ainda. Abra o guia de TV, escolha um programa e toque em Gravar.</string>
+    <string name="recording_group_now">Gravando agora</string>
+    <string name="recording_group_scheduled">Agendada</string>
+    <string name="recording_group_completed">Gravado</string>
+    <string name="recording_group_failed">Falhou</string>
+    <string name="recording_group_missed">Perdida</string>
+    <string name="recording_record">Gravar</string>
+    <string name="recording_stop">Parar a gravação</string>
+    <string name="recording_record_series">Gravar todas as exibições</string>
+    <string name="recording_stop_series">Parar de gravar todas as exibições</string>
+    <string name="recording_from_archive">Gravar do acervo</string>
+    <string name="recording_scheduled_for">Vai gravar <xliff:g id="time">%1$s</xliff:g></string>
+    <string name="recording_badge">REC</string>
+    <string name="recording_pill_line">Gravando <xliff:g id="title">%1$s</xliff:g></string>
+    <string name="recording_clash_with">Conflita com <xliff:g id="programme">%1$s</xliff:g></string>
+    <string name="recording_settings_group">Gravação</string>
+    <string name="settings_recording_reserve">Manter uma conexão livre para assistir</string>
+    <string name="settings_recording_reserve_description">As gravações deixam uma das conexões do seu provedor livre, para que sempre haja uma para assistir. Desative para gravar em todas.</string>
+    <string name="settings_recording_pre_roll">Começar antes</string>
+    <string name="settings_recording_pre_roll_description">Começar este tempo antes do horário indicado, para que um guia um pouco adiantado não perca o início.</string>
+    <string name="settings_recording_post_roll">Continuar após o fim</string>
+    <string name="settings_recording_post_roll_description">Continuar este tempo depois do horário de término indicado, para que um programa que se estenda não seja cortado.</string>
+    <string name="settings_recording_timers_inexact">Este dispositivo não permite que o OwnTV defina alarmes exatos, então uma gravação pode começar alguns minutos atrasada. As gravações começam mais cedo para compensar.</string>
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minuto</item>
+        <item quantity="many"><xliff:g id="count">%1$d</xliff:g> minutos</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minutos</item>
+    </plurals>
     <string name="recording_failed_encrypted">Este canal é criptografado e não pode ser gravado</string>
+    <string name="recording_failed_metered">Não gravado usando dados móveis</string>
+    <string name="settings_recording_mobile_data">Gravar usando dados móveis</string>
+    <string name="settings_recording_mobile_data_description">Desativado: uma gravação que cai fora do Wi-Fi é ignorada em vez de esperar — um programa ao vivo não passa de novo.</string>
+    <string name="settings_record_watching">Gravar o que estou assistindo</string>
+    <string name="settings_record_watching_description">Adiciona ao player um botão de gravação que salva o canal que você está assistindo. Ele busca o canal por conta própria, então usa uma das conexões do seu provedor enquanto roda, e continua gravando depois que você troca de canal ou sai do player.</string>
+    <string name="settings_record_watching_warning_title">Apenas uma conexão</string>
+    <string name="settings_record_watching_warning_description">A gravação busca o canal uma segunda vez, então usa outra das conexões do seu provedor. Em uma conta que permite apenas uma, a gravação é recusada enquanto você assiste. Depois de iniciada ela segue sozinha — troque de canal, saia do player, e ela continua até o programa acabar ou você pará-la em Gravações.</string>
+    <string name="settings_record_watching_keep_off">Deixar desativado</string>
+    <string name="settings_record_watching_turn_on">Ativar</string>
+    <string name="player_recording_conflict">Seu provedor permite apenas um fluxo por vez, e a gravação está usando ele.</string>
+    <string name="player_keep_watching_stop_recording">Continuar assistindo (para a gravação)</string>
 </resources>

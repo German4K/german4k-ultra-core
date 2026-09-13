@@ -103,6 +103,20 @@ open class StalkerAuthManager(private val client: StalkerClient) {
         return sessionFor(creds)
     }
 
+    /**
+     * `account_info` for an open session, or an empty map.
+     *
+     * A second call, because `get_profile` does not carry the subscription end date on every portal
+     * and on some carries nothing usable at all: one real portal answers 162 profile fields whose
+     * only date-shaped one is `expire_billing_date`, set to `0000-00-00 00:00:00`, while
+     * `account_info` returns the date the user sees on the provider's own site. Optional by
+     * contract — a portal that refuses this is not a portal that is broken.
+     */
+    suspend fun accountInfo(session: StalkerSession, creds: StalkerCredentials): Map<String, String> =
+        runCatching { client.getAccountInfo(session.apiBase, creds.mac, session.token, creds.userAgent) }
+            .onFailure { Log.i(TAG, "account_info unavailable sourceId=${creds.sourceId}: ${it.message}") }
+            .getOrDefault(emptyMap())
+
     private suspend fun openSession(creds: StalkerCredentials): StalkerSession {
         val startedAt = SystemClock.elapsedRealtime()
         val handshake = client.resolveHandshake(creds.portalUrl, creds.mac, creds.userAgent)

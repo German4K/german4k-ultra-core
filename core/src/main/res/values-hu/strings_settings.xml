@@ -472,6 +472,7 @@
     <string name="settings_search_keywords_autoplay">automatikus lejátszás sorozat évad</string>
     <string name="settings_search_keywords_catchup">archívum időzóna eltolás visszanézés külső lejátszó vlc mx</string>
     <string name="settings_search_keywords_video">dekóder feliratok szinkron</string>
+    <string name="settings_search_keywords_recording">felvétel rögzítés dvr időzítő ütemezés sorozat mentés élő</string>
     <string name="settings_search_keywords_subtitle_appearance">felirat méret szín pozíció átlátszóság háttér átlátszatlanság</string>
     <string name="settings_search_keywords_latency">élő puffer késleltetés csúszás alacsony késleltetés másodperc élő adás széle</string>
     <string name="settings_search_keywords_proxy">http forgalom útvonal</string>
@@ -799,6 +800,13 @@ Válaszd a Kiegyensúlyozott beállítást, ha egy csatorna megbízhatatlanná v
     <string name="settings_sources_test_connections_max">Kapcsolatok: egyszerre legfeljebb <xliff:g id="max">%1$d</xliff:g></string>
     <string name="settings_sources_test_trial">Próbafiók</string>
     <string name="settings_sources_test_expiry_none">Nincs megadva lejárati dátum</string>
+    <string name="settings_sources_info">Információ</string>
+    <string name="settings_sources_retest">Újratesztelés</string>
+    <string name="settings_sources_probe_title">Teszteli ezt a lejátszási listát?</string>
+    <string name="settings_sources_probe_warning">Sok szolgáltató soha nem árulja el, hány csatornát nézhet egyszerre, ezért az OwnTV úgy deríti ki, hogy megnyit néhányat, és megnézi, melyik marad életben. Minden, ami most szól, le fog állni, és ez akár két percig is eltarthat.</string>
+    <string name="settings_sources_probe_running">Annak ellenőrzése, hány csatornát enged ez a szolgáltató… (<xliff:g id="current">%1$d</xliff:g>/<xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">Az OwnTV nem tudta megállapítani, hány csatornát enged ez a szolgáltató.</string>
+    <string name="settings_sources_probe_skip">Kihagyás</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">ALAPÉRTELMEZETT</string>
     <string name="settings_sources_backup">Mentés</string>
@@ -1324,8 +1332,10 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
     <string name="more_pane_encrypted">Titkosítva</string>
     <string name="settings_backup_location">Hely</string>
     <string name="settings_multiview">Többnézet</string>
-    <string name="settings_multiview_description">Nézz egyszerre akár négy élő csatornát. Minden csempe egy szolgáltatói kapcsolatot használ.</string>
+    <string name="settings_multiview_description">Nézzen több élő csatornát egyszerre. Hogy hányat, azt minden alkalommal Ön dönti el, legfeljebb eddig a határig – minden mező a szolgáltató egy kapcsolatát használja.</string>
     <string name="settings_multiview_tiles">Csempék</string>
+    <string name="settings_multiview_tiles_max">Legfeljebb ennyi mező</string>
+    <string name="settings_multiview_tiles_max_value">Legfeljebb <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Kettőnél több csempe</string>
     <string name="settings_multiview_warning_description">Három vagy négy csempéhez három vagy négy kapcsolat kell a szolgáltatónál, és egy tévékészülék is csak korlátozott számú csatornát tud egyszerre dekódolni. Ha egy csempe nem indul el, megmondja, miért, a többi pedig tovább megy.</string>
     <string name="settings_multiview_keep_two">Maradjon 2</string>

@@ -318,5 +318,6 @@
     <string name="multiview_add_to">Legg til i Multivisning</string>
     <string name="multiview_added">Lagret til Multivisning · <xliff:g id="count">%1$d</xliff:g> av <xliff:g id="total">%2$d</xliff:g>. Start en kanal for å åpne rutenettet.</string>
     <string name="multiview_tile_sound_only">Bare lyd</string>
+    <string name="multiview_tile_show_picture">Vis bildet</string>
     <string name="multiview_sound_only_note">Bare lyd — bruker fortsatt en av leverandørens strømmer</string>
 </resources>

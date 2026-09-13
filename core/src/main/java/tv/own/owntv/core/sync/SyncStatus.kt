@@ -31,7 +31,19 @@ data class ImportStage(
     val liveActive: Boolean = false,
     val moviesActive: Boolean = false,
     val seriesActive: Boolean = false,
+    /**
+     * Which stream the connection measurement is opening, and how many it may open, or 0/0 when it
+     * is not running.
+     *
+     * Carried on the ordinary progress object so the measurement appears on whatever screen is
+     * already watching a sync — it runs *before* a single row is written and can take two minutes,
+     * which without a word on screen is indistinguishable from the app having hung.
+     */
+    val measuringStream: Int = 0,
+    val measuringOf: Int = 0,
 ) {
+    val measuringConnections: Boolean get() = measuringOf > 0
+
     val totalProcessed: Int
         get() = liveProcessed + moviesProcessed + seriesProcessed
 }

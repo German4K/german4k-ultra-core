@@ -424,6 +424,7 @@
     <string name="settings_search_keywords_autoplay">автовоспроизведение сериал сезон</string>
     <string name="settings_search_keywords_catchup">архив часовой пояс смещение catchup внешний плеер vlc mx</string>
     <string name="settings_search_keywords_video">декодер субтитры синхронизация</string>
+    <string name="settings_search_keywords_recording">запись записать записи dvr таймер расписание сериал сохранить прямой эфир</string>
     <string name="settings_search_keywords_subtitle_appearance">субтитры размер цвет положение прозрачность фон непрозрачность</string>
     <string name="settings_search_keywords_latency">прямой эфир буфер задержка низкая задержка секунды текущая позиция эфира</string>
     <string name="settings_search_keywords_proxy">HTTP трафик маршрут</string>
@@ -782,6 +783,13 @@
     <string name="settings_sources_test_connections_max">Подключения: до <xliff:g id="max">%1$d</xliff:g> одновременно</string>
     <string name="settings_sources_test_trial">Пробная учётная запись</string>
     <string name="settings_sources_test_expiry_none">Дата окончания не указана</string>
+    <string name="settings_sources_info">Сведения</string>
+    <string name="settings_sources_retest">Проверить снова</string>
+    <string name="settings_sources_probe_title">Проверить этот плейлист?</string>
+    <string name="settings_sources_probe_warning">Многие провайдеры не сообщают, сколько каналов можно смотреть одновременно, поэтому OwnTV выясняет это, открывая несколько каналов и наблюдая, какие из них продолжают работать. Всё, что сейчас воспроизводится, остановится, и это может занять до двух минут.</string>
+    <string name="settings_sources_probe_running">Проверяем, сколько каналов разрешает этот провайдер… (<xliff:g id="current">%1$d</xliff:g> из <xliff:g id="total">%2$d</xliff:g>)</string>
+    <string name="settings_sources_probe_unknown">OwnTV не смог определить, сколько каналов разрешает этот провайдер.</string>
+    <string name="settings_sources_probe_skip">Пропустить</string>
     <string name="settings_sources_auto_refresh">⟳ <xliff:g id="mode">%1$s</xliff:g></string>
     <string name="settings_sources_default">ПО УМОЛЧАНИЮ</string>
     <string name="settings_sources_backup">Резервная копия</string>
@@ -1391,8 +1399,10 @@
     <string name="more_pane_encrypted">Зашифрована</string>
     <string name="settings_backup_location">Расположение</string>
     <string name="settings_multiview">Мультиэкран</string>
-    <string name="settings_multiview_description">Смотрите до четырёх каналов одновременно. Каждая плитка занимает одно подключение провайдера.</string>
+    <string name="settings_multiview_description">Смотрите несколько прямых эфиров одновременно. Сколько именно — вы решаете каждый раз, но не больше этого числа: каждое окно занимает одно подключение провайдера.</string>
     <string name="settings_multiview_tiles">Плитки</string>
+    <string name="settings_multiview_tiles_max">Максимум окон</string>
+    <string name="settings_multiview_tiles_max_value">Не больше <xliff:g id="count">%1$d</xliff:g></string>
     <string name="settings_multiview_warning_title">Больше двух плиток</string>
     <string name="settings_multiview_warning_description">Три или четыре плитки требуют трёх или четырёх подключений у провайдера, а ТВ-приставка декодирует лишь ограниченное число каналов сразу. Если плитка не запустится, она назовёт причину, а остальные продолжат играть.</string>
     <string name="settings_multiview_keep_two">Оставить 2</string>

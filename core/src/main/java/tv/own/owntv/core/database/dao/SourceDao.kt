@@ -53,6 +53,17 @@ interface SourceDao {
     @Query("UPDATE sources SET maxConnections = :maxConnections WHERE id = :id")
     suspend fun updateMaxConnections(id: Long, maxConnections: Int)
 
+    /**
+     * Record a *measured* limit and when it was measured.
+     *
+     * Separate from [updateMaxConnections], which is the provider's own published number, because the
+     * timestamp is what stops the measurement running again on every sync — and because a measurement
+     * that concluded nothing still has to be remembered as "we looked", or it would be repeated
+     * forever on exactly the playlists it cannot answer for.
+     */
+    @Query("UPDATE sources SET maxConnections = :maxConnections, maxConnectionsProbedAt = :probedAt WHERE id = :id")
+    suspend fun updateProbedConnections(id: Long, maxConnections: Int, probedAt: Long)
+
     @Query("UPDATE sources SET preferHls = :preferHls WHERE id = :id")
     suspend fun updatePreferHls(id: Long, preferHls: Boolean)
 

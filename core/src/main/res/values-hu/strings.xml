@@ -165,6 +165,8 @@
     <string name="sync_error_malformed_guide">A kiszolgálóról érkező műsorújság-adatok hibásak voltak. Egy részük így is betöltődhetett — kérjük, próbáld újra, vagy ellenőrizd az EPG URL-t.</string>
 
     <string name="common_items_per_skip">Elemek ugrásonként</string>
+    <string name="common_minutes">Perc</string>
+    <string name="common_size_mb"><xliff:g id="size">%1$s</xliff:g> MB</string>
     <string name="common_plus">+</string>
     <string name="common_minus">–</string>
     <string name="common_hide">Elrejtés</string>

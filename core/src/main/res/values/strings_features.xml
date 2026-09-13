@@ -338,7 +338,85 @@
     <string name="recording_failed_channel_gone">That channel is no longer in your playlist</string>
     <!-- Translators: Shown on a recording that failed for a reason the app could not identify. -->
     <string name="recording_failed_unknown">It did not record</string>
+
+    <!-- Translators: Screen title for the Recordings screen, and the name of the list of recorded live TV programmes. -->
+    <string name="recording_title">Recordings</string>
+    <!-- Translators: One-line description under the Recordings screen title. -->
+    <string name="recording_description">Live TV saved on this device.</string>
+    <!-- Translators: Empty-state message on the Recordings screen, directing the user to the TV guide. -->
+    <string name="recording_empty">Nothing recorded yet. Open the TV guide, pick a programme and press Record.</string>
+    <!-- Translators: Section heading for recordings that are being written right now. -->
+    <string name="recording_group_now">Recording now</string>
+    <!-- Translators: Section heading for recordings set to happen later. -->
+    <string name="recording_group_scheduled">Scheduled</string>
+    <!-- Translators: Section heading for recordings that finished and can be watched. -->
+    <string name="recording_group_completed">Recorded</string>
+    <!-- Translators: Section heading for recordings that started but stopped before the end. -->
+    <string name="recording_group_failed">Failed</string>
+    <!-- Translators: Section heading for recordings that never started at all, so the programme was not captured. -->
+    <string name="recording_group_missed">Missed</string>
+    <!-- Translators: Button that starts recording a programme, or schedules it. -->
+    <string name="recording_record">Record</string>
+    <!-- Translators: Button that ends a recording that is currently running. Whatever was captured is kept. -->
+    <string name="recording_stop">Stop recording</string>
+    <!-- Translators: Button that records every future showing of this programme title on this channel. -->
+    <string name="recording_record_series">Record every showing</string>
+    <!-- Translators: Button that cancels the standing "record every showing" instruction. -->
+    <string name="recording_stop_series">Stop recording every showing</string>
+    <!-- Translators: Button that records a programme which has already been broadcast, from the provider's catch-up archive. -->
+    <string name="recording_from_archive">Record from catch-up</string>
+    <!-- Translators: Status line on a scheduled recording. "time" is a formatted date and time, e.g. "Sat 21:00". -->
+    <string name="recording_scheduled_for">Will record <xliff:g id="time">%1$s</xliff:g></string>
+    <!-- Translators: Short badge shown over the video while a recording is running. Keep it very short; many languages keep the English "REC". -->
+    <string name="recording_badge">REC</string>
+    <!-- Translators: Line in the status pill while a programme is being recorded. "title" is the programme name. -->
+    <string name="recording_pill_line">Recording <xliff:g id="title">%1$s</xliff:g></string>
+    <!-- Translators: Warning shown when a new recording would overlap one already scheduled, and the provider has no spare connection. "programme" is the other recording's title. -->
+    <string name="recording_clash_with">Clashes with <xliff:g id="programme">%1$s</xliff:g></string>
+    <!-- Translators: Heading of the Recording group on the settings screen. -->
+    <string name="recording_settings_group">Recording</string>
+    <!-- Translators: Settings toggle. A TV provider allows a limited number of simultaneous streams; this keeps one of them unused so the user can always watch something. -->
+    <string name="settings_recording_reserve">Keep one stream free for watching</string>
+    <!-- Translators: Description under the "keep one stream free" toggle. -->
+    <string name="settings_recording_reserve_description">Recordings leave one of your provider\'s connections free, so there is always one to watch on. Turn this off to record on every connection.</string>
+    <!-- Translators: Settings row for how many minutes before a programme starts recording should begin. -->
+    <string name="settings_recording_pre_roll">Start early</string>
+    <!-- Translators: Description under the "start early" setting. TV guide times are often slightly wrong. -->
+    <string name="settings_recording_pre_roll_description">Begin this long before the listed start time, so a guide that runs a little early still catches the opening.</string>
+    <!-- Translators: Settings row for how many minutes after a programme ends recording should continue. -->
+    <string name="settings_recording_post_roll">Keep going after the end</string>
+    <!-- Translators: Description under the "keep going after the end" setting. -->
+    <string name="settings_recording_post_roll_description">Carry on this long past the listed end time, so a programme that overruns is not cut off.</string>
+    <!-- Translators: Warning on the recording settings screen when Android will not let the app set exact alarms, so recordings may begin late. -->
+    <string name="settings_recording_timers_inexact">This device does not allow OwnTV to set exact alarms, so a recording may begin a few minutes late. Recordings start earlier to make up for it.</string>
+    <!-- Translators: A number of minutes, used as the value of the "start early" and "keep going after the end" settings. -->
+    <plurals name="recording_minutes">
+        <item quantity="one"><xliff:g id="count">%1$d</xliff:g> minute</item>
+        <item quantity="other"><xliff:g id="count">%1$d</xliff:g> minutes</item>
+    </plurals>
     <!-- Translators: Shown on a recording that was refused because the channel is delivered as encrypted HLS, which the recorder cannot turn into a playable file. -->
     <string name="recording_failed_encrypted">This channel is scrambled and cannot be recorded</string>
+    <!-- Translators: Shown on a recording that was skipped because the device was on a metered (mobile data) connection and the user has turned off recording over mobile data. -->
+    <string name="recording_failed_metered">Not recorded on mobile data</string>
+    <!-- Translators: Settings toggle on a phone: may a recording run when the device is on mobile data rather than Wi-Fi. -->
+    <string name="settings_recording_mobile_data">Record on mobile data</string>
+    <!-- Translators: Description under the "record on mobile data" toggle. Explains that, unlike a download, a recording is skipped rather than postponed, because a live broadcast does not come round again. -->
+    <string name="settings_recording_mobile_data_description">Off means a recording that falls due away from Wi-Fi is skipped rather than made to wait — a live programme does not come round again.</string>
+    <!-- Translators: Settings toggle. Adds a record button to the video player that records the channel already playing, using the connection already open, instead of opening a second one. -->
+    <string name="settings_record_watching">Record what I’m watching</string>
+    <!-- Translators: Description under the "record what I am watching" toggle. -->
+    <string name="settings_record_watching_description">Adds a record button to the player that saves the channel you are watching. It fetches the channel itself, so it uses one of your provider’s connections while it runs, and it keeps recording after you change channel or leave the player.</string>
+    <!-- Translators: Title of the dialog shown when turning on "record what I am watching", explaining the trade-off before it is accepted. -->
+    <string name="settings_record_watching_warning_title">One connection only</string>
+    <!-- Translators: Body of that dialog. Explains that this mode needs no second provider connection, but stops when the channel changes and cannot be scheduled. -->
+    <string name="settings_record_watching_warning_description">Recording fetches the channel a second time, so it uses another of your provider’s connections. On an account that allows only one, the recording is refused while you are watching. Once started it keeps going on its own — change channel, leave the player, and it carries on until the programme ends or you stop it from Recordings.</string>
+    <!-- Translators: Button that dismisses the dialog and leaves the setting off. -->
+    <string name="settings_record_watching_keep_off">Keep off</string>
+    <!-- Translators: Button that accepts the trade-off and turns the setting on. -->
+    <string name="settings_record_watching_turn_on">Turn it on</string>
+    <!-- Translators: Shown on the player's failure screen when playback stopped because a recording is using the provider's only allowed stream. -->
+    <string name="player_recording_conflict">Your provider allows one stream at a time, and the recording is using it.</string>
+    <!-- Translators: Button on that failure screen. Stops the recording so the picture can come back. Keep the parenthetical: it is the consequence the user needs before pressing. -->
+    <string name="player_keep_watching_stop_recording">Keep watching (stops the recording)</string>
 
 </resources>

@@ -8,12 +8,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tv.own.owntv.core.database.dao.ChannelDao
+import tv.own.owntv.core.database.dao.EpgDao
 import tv.own.owntv.core.database.dao.RecordingDao
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.EpgProgrammeEntity
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.epg.CatchupUrl
 import tv.own.owntv.core.database.entity.RecordingEntity
+import tv.own.owntv.core.database.entity.RecordingRuleEntity
 import tv.own.owntv.core.live.StreamGrant
 import tv.own.owntv.core.live.StreamPurpose
 import tv.own.owntv.core.live.connectionBudget
@@ -23,9 +26,9 @@ import tv.own.owntv.core.model.RecordingFailure
 import tv.own.owntv.core.model.RecordingStatus
 import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.core.storage.MediaFolders
-import tv.own.owntv.core.storage.StorageAccess
+import tv.own.owntv.core.storage.MediaRoot
+import tv.own.owntv.core.storage.MediaTarget
 import tv.own.owntv.core.parser.XtreamClient
-import java.io.File
 import java.util.TimeZone
 
 /**
@@ -45,6 +48,8 @@ class RecordingManager(
     private val streams: OpenStreamRegistry,
     private val engine: RecordingEngine,
     private val scheduler: RecordingScheduler,
+    private val channelDao: ChannelDao,
+    private val epgDao: EpgDao,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -87,10 +92,10 @@ class RecordingManager(
 
     /** Free/total space of the volume the recordings land on — the same volume downloads use. */
     suspend fun storageInfo(): RecordingStorageInfo = withContext(Dispatchers.IO) {
-        val root = recordingsRoot()
+        val space = recordingsRoot().space()
         RecordingStorageInfo(
-            freeBytes = root.usableSpace,
-            totalBytes = root.totalSpace,
+            freeBytes = space.freeBytes,
+            totalBytes = space.totalBytes,
             reserveBytes = RecordingRules.RESERVE_BYTES,
         )
     }
@@ -133,11 +138,11 @@ class RecordingManager(
         ) {
             return@withContext existing
         }
-        val root = File(recordingsRoot(), MediaFolders.TV).apply { mkdirs() }
-        val file = File(root, RecordingRules.fileName(recording.channelName, recording.title, recording.startMs))
+        val target = recordingsRoot()
+            .child(MediaFolders.TV, RecordingRules.fileName(recording.channelName, recording.title, recording.startMs))
         val row = recording.copy(
             id = existing?.id ?: 0,
-            filePath = file.absolutePath,
+            filePath = target?.stored,
             status = RecordingStatus.SCHEDULED,
             failure = RecordingFailure.NONE,
             bytes = 0,
@@ -205,6 +210,131 @@ class RecordingManager(
         )
     }
 
+    // --- Series recording: "record every showing of this title on this channel" (D7) -------------
+
+    /** This profile's standing rules, for the screens that list and cancel them. */
+    fun observeRules(profileId: Long): Flow<List<RecordingRuleEntity>> = recordingDao.observeRules(profileId)
+
+    /** The rule covering this programme on this channel, or null when there is none. */
+    suspend fun ruleFor(profileId: Long, channelId: Long, title: String): RecordingRuleEntity? =
+        recordingDao.findRule(profileId, channelId, RecordingRuleMatcher.fold(title))
+
+    /**
+     * Start recording every showing of [title] on [channel], and schedule the ones the guide already
+     * knows about.
+     *
+     * Scoped to one channel on purpose: "every showing anywhere" across a twenty-thousand-channel
+     * playlist is a different and much worse feature, and nobody asked for it.
+     */
+    suspend fun addSeriesRule(
+        profileId: Long,
+        channel: ChannelEntity,
+        title: String,
+    ): RecordingRuleEntity = withContext(Dispatchers.IO) {
+        val key = RecordingRuleMatcher.fold(title)
+        val existing = recordingDao.findRule(profileId, channel.id, key)
+        val rule = (existing ?: RecordingRuleEntity(
+            profileId = profileId,
+            sourceId = channel.sourceId,
+            channelId = channel.id,
+            channelName = channel.name,
+            epgChannelId = channel.epgChannelId,
+            title = title,
+            titleKey = key,
+        )).copy(enabled = true)
+        val id = recordingDao.upsertRule(rule)
+        val saved = rule.copy(id = if (id > 0) id else rule.id)
+        applyRules()
+        saved
+    }
+
+    /**
+     * Stop recording every showing, and cancel the showings this rule had queued up.
+     *
+     * Anything already recorded — or being recorded right now — is left alone. The user asked to stop
+     * recording *future* showings, not to throw away last week's.
+     */
+    suspend fun removeSeriesRule(rule: RecordingRuleEntity) = withContext(Dispatchers.IO) {
+        val pending = RecordingRuleMatcher.pendingFor(rule.id, recordingDao.scheduled())
+        pending.forEach { row ->
+            scheduler.cancel(row.id)
+            recordingDao.updateProgress(
+                id = row.id,
+                status = RecordingStatus.CANCELLED,
+                failure = RecordingFailure.NONE,
+                bytes = 0,
+                filePath = null,
+                startedAt = null,
+                endedAt = System.currentTimeMillis(),
+                timestamp = System.currentTimeMillis(),
+            )
+        }
+        recordingDao.deleteRule(rule)
+    }
+
+    /**
+     * Walk every enabled rule and schedule the showings the guide now knows about that are not
+     * already spoken for.
+     *
+     * **Called after a guide refresh**, which is what makes a standing rule a standing rule: a
+     * programme three weeks out does not exist in the database until the EPG that mentions it is
+     * fetched. It is idempotent by construction — `showingsToSchedule` excludes anything already in
+     * the table, and `schedule` finds an existing row rather than adding a second.
+     *
+     * Clashes are **not** resolved here. A clash is decided when the recording is due, by the
+     * connection budget, and reported as a MISSED row with a reason (D10) — deciding it now, against
+     * a guide that may still change, would refuse recordings that would have been fine.
+     */
+    suspend fun applyRules() = withContext(Dispatchers.IO) {
+        val now = System.currentTimeMillis()
+        val rules = recordingDao.enabledRules()
+        if (rules.isEmpty()) return@withContext
+        for (rule in rules) {
+            val channel = channelDao.getById(rule.channelId) ?: continue
+            val epgKey = rule.epgChannelId ?: channel.epgChannelId ?: continue
+            // No source filter: a series rule matches on the channel's guide, and that guide routinely
+            // arrives from a separate EPG feed rather than the playlist the channel came from. Pinning
+            // it to the channel's own source made a rule miss showings that were sitting in the table.
+            val programmes = epgDao.programmesForChannel(
+                epgKey = epgKey,
+                from = now,
+                to = now + RULE_HORIZON_MS,
+            )
+            val showings = RecordingRuleMatcher.showingsToSchedule(
+                titleKey = rule.titleKey,
+                channelId = rule.channelId,
+                programmes = programmes,
+                // Every row, not just the scheduled ones: a showing already recorded, failed or
+                // cancelled by hand must not come back on the next refresh.
+                existing = recordingDao.observeForProfile(rule.profileId).first(),
+                now = now,
+            )
+            for (programme in showings) {
+                val window = windowFor(programme.startMs, programme.stopMs)
+                schedule(
+                    RecordingEntity(
+                        profileId = rule.profileId,
+                        sourceId = channel.sourceId,
+                        channelId = channel.id,
+                        channelName = channel.name,
+                        channelIconUrl = channel.logoUrl,
+                        epgChannelId = channel.epgChannelId,
+                        streamUrl = channel.streamUrl,
+                        httpHeaders = channel.httpHeaders,
+                        title = programme.title,
+                        description = programme.description,
+                        programmeStartMs = programme.startMs,
+                        programmeStopMs = programme.stopMs,
+                        startMs = window.first,
+                        stopMs = window.last,
+                        ruleId = rule.id,
+                    ),
+                )
+            }
+        }
+    }
+
+
     /**
      * Stop a recording that is running, keeping what it has captured — a `.ts` is playable to
      * whatever point it reached, so this is a finished short recording and not a failure.
@@ -214,7 +344,7 @@ class RecordingManager(
             engine.stop(recording.id)
             try {
                 val row = recordingDao.getById(recording.id) ?: return@launch
-                val bytes = row.filePath?.let { File(it) }?.takeIf { it.exists() }?.length() ?: 0L
+                val bytes = MediaTarget.of(context, row.filePath)?.length() ?: 0L
                 val (status, failure) = RecordingRules.outcomeOf(bytes, RecordingFailure.NONE)
                 recordingDao.updateProgress(
                     id = row.id,
@@ -255,7 +385,7 @@ class RecordingManager(
             scheduler.cancel(recording.id)
             engine.stop(recording.id)
             try {
-                recording.filePath?.let { runCatching { File(it).delete() } }
+                MediaTarget.of(context, recording.filePath)?.delete()
                 recordingDao.delete(recording)
             } finally {
                 engine.release(recording.id)
@@ -263,15 +393,49 @@ class RecordingManager(
         }
     }
 
-    private suspend fun recordingsRoot(): File =
-        StorageAccess.resolveRoot(context, settings.downloadRoot.first())
-            .also { MediaFolders.ensureIn(it) }
+    /**
+     * Point a finished recording at a file the user has moved it to, and let go of the old one.
+     *
+     * This is Export's second half: the bytes are already at [movedTo], and until the row agrees the
+     * user has two copies and the app is tracking the wrong one.
+     *
+     * Uses `updateProgress` and never `upsert`, for the same reason [RecordingEngine] does: the
+     * table's unique index on `(profileId, channelId, programmeStartMs)` makes a REPLACE delete this
+     * row and insert a new one with a different id, orphaning anything still holding the old one.
+     * Everything but the location is written back exactly as it was.
+     */
+    suspend fun relocate(recording: RecordingEntity, movedTo: String): Boolean =
+        withContext(Dispatchers.IO) {
+            val previous = MediaTarget.of(context, recording.filePath)
+            recordingDao.updateProgress(
+                id = recording.id,
+                status = recording.status,
+                failure = recording.failure,
+                bytes = recording.bytes,
+                filePath = movedTo,
+                startedAt = recording.startedAt,
+                endedAt = recording.endedAt,
+                timestamp = System.currentTimeMillis(),
+            )
+            previous?.delete()
+            true
+        }
+
+    private suspend fun recordingsRoot(): MediaRoot =
+        MediaRoot.of(context, settings.downloadRoot.first()).also { it.ensureFolders() }
 
     private fun kick() {
         engine.markQueued()
         scope.launch { RecordingWorker.kick(context) }
     }
 }
+
+/**
+ * How far ahead a series rule looks. Two weeks is more guide than most providers publish, and a rule
+ * is re-applied on every refresh — so looking further would only schedule rows for programmes whose
+ * times are still going to change.
+ */
+private const val RULE_HORIZON_MS = 14L * 24 * 60 * 60 * 1000
 
 /** Free/total space on the volume recordings are written to, and the floor they stop at (D8). */
 data class RecordingStorageInfo(val freeBytes: Long, val totalBytes: Long, val reserveBytes: Long) {

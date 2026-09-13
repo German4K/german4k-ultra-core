@@ -134,12 +134,17 @@ class BackupV17ScopingTest {
             "userAgent", "epgUrl", "syncLive", "syncMovies", "syncSeries", "importPortalEpg",
             "preferHls", "livePrerollSecs", "hlsSupported", "createdAt", "lastSyncAt",
             "liveEnginePreference", "liveLatencyMode", "liveLatencyCustomSecs",
+            // v22. `maxConnections` used to be excluded on the grounds that the Xtream sync
+            // re-derives it — true for Xtream, and false for everything else. Since it can now also
+            // be *measured*, by opening real streams for up to two minutes with playback stopped,
+            // dropping it would make a restored playlist forget an expensive answer and never take
+            // it again: the automatic measurement runs only on a playlist's first sync, and a
+            // restored playlist has already had one. It describes the account, not the device, so it
+            // is the same wherever it is restored. The merge prefers whatever this device measured
+            // itself.
+            "maxConnections", "maxConnectionsProbedAt",
         )
-        // Intentionally re-derived rather than carried. `maxConnections` is the provider's own
-        // answer, written only by the Xtream sync (XtreamClient → SourceDao.setMaxConnections), so
-        // the first sync after a restore fills it in — and a stale value copied from another device
-        // would mis-describe the account until then.
-        val deliberatelyExcluded = setOf("maxConnections")
+        val deliberatelyExcluded = emptySet<String>()
         // Not a field of the entity at all: the Compose compiler adds `$stable` as a static, and
         // Kotlin does not flag it synthetic.
         val compilerGenerated = setOf("\$stable")

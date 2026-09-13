@@ -219,6 +219,10 @@ dependencies {
     // delegates to has to live here too. A phone app simply never calls those methods.
     implementation(libs.androidx.tvprovider)
 
+    // Storage Access Framework. A phone bound for Play cannot hold MANAGE_EXTERNAL_STORAGE, so a
+    // download folder of the user's own choosing is a SAF tree rather than a path — see MediaTarget.
+    implementation(libs.androidx.documentfile)
+
     // Networking
     implementation(libs.okhttp)
     implementation(libs.zxing.core) // QR generation for the Remote (companion) add-source flow

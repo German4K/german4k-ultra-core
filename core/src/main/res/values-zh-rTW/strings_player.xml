@@ -309,5 +309,6 @@
     <string name="multiview_add_to">加入多畫面</string>
     <string name="multiview_added">已為多畫面保留 · <xliff:g id="count">%1$d</xliff:g> / <xliff:g id="total">%2$d</xliff:g>。播放任一頻道即可開啟格線。</string>
     <string name="multiview_tile_sound_only">僅聲音</string>
+    <string name="multiview_tile_show_picture">顯示畫面</string>
     <string name="multiview_sound_only_note">僅聲音 — 仍會占用供應商的一路串流</string>
 </resources>
