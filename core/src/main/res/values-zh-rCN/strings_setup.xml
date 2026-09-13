@@ -29,6 +29,9 @@
     <string name="setup_welcome_to">欢迎使用</string>
     <string name="setup_welcome_tagline">专属于你的 IPTV 播放器。</string>
     <string name="setup_get_started">开始使用</string>
+    <string name="setup_display_size_title">调整到看着舒服的大小</string>
+    <string name="setup_display_size_description">设置界面和文字的大小。两者之后都可以在设置中更改。</string>
+    <string name="setup_display_size_preview">如果坐在座位上能轻松读出这句话，大小就合适了。</string>
     <string name="setup_before_you_start">开始之前</string>
     <string name="setup_disclaimer">OwnTV 仅是一款媒体播放器。其中不包含任何频道、播放列表或内容。你有责任自行添加具有合法访问权限的 Xtream、M3U 或 Stalker 源。</string>
     <string name="setup_i_understand">我明白了</string>

@@ -29,6 +29,9 @@
     <string name="setup_welcome_to">ÜDVÖZÖL AZ</string>
     <string name="setup_welcome_tagline">A saját IPTV-lejátszód.</string>
     <string name="setup_get_started">Kezdés</string>
+    <string name="setup_display_size_title">Állítsd kényelmes olvasásra</string>
+    <string name="setup_display_size_description">Add meg a felület és a szöveg méretét. Mindkettőt később is módosíthatod a Beállításokban.</string>
+    <string name="setup_display_size_preview">Ha ezt a helyedről könnyen elolvasod, a méret megfelelő.</string>
     <string name="setup_before_you_start">Mielőtt elkezdenéd</string>
     <string name="setup_disclaimer">Az OwnTV kizárólag médialejátszó. Nem tartalmaz csatornákat, lejátszási listákat vagy tartalmat. A saját, legálisan elérhető Xtream-, M3U- vagy Stalker-forrásaid hozzáadása a te felelősséged.</string>
     <string name="setup_i_understand">Megértettem</string>

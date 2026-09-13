@@ -29,6 +29,9 @@
     <string name="setup_welcome_to">BEM-VINDO AO</string>
     <string name="setup_welcome_tagline">Seu próprio reprodutor de IPTV.</string>
     <string name="setup_get_started">Começar</string>
+    <string name="setup_display_size_title">Deixe confortável para ler</string>
+    <string name="setup_display_size_description">Defina o tamanho da interface e do texto. Você pode mudar os dois depois em Configurações.</string>
+    <string name="setup_display_size_preview">Se você lê isto sem esforço do seu lugar, o tamanho está certo.</string>
     <string name="setup_before_you_start">Antes de começar</string>
     <string name="setup_disclaimer">O OwnTV é apenas um reprodutor de mídia. Ele não inclui canais, listas de reprodução nem conteúdo. Você é responsável por adicionar suas próprias fontes Xtream, M3U ou Stalker às quais tenha acesso legal.</string>
     <string name="setup_i_understand">Entendi</string>

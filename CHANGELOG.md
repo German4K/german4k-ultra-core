@@ -3,6 +3,23 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.39 — 2026-09-13
+
+### Words for a first-run step that sets how big everything is
+
+A community request (TV #179) pointed out something neither app had noticed about itself: the
+settings that make the interface bigger can only be found *after* setup, on screens the user has
+already struggled to read. Both apps now offer interface zoom and text size as a step of the first
+run, and this is the text it is written in — a heading, a line of explanation, and a sample sentence
+that resizes as the user adjusts, so the size is judged against real text rather than a number.
+
+Three strings, `setup_display_size_title`, `_description` and `_preview`, in all 25 packaged
+locales. Everything else the step shows was already translated and is reused as-is: the zoom and
+font-size labels, the step buttons, Reset, Back and Continue, and the low-memory zoom warning — the
+step offers zoom's whole range and gates the same crossing Settings gates. No new settings and no
+storage change: it writes the same `uiZoomPercent` and font size the Settings screens have always
+written.
+
 ## core-1.0.38 — 2026-09-13
 
 ### One category order, instead of two that had to agree

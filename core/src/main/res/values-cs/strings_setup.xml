@@ -29,6 +29,9 @@
     <string name="setup_welcome_to">VÍTEJTE V</string>
     <string name="setup_welcome_tagline">Váš vlastní přehrávač IPTV.</string>
     <string name="setup_get_started">Začít</string>
+    <string name="setup_display_size_title">Nastav si pohodlné čtení</string>
+    <string name="setup_display_size_description">Zvol velikost rozhraní a jeho textu. Obojí můžeš později změnit v Nastavení.</string>
+    <string name="setup_display_size_preview">Pokud to ze svého místa přečteš bez námahy, je velikost správná.</string>
     <string name="setup_before_you_start">Než začnete</string>
     <string name="setup_disclaimer">OwnTV je pouze přehrávač médií. Neobsahuje žádné kanály, playlisty ani obsah. Za přidání vlastních legálně dostupných zdrojů Xtream, M3U nebo Stalker odpovídáte vy.</string>
     <string name="setup_i_understand">Rozumím</string>

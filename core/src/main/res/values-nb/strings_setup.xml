@@ -29,6 +29,9 @@
     <string name="setup_welcome_to">VELKOMMEN TIL</string>
     <string name="setup_welcome_tagline">Din egen IPTV-avspiller.</string>
     <string name="setup_get_started">Kom i gang</string>
+    <string name="setup_display_size_title">Gjør det behagelig å lese</string>
+    <string name="setup_display_size_description">Velg størrelsen på grensesnittet og teksten. Du kan endre begge senere i Innstillinger.</string>
+    <string name="setup_display_size_preview">Hvis du leser dette uten anstrengelse fra plassen din, er størrelsen riktig.</string>
     <string name="setup_before_you_start">Før du begynner</string>
     <string name="setup_disclaimer">OwnTV er bare en medieavspiller. Appen inneholder ingen kanaler, spillelister eller noe innhold. Du er selv ansvarlig for å legge til egne Xtream-, M3U- eller Stalker-kilder som du har lovlig tilgang til.</string>
     <string name="setup_i_understand">Jeg forstår</string>

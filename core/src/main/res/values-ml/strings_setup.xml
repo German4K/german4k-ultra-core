@@ -29,6 +29,9 @@
     <string name="setup_welcome_to">സ്വാഗതം</string>
     <string name="setup_welcome_tagline">നിങ്ങളുടെ സ്വന്തം IPTV പ്ലെയർ.</string>
     <string name="setup_get_started">ആരംഭിക്കുക</string>
+    <string name="setup_display_size_title">വായിക്കാൻ സൗകര്യപ്രദമാക്കുക</string>
+    <string name="setup_display_size_description">ഇന്റർഫേസിന്റെയും അതിലെ എഴുത്തിന്റെയും വലുപ്പം ക്രമീകരിക്കുക. രണ്ടും പിന്നീട് ക്രമീകരണങ്ങളിൽ മാറ്റാം.</string>
+    <string name="setup_display_size_preview">ഇരിക്കുന്നിടത്തുനിന്ന് ഇത് എളുപ്പത്തിൽ വായിക്കാമെങ്കിൽ വലുപ്പം ശരിയാണ്.</string>
     <string name="setup_before_you_start">ആരംഭിക്കുന്നതിന് മുമ്പ്</string>
     <string name="setup_disclaimer">OwnTV ഒരു മീഡിയ പ്ലെയർ മാത്രമാണ്. ഇതിൽ ചാനലുകളോ പ്ലേലിസ്റ്റുകളോ ഉള്ളടക്കമോ ഉൾപ്പെടുന്നില്ല. നിങ്ങൾക്ക് നിയമപരമായി ആക്‌സസ് ചെയ്യാനാകുന്ന സ്വന്തം Xtream, M3U, അല്ലെങ്കിൽ Stalker ഉറവിടങ്ങൾ ചേർക്കേണ്ട ഉത്തരവാദിത്തം നിങ്ങൾക്കാണ്.</string>
     <string name="setup_i_understand">ഞാൻ മനസ്സിലാക്കുന്നു</string>

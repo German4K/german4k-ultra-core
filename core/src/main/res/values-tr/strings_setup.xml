@@ -29,6 +29,9 @@
     <string name="setup_welcome_to">HOŞ GELDİNİZ</string>
     <string name="setup_welcome_tagline">Size ait IPTV oynatıcısı.</string>
     <string name="setup_get_started">Başlayın</string>
+    <string name="setup_display_size_title">Rahat okunacak boyutu seçin</string>
+    <string name="setup_display_size_description">Arayüzün ve yazısının boyutunu ayarlayın. İkisini de sonradan Ayarlar\'dan değiştirebilirsiniz.</string>
+    <string name="setup_display_size_preview">Bunu oturduğunuz yerden rahatça okuyabiliyorsanız boyut doğrudur.</string>
     <string name="setup_before_you_start">Başlamadan önce</string>
     <string name="setup_disclaimer">OwnTV yalnızca bir medya oynatıcısıdır. Hiçbir kanal, oynatma listesi veya içerik içermez. Yasal olarak erişebildiğiniz kendi Xtream, M3U veya Stalker kaynaklarınızı eklemek sizin sorumluluğunuzdadır.</string>
     <string name="setup_i_understand">Anladım</string>

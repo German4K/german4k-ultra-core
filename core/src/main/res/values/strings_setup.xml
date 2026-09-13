@@ -60,6 +60,12 @@
     <string name="setup_welcome_tagline">Your own IPTV player.</string>
     <!-- Translators: Primary action button on the first-run welcome screen. -->
     <string name="setup_get_started">Get Started</string>
+    <!-- Translators: Heading on the first-run step where the user sets interface and text size before the rest of setup. -->
+    <string name="setup_display_size_title">Make it comfortable to read</string>
+    <!-- Translators: Description under the heading on the first-run display-size step. "Settings" refers to the app's Settings screen. -->
+    <string name="setup_display_size_description">Set how big the interface and its text are. You can change both later in Settings.</string>
+    <!-- Translators: Sample sentence shown on the first-run display-size step; it scales live so the user can judge readability from the sofa. -->
+    <string name="setup_display_size_preview">If you can read this easily from your seat, the size is right.</string>
     <!-- Translators: Heading on the first-run disclaimer screen shown before the user can proceed. -->
     <string name="setup_before_you_start">Before you start</string>
     <!-- Translators: Body text on the first-run disclaimer screen. "OwnTV", "Xtream", "M3U" are brand/protocol names that must not be translated. -->
