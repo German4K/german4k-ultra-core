@@ -288,7 +288,9 @@ class LiveLadderTest {
         // an `.m3u8` both engines already proved unplayable this session is not worth paying for again.
         val url = "http://n.test/live/1.ts"
         val ladder = ladderFor(url)
-        while (ladder.advance() != null) Unit
+        // Climb to the top. An empty block rather than a bare `Unit` body: the compiler reads that
+        // one as an expression whose value is discarded and says so on every build.
+        while (ladder.advance() != null) { /* spend every rung */ }
 
         runBlocking { ladder.arm(url, EnginePreference.EXO_FIRST) { true } }
         assertEquals(listOf(Rung.EXO_TS, Rung.MPV_TS), ladder.plan)

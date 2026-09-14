@@ -9,7 +9,7 @@
 
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android%20library-3DDC84?logo=android&logoColor=white">
-  <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-2.4.10-7F52FF?logo=kotlin&logoColor=white">
+  <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-2.4.20-7F52FF?logo=kotlin&logoColor=white">
   <img alt="minSdk" src="https://img.shields.io/badge/minSdk-26-3DDC84">
   <img alt="Player" src="https://img.shields.io/badge/engines-libmpv%20%2B%20ExoPlayer-FB8C00">
   <img alt="License" src="https://img.shields.io/badge/license-GPLv3-blue">
@@ -94,18 +94,18 @@ have numbers that can disagree.
 - Profiles, downloads, settings storage, TMDB metadata and trending, weather, update checks
 
 ### 🌍 Strings & translations (`:core`)
-- Six Android resource components, **24 packaged locales**, and the toolkit that guards them:
+- Six Android resource components, **26 packaged locales**, and the toolkit that guards them:
   hardcoded-literal inventory, plural/CLDR validation, number-locale checks, overflow checks
 
 ## 🧱 Tech stack
 
-Kotlin 2.4.10 · AGP 9.3.2 · Room 2.8.4 · Media3 1.11.0 · libmpv · Koin 4.2.2 · OkHttp 5 ·
+Kotlin 2.4.20 · AGP 9.4.0 · Room 2.8.5 · Media3 1.11.1 · libmpv · Koin 4.2.2 · OkHttp 5 ·
 Coroutines 1.11.0 · WorkManager · DataStore · Paging 3 · KSP 2.3.11 · minSdk 26
 
 ## 🔗 Who depends on this
 
-- **[OwnTV for Android TV](https://github.com/ahXN00/OwnTV)** — shipping.
-- **OwnTV for mobile** — in progress.
+- **[OwnTV for Android TV](https://github.com/ahXN00/OwnTV)** — televisions and set-top boxes, shipping.
+- **[OwnTV for mobile](https://github.com/ahXN00/OwnTV_Mobile)** — phones and tablets, shipping.
 
 **A change here affects both.** Nothing is released from here until the TV app has been rebuilt
 against it. There is no such thing as a change that only affects one app.
@@ -143,8 +143,8 @@ real data — installing a test APK wipes the catalog, playlists, profiles and h
 Core publishes to **GitHub Packages** as `tv.own.owntv:core` and `tv.own.owntv:player-core`:
 
 ```kotlin
-implementation("tv.own.owntv:core:1.0.5")
-implementation("tv.own.owntv:player-core:1.0.5")
+implementation("tv.own.owntv:core:1.0.41")
+implementation("tv.own.owntv:player-core:1.0.41")
 ```
 
 GitHub's Maven registry asks who you are even for public packages, so add the repository with
@@ -228,6 +228,13 @@ Contributions, bug reports and ideas are welcome. Two things to know before open
   Anything else makes core unusable from the mobile app.
 
 ## 🙏 Credits
+
+<img src="extras/Weblate_logo.svg" alt="Weblate" width="200">
+
+Core holds every string in the suite, and it speaks 26 languages because people translate it on
+[**Hosted Weblate**](https://hosted.weblate.org/projects/owntv/), which hosts the project free of
+charge for libre software. Thank you to Weblate and to every translator who has given OwnTV their
+language.
 
 <img src="extras/tmdb_logo.svg" alt="TMDB" width="200">
 
