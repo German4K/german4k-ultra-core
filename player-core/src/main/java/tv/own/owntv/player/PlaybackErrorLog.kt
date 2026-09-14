@@ -341,7 +341,15 @@ object PlaybackErrorLog {
         return fallback.absolutePath
     }
 
-    /** Scoped-storage writer. Reuses OwnTV's existing report instead of creating `(1)`, `(2)`, … files. */
+    /**
+     * Scoped-storage writer. Reuses OwnTV's existing report instead of creating `(1)`, `(2)`, … files.
+     *
+     * `@RequiresApi` states what the single caller above already guarantees with its `SDK_INT >= Q`
+     * check. It is documentation that lint can read: AGP 9.4's lint no longer follows that guard
+     * across the call boundary and reported the `MediaStore.Downloads` collection as unguarded. The
+     * code was always correct; only the proof was implicit.
+     */
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.Q)
     @android.annotation.SuppressLint("InlinedApi")
     private fun writeToMediaStoreDownloads(context: Context, text: String): String {
         val resolver = context.contentResolver

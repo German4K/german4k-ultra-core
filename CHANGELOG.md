@@ -3,6 +3,31 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.41 — 2026-09-14
+
+### The playback engine and the database move up a patch release
+
+`androidx.media3` 1.11.0 → **1.11.1** and Room 2.8.4 → **2.8.5**, both bug-fix releases on the
+versions already in use. Media3 is the ExoPlayer half of the player, so this one is felt by live
+television on both apps; Room is every query in the library. Both are pinned in the consumers'
+catalogues as well as here — a core generating Room 2.8.5 code while an app carries the 2.8.4 runtime
+is the "two Room versions on one classpath" this catalogue's own header warns about, so the three
+repositories move together.
+
+### The build toolchain, in all three repositories at once
+
+AGP 9.3.2 → **9.4.0** and Kotlin 2.4.10 → **2.4.20**. They are one change rather than three: the
+apps compile these sources through a composite build during local development, and Gradle cannot mix
+two AGP or Kotlin versions across it. Verified by building core, the television app and the mobile
+app, with lint and every unit test, on the new toolchain.
+
+**One source change came with it.** AGP 9.4's lint no longer follows a `SDK_INT >= Q` guard across a
+call boundary, and failed the build on `PlaybackErrorLog`'s scoped-storage writer — a method whose
+single caller has always been inside that guard. It now says so with `@RequiresApi(Q)`. The code was
+always correct; only the proof was implicit. Not a suppression: a statement of the contract.
+
+**No API change, no new strings, no database change.**
+
 ## core-1.0.40 — 2026-09-14
 
 ### The updater asks the right repository
