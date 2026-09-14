@@ -19,6 +19,29 @@ Core is versioned independently of the apps. A core version never lines up with 
 
 ---
 
+## core-1.0.42 — 2026-09-14
+
+### The documentation, rewritten to the point
+
+- **This changelog is a summary again.** Each release is now a short list of what changed and what a
+  consuming app has to know, with markers for a database version, a backup format, a new API, a
+  breaking change or new strings. Releases up to `core-1.0.36` are the original long-form notes,
+  kept exactly as written and folded away at the end of the file.
+- **README facts corrected** — **26** packaged locales rather than 24, a current version in the
+  "consuming core" example instead of `1.0.5`, and the mobile app listed as shipping rather than in
+  progress. The toolchain versions were refreshed to match `core-1.0.41`.
+- **Weblate is credited**, with its logo, in all three repositories. The credit links to
+  **weblate.org** rather than to OwnTV's own translation page: `test_i18n_tools.py` requires exactly
+  one clickable link to the project page in the README — the one inside the managed
+  `i18n-contribution` block — and a second copy broke it.
+- **One warning fixed** in `LiveLadderTest`: a bare `Unit` as a `while` body reads as an expression
+  whose value is discarded. All three repositories now build with **no warnings at all**.
+
+*No API change · no database change · no new strings · the published artifact is identical to
+`core-1.0.41`.*
+
+---
+
 ## core-1.0.41 — 2026-09-14
 
 ### The playback engine, the database and the build toolchain move up
