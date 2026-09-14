@@ -43,6 +43,14 @@ Core is versioned independently of the apps. A core version never lines up with 
   and the request failed in three milliseconds with `unexpected end of stream`. `StalkerClient` now
   opts back in, exactly as `OpenSubtitlesClient` already did.
 
+- **CI can set up an Android SDK again.** `android-actions/setup-android` installs `tools platform-tools`
+  by default, and Google removed the obsolete `tools` package from the SDK repository on 2026-09-14 —
+  between `core-1.0.42`'s release that afternoon, which installed it fine, and the evening's first push,
+  which did not. `Failed to find package 'tools'` fails the whole step, and every later step then reports
+  `./gradlew: Permission denied`, because the `chmod +x` lives inside the unit-test step and never ran —
+  which reads like a repository problem and is not one. The action now asks for `platform-tools` only,
+  here and in both app repositories, which were one push from the same wall.
+
 *No database change · no backup change · no new strings.*
 
 ---
