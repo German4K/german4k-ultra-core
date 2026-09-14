@@ -128,17 +128,132 @@ class StreamUrlResolverTest {
 
     // --- Phase E: catch-up archive resolve (§5.6) ---
 
-    @Test fun resolveCatchup_buildsArchiveCmdAndTvArchiveType() = runBlocking {
+    /**
+     * The fix: the cmd carries the PORTAL's programme id, taken from its own guide table. Sending a
+     * synthesized `<channel>_<start>_<duration>` instead is what made every Ministra-facade portal
+     * answer an empty 200, so catch-up did nothing at all.
+     */
+    @Test fun resolveCatchup_usesThePortalsProgrammeId() = runBlocking {
         val client = RecordingClient(resolved = "http://realhost/archive/out.m3u8?token=a")
         val r = resolver(client = client)
-        val startMs = 1_700_000_000_000L // 1700000000 s
-        val endMs = startMs + 90 * 60_000L // 90 min
+        val startMs = 1_700_000_000_000L
+        val endMs = startMs + 90 * 60_000L
+        client.archiveDay = listOf(
+            StalkerClient.ArchiveEntry("18047424_4321", startMs - 3_600_000L, startMs, true),
+            StalkerClient.ArchiveEntry("18047425_4321", startMs, endMs, true),
+            StalkerClient.ArchiveEntry("18047426_4321", endMs, endMs + 3_600_000L, false),
+        )
+        assertEquals(
+            "http://realhost/archive/out.m3u8?token=a",
+            r.resolveCatchup(stalkerSource("unused"), "4321", startMs, endMs),
+        )
+        assertEquals("tv_archive", client.lastType)
+        assertEquals("auto /media/18047425_4321.mpg", client.lastCmd)
+    }
+
+    /** A programme mid-way through still resolves to the row that covers the instant. */
+    @Test fun resolveCatchup_matchesTheRowCoveringTheInstant() = runBlocking {
+        val client = RecordingClient()
+        val r = resolver(client = client)
+        val startMs = 1_700_000_000_000L
+        client.archiveDay = listOf(
+            StalkerClient.ArchiveEntry("a_9", startMs - 7_200_000L, startMs - 3_600_000L, true),
+            StalkerClient.ArchiveEntry("b_9", startMs - 3_600_000L, startMs + 3_600_000L, true),
+        )
+        r.resolveCatchup(stalkerSource("unused"), "9", startMs, startMs + 1_800_000L)
+        assertEquals("auto /media/b_9.mpg", client.lastCmd)
+    }
+
+    /** Our guide is XMLTV and the portal's is its own; a couple of minutes apart is the same programme. */
+    @Test fun resolveCatchup_acceptsANearbyStartWithinTolerance() = runBlocking {
+        val client = RecordingClient()
+        val r = resolver(client = client)
+        val startMs = 1_700_000_000_000L
+        client.archiveDay = listOf(
+            StalkerClient.ArchiveEntry("near_9", startMs + 120_000L, startMs + 1_800_000L, true),
+        )
+        r.resolveCatchup(stalkerSource("unused"), "9", startMs, startMs + 1_800_000L)
+        assertEquals("auto /media/near_9.mpg", client.lastCmd)
+    }
+
+    /** Far enough away and it is a different programme — fall back rather than play the wrong thing. */
+    @Test fun resolveCatchup_fallsBackWhenNothingIsCloseEnough() = runBlocking {
+        val client = RecordingClient()
+        val r = resolver(client = client)
+        val startMs = 1_700_000_000_000L
+        client.archiveDay = listOf(
+            StalkerClient.ArchiveEntry("far_9", startMs + 6 * 3_600_000L, startMs + 7 * 3_600_000L, true),
+        )
+        r.resolveCatchup(stalkerSource("unused"), "9", startMs, startMs + 5_400_000L)
+        assertEquals("auto /media/9_1700000000_5400.mpg", client.lastCmd)
+    }
+
+    /**
+     * The table is paged and the match is usually not on page one — a real channel lists eighty
+     * programmes a day over eight pages, and an evening one is on the last. Reading the day from the
+     * front cost eight round trips before playback could even be asked for, and got slower the later
+     * the programme. Pages run in time order, so the search halves instead.
+     */
+    @Test fun resolveCatchup_binarySearchesTheDaysPages() = runBlocking {
+        val client = RecordingClient()
+        val r = resolver(client = client)
+        val dayStart = 1_700_000_000_000L
+        client.pageSize = 10
+        client.archiveDay = (0 until 80).map {
+            StalkerClient.ArchiveEntry("p$it" + "_9", dayStart + it * 1_800_000L, dayStart + (it + 1) * 1_800_000L, true)
+        }
+        val target = dayStart + 75 * 1_800_000L // page 8 of 8 — the worst case for a linear walk
+        r.resolveCatchup(stalkerSource("unused"), "9", target, target + 1_800_000L)
+        assertEquals("auto /media/p75_9.mpg", client.lastCmd)
+        assertTrue(
+            "a linear walk would take 8 requests; the search took ${client.requestedPages}",
+            client.requestedPages.size <= 4,
+        )
+        assertEquals("the first page is the probe that reveals how many there are", 1, client.requestedPages.first())
+    }
+
+    /** Every hour of the day resolves, and none of them costs more than the halving allows. */
+    @Test fun resolveCatchup_findsEveryProgrammeOfTheDayWithinFourRequests() = runBlocking {
+        val dayStart = 1_700_000_000_000L
+        (0 until 80).forEach { index ->
+            val client = RecordingClient()
+            val r = resolver(client = client)
+            client.pageSize = 10
+            client.archiveDay = (0 until 80).map {
+                StalkerClient.ArchiveEntry("p$it" + "_9", dayStart + it * 1_800_000L, dayStart + (it + 1) * 1_800_000L, true)
+            }
+            val target = dayStart + index * 1_800_000L + 60_000L
+            r.resolveCatchup(stalkerSource("unused"), "9", target, target + 1_800_000L)
+            assertEquals("row $index", "auto /media/p$index" + "_9.mpg", client.lastCmd)
+            assertTrue("row $index took ${client.requestedPages}", client.requestedPages.size <= 4)
+        }
+    }
+
+    /** A portal that does not serve the guide table keeps the old behaviour instead of dying. */
+    @Test fun resolveCatchup_fallsBackToTheLegacyCmdWhenTheGuideFails() = runBlocking {
+        val client = RecordingClient(resolved = "http://realhost/archive/out.m3u8?token=a")
+        val r = resolver(client = client)
+        client.archiveDayFails = true
+        val startMs = 1_700_000_000_000L
+        val endMs = startMs + 90 * 60_000L
         assertEquals(
             "http://realhost/archive/out.m3u8?token=a",
             r.resolveCatchup(stalkerSource("unused"), "4321", startMs, endMs),
         )
         assertEquals("tv_archive", client.lastType)
         assertEquals("auto /media/4321_1700000000_5400.mpg", client.lastCmd)
+    }
+
+    /** The day asked for is the programme's own, in the timezone this client tells the portal it is in. */
+    @Test fun resolveCatchup_asksForTheProgrammesOwnDay() = runBlocking {
+        val client = RecordingClient()
+        val r = resolver(client = client)
+        val startMs = 1_700_000_000_000L
+        val expected = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+            .apply { timeZone = java.util.TimeZone.getDefault() }
+            .format(java.util.Date(startMs))
+        r.resolveCatchup(stalkerSource("unused"), "9", startMs, startMs + 1_800_000L)
+        assertEquals(expected, client.lastArchiveDate)
     }
 
     @Test fun resolveCatchup_everyCallIsFresh() = runBlocking {
@@ -221,6 +336,26 @@ class StreamUrlResolverTest {
         ): List<ShortEpgEntry> {
             lastShortEpgChannel = channelId
             return shortEpgEntries
+        }
+
+        /** The whole day the fake portal knows about; [getArchiveDay] serves it [pageSize] at a time. */
+        var archiveDay: List<ArchiveEntry> = emptyList()
+        var pageSize = 10
+        var archiveDayFails = false
+        var archiveDayCalls = 0
+        var lastArchiveDate: String? = null
+        val requestedPages = mutableListOf<Int>()
+
+        override suspend fun getArchiveDay(
+            apiBase: String, mac: String, token: String, userAgent: String?, channelId: String, date: String, page: Int,
+        ): Page<ArchiveEntry> {
+            archiveDayCalls++
+            lastArchiveDate = date
+            requestedPages += page
+            if (archiveDayFails) throw java.io.IOException("portal said nothing")
+            val from = (page - 1) * pageSize
+            val items = archiveDay.drop(from).take(pageSize)
+            return Page(archiveDay.size, pageSize, items)
         }
     }
 }

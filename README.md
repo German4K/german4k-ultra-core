@@ -143,8 +143,8 @@ real data — installing a test APK wipes the catalog, playlists, profiles and h
 Core publishes to **GitHub Packages** as `tv.own.owntv:core` and `tv.own.owntv:player-core`:
 
 ```kotlin
-implementation("tv.own.owntv:core:1.0.41")
-implementation("tv.own.owntv:player-core:1.0.41")
+implementation("tv.own.owntv:core:1.0.43")
+implementation("tv.own.owntv:player-core:1.0.43")
 ```
 
 GitHub's Maven registry asks who you are even for public packages, so add the repository with

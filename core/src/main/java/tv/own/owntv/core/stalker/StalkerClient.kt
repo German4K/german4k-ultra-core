@@ -24,7 +24,18 @@ import java.util.TimeZone
  * MAG request headers, all derived in one place. Content lists and `create_link` come in later
  * phases. Responses are small JSON wrapped as `{"js": <payload>}` and parsed with [JsonReader].
  */
-open class StalkerClient(private val client: OkHttpClient) {
+open class StalkerClient(okHttpClient: OkHttpClient) {
+
+    /**
+     * Same pool and dispatcher as the shared client, but with connection-failure recovery ON.
+     *
+     * The shared client sets `retryOnConnectionFailure(false)` so SyncManager owns stream retries. A
+     * portal call is not a stream: it is one small request, often the first in minutes, and portals
+     * drop idle keep-alive sockets. OkHttp then hands the dead one out and the request dies instantly
+     * with `unexpected end of stream` — which is exactly how a catch-up pick failed with no network
+     * round trip at all, three milliseconds after it was made.
+     */
+    private val client: OkHttpClient = okHttpClient.newBuilder().retryOnConnectionFailure(true).build()
 
     /** The MAC is not authorized / the token expired / the portal answered `{"js":false}`. */
     class StalkerAuthException(message: String) : IOException(message)
@@ -96,6 +107,14 @@ open class StalkerClient(private val client: OkHttpClient) {
 
     /** One programme from `get_short_epg` (Phase E, §5.5) — times in epoch ms. */
     data class ShortEpgEntry(val title: String, val description: String?, val startMs: Long, val stopMs: Long)
+
+    /**
+     * One row of the portal's per-day guide table, which is the only place the **archive token** for a
+     * programme can be had. [id] is the portal's own `"<programme>_<channel>"` pair, and it is what
+     * `tv_archive&action=create_link` expects inside its `cmd` — see [getArchiveDay]. [archived] is
+     * the portal's `mark_archive`: its claim that this programme is inside the recorded window.
+     */
+    data class ArchiveEntry(val id: String, val startMs: Long, val stopMs: Long, val archived: Boolean)
 
     /**
      * Probe the API-endpoint candidates for [portalUrl] (§1.1: `portal.php`, `stalker_portal/server/
@@ -186,6 +205,63 @@ open class StalkerClient(private val client: OkHttpClient) {
     ): List<ShortEpgEntry> {
         val url = "$apiBase?type=itv&action=get_short_epg&ch_id=${enc(channelId)}&size=$size&JsHttpRequest=1-xml"
         return request(url, mac, token, userAgent) { readShortEpg(it) }
+    }
+
+    /**
+     * `?type=epg&action=get_simple_data_table&ch_id=<id>&date=<yyyy-MM-dd>&p=<page>` → one page of that
+     * channel's guide for that day, each row carrying the archive token [ArchiveEntry.id].
+     *
+     * **This call is what makes catch-up work at all on a portal.** The archive `cmd` is
+     * `auto /media/<programme>_<channel>.mpg`, and that first half is a portal-side programme id we
+     * cannot compute: a Ministra facade parses the filename as `<programme_id>_<stream_id>` and looks
+     * the pair up in its own guide. Sending a synthesized `<channel>_<start>_<duration>` instead — as
+     * this client did until 1.0.43 — finds no row, so the portal answers **HTTP 200 with an empty
+     * body**, which surfaces as an unhelpful `EOFException` and left catch-up silently dead.
+     *
+     * Note `type=epg`, not `itv` and not `tv_archive`: the facades that serve this route everything
+     * else to an empty body, which is a fast way to be misled about what the portal supports.
+     *
+     * Times come back as true epoch seconds in `start_timestamp`/`stop_timestamp`, already matching
+     * the wall clock the portal shows for the timezone this client sends in its cookie.
+     */
+    open suspend fun getArchiveDay(
+        apiBase: String, mac: String, token: String, userAgent: String?, channelId: String, date: String, page: Int,
+    ): Page<ArchiveEntry> {
+        val url = "$apiBase?type=epg&action=get_simple_data_table&ch_id=${enc(channelId)}" +
+            "&date=${enc(date)}&p=$page&JsHttpRequest=1-xml"
+        return request(url, mac, token, userAgent) { readArchiveDay(it) }
+    }
+
+    private fun readArchiveDay(reader: JsonReader): Page<ArchiveEntry> {
+        var total = 0
+        var maxPer = 0
+        val rows = ArrayList<Map<String, String>>()
+        if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return Page(0, 0, emptyList()) }
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (reader.nextName()) {
+                "total_items" -> total = nextIntLenient(reader) ?: 0
+                "max_page_items" -> maxPer = nextIntLenient(reader) ?: 0
+                "data" -> if (reader.peek() == JsonToken.BEGIN_ARRAY) {
+                    reader.beginArray()
+                    while (reader.hasNext()) {
+                        if (reader.peek() == JsonToken.BEGIN_OBJECT) rows.add(readScalarFields(reader)) else reader.skipValue()
+                    }
+                    reader.endArray()
+                } else {
+                    reader.skipValue()
+                }
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+        val items = rows.mapNotNull { f ->
+            val id = f["id"]?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            val start = epgTimeMs(f["start_timestamp"], f["time"]) ?: return@mapNotNull null
+            val stop = epgTimeMs(f["stop_timestamp"], f["time_to"]) ?: return@mapNotNull null
+            ArchiveEntry(id, start, stop, (f["mark_archive"]?.trim()?.toIntOrNull() ?: 0) > 0)
+        }
+        return Page(total, maxPer, items)
     }
 
     private fun readShortEpg(reader: JsonReader): List<ShortEpgEntry> {

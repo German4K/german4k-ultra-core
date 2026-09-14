@@ -235,6 +235,23 @@
 1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	top_center
 1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	top_left
 1	core/src/main/java/tv/own/owntv/core/settings/SubtitleStyle.kt	top_right
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	$apiBase?type=epg&action=get_simple_data_table&ch_id=${enc(channelId)}
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	&date=${enc(date)}&p=$page&JsHttpRequest=1-xml
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	data
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	id
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	mark_archive
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	max_page_items
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	start_timestamp
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	stop_timestamp
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	time
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	time_to
+1	core/src/main/java/tv/own/owntv/core/stalker/StalkerClient.kt	total_items
+1	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	StreamUrlResolver
+1	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	archive guide lookup failed ch=$channelRemoteId
+1	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	auto /media/$programmeId.mpg
+1	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	auto /media/${channelRemoteId}_${startMs / 1000}_$durationS.mpg
+1	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	no archive programme id for ch=$channelRemoteId — trying the legacy cmd
+1	core/src/main/java/tv/own/owntv/core/stalker/StreamUrlResolver.kt	yyyy-MM-dd
 1	core/src/main/java/tv/own/owntv/core/storage/DocumentVolumes.kt	primary
 1	core/src/main/java/tv/own/owntv/core/storage/MediaFolders.kt	/document/
 1	core/src/main/java/tv/own/owntv/core/storage/MediaTarget.kt	cannot open $uri for reading

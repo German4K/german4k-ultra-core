@@ -19,6 +19,34 @@ Core is versioned independently of the apps. A core version never lines up with 
 
 ---
 
+## core-1.0.43 — 2026-09-14
+
+### Stalker catch-up actually plays
+
+- **The archive command carried the wrong id, so catch-up did nothing on any portal.** A Ministra
+  portal reads the play command's filename as `<programme id>_<channel id>` and looks that pair up in
+  its own guide; core synthesized `<channel id>_<start>_<duration>` instead, which matches nothing, so
+  the portal answered **HTTP 200 with an empty body**. That surfaced as an `EOFException`, became a
+  null URL, and left "Watch from start" and "Go back to…" doing nothing at all. **API** — new
+  `StalkerClient.getArchiveDay(…)` (`type=epg&action=get_simple_data_table`) fetches the day's guide
+  and `StreamUrlResolver.resolveCatchup` sends the portal's own id for the programme covering the
+  chosen instant. Verified end to end against a live portal: real MPEG-TS, correct programme.
+- **Portals that do not serve that table keep working** — the previous command is still tried when no
+  programme id can be found, which is the shape genuine Ministra accepts.
+- **The guide lookup binary-searches the day's pages** instead of reading it from the front. A busy
+  channel lists eighty programmes a day over eight pages, so an evening programme cost eight round
+  trips before playback could even be requested, and got slower the later in the day it aired. Four
+  at the very worst now, usually two or three, measured against a live portal.
+- **Portal calls survive a dropped keep-alive.** The shared HTTP client disables OkHttp's
+  connection-failure retry so sync owns its own retries, but a portal call is one small request, often
+  the first in minutes, against a server that closes idle sockets. The dead connection was handed out
+  and the request failed in three milliseconds with `unexpected end of stream`. `StalkerClient` now
+  opts back in, exactly as `OpenSubtitlesClient` already did.
+
+*No database change · no backup change · no new strings.*
+
+---
+
 ## core-1.0.42 — 2026-09-14
 
 ### The documentation, rewritten to the point
