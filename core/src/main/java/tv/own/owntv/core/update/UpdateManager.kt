@@ -26,9 +26,10 @@ import java.io.IOException
 /**
  * In-app updates straight from GitHub Releases: checks the repo's latest release, compares its tag
  * with the installed version, downloads the release APK, and hands it to the system installer.
- * No server of our own — the releases CI already publishes `OwnTV-vX.Y.Z.apk` (arm) and
- * `OwnTV-x86_64-vX.Y.Z.apk` per tag; the asset matching this device's ABI is chosen, so updates
- * also work on an x86_64 emulator.
+ * No server of our own — each app's releases CI already publishes one APK per ABI flavour per tag
+ * (`OwnTV-vX.Y.Z.apk` / `OwnTV-x86_64-vX.Y.Z.apk` on the television, `OwnTV-Mobile-…` on the phone),
+ * and the asset matching this device's ABI is chosen, so updates also work on an x86_64 emulator.
+ * **Which repository is asked is the host app's to say** — see [CoreBuildInfo.releaseRepo].
  */
 class UpdateManager(
     private val context: Context,
@@ -98,7 +99,7 @@ class UpdateManager(
         scope.launch {
             runCatching {
                 val request = Request.Builder()
-                    .url("https://api.github.com/repos/$REPO/releases/latest")
+                    .url("https://api.github.com/repos/${CoreBuildInfo.releaseRepo}/releases/latest")
                     .header("Accept", "application/vnd.github+json")
                     .header("User-Agent", "OwnTV")
                     .build()
@@ -303,6 +304,5 @@ class UpdateManager(
         private const val TAG = "UpdateManager"
         private const val SESSION_ENTRY = "owntv-update"
         private const val INSTALL_STATUS_ACTION = "tv.own.owntv.UPDATE_INSTALL_STATUS"
-        const val REPO = "ahXN00/OwnTV"
     }
 }

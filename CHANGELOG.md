@@ -3,6 +3,24 @@
 Core is versioned independently of the apps. A core version number never lines up with an OwnTV TV
 app `v4.x` release, and the two must not be confused. Tags here are prefixed `core-`.
 
+## core-1.0.40 — 2026-09-14
+
+### The updater asks the right repository
+
+`UpdateManager` had the television's repository baked into it as a constant. That was correct while
+one app used it; with the phone app taking the same updater it was a latent bug with a slow, ugly
+failure — the phone would have found the *television's* newest release, downloaded a whole APK over
+whatever connection the user had, handed it to the system installer and been refused, because
+`tv.own.owntv` is not `tv.own.owntv.mobile`. Nothing in that sequence would have said why.
+
+Which repository is asked is now the host app's to state, as `CoreBuildInfo.releaseRepo`, alongside
+the version, the edge key and the other build facts core takes rather than bakes in. It **defaults
+to the television's repository**, so that app needs no change and cannot regress; the mobile app
+sets its own in `onCreate`, beside `tvHome`.
+
+**Asset matching needed nothing.** It selects on a name ending `.apk` plus an `x86_64` marker, and
+both repositories' release assets carry those, whatever else their names say.
+
 ## core-1.0.39 — 2026-09-13
 
 ### Words for a first-run step that sets how big everything is
