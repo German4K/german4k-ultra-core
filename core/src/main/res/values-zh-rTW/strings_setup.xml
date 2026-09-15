@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">OwnTV 僅為媒體播放器，不包含任何頻道、播放清單或內容。您有責任自行新增可合法存取的 Xtream、M3U 或 Stalker 來源。</string>
     <string name="setup_i_understand">我瞭解了</string>
     <string name="setup_set_up_owntv">設定 OwnTV</string>
-    <string name="setup_setup_choice_description">從頭開始，或從備份檔案還原您的使用者檔案、播放清單和我的最愛。</string>
+    <string name="setup_setup_choice_description">從頭開始，或從備份檔案或另一部裝置還原您的使用者檔案、播放清單和我的最愛。</string>
     <string name="setup_new_profile">新增使用者檔案</string>
     <string name="setup_create_profile_add_sources">建立使用者檔案並新增來源</string>
     <string name="setup_restore_backup">還原備份</string>
     <string name="setup_import_profiles_playlists">從檔案匯入使用者檔案和播放清單</string>
+    <string name="setup_sync_device">從另一部裝置</string>
+    <string name="setup_sync_device_description">透過 Wi-Fi 從你的另一部 OwnTV 裝置複製所有內容</string>
     <string name="setup_add_playlist">新增播放清單</string>
     <string name="setup_add_playlist_description">為此使用者檔案新增來源，或稍後再設定。</string>
     <string name="setup_new">新增</string>

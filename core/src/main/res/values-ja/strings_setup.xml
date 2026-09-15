@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">OwnTVはメディアプレーヤーにすぎません。チャンネル、プレイリスト、コンテンツは一切含まれていません。合法的にアクセスできるご自身のXtream、M3U、またはStalkerソースを追加する責任はユーザーにあります。</string>
     <string name="setup_i_understand">理解しました</string>
     <string name="setup_set_up_owntv">OwnTVをセットアップ</string>
-    <string name="setup_setup_choice_description">新しく始めるか、バックアップファイルからプロフィール、プレイリスト、お気に入りを復元します。</string>
+    <string name="setup_setup_choice_description">新しく始めるか、バックアップファイルまたは別の端末からプロフィール、プレイリスト、お気に入りを復元します。</string>
     <string name="setup_new_profile">新しいプロフィール</string>
     <string name="setup_create_profile_add_sources">プロフィールを作成してソースを追加</string>
     <string name="setup_restore_backup">バックアップを復元</string>
     <string name="setup_import_profiles_playlists">ファイルからプロフィールとプレイリストをインポート</string>
+    <string name="setup_sync_device">別の端末から</string>
+    <string name="setup_sync_device_description">Wi-Fi 経由でもう一方の OwnTV 端末からすべてをコピーします</string>
     <string name="setup_add_playlist">プレイリストを追加</string>
     <string name="setup_add_playlist_description">このプロフィールにソースを追加するか、後でセットアップします。</string>
     <string name="setup_new">新規</string>

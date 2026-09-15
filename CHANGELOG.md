@@ -19,6 +19,26 @@ Core is versioned independently of the apps. A core version never lines up with 
 
 ---
 
+## core-1.0.44 — 2026-09-15
+
+### A new device can be set up from the one you already have
+
+- **Strings** — the first-run setup screen gains a third choice, "From another device", beside
+  "New profile" and "Restore backup". Two new keys, `setup_sync_device` and
+  `setup_sync_device_description`, in all 25 packaged locales plus the `en-GB` overlay.
+- **`setup_setup_choice_description` was reworded** and re-translated everywhere. It said data came
+  back "from a backup file"; with a third route on the same screen that was no longer true.
+- **No new API and no new sync code.** `LocalSyncManager`, `LocalSyncClient`, `LocalSyncDiscovery` and
+  `PairedDeviceStore` are untouched — both apps drive the existing `LocalSyncViewModel` step machine
+  from their wizards, forcing `SyncDirection.RECEIVE` and leaving the section picker in place. A
+  device being set up never hosts: it has nothing worth serving, and announcing an empty container on
+  the network would only be something for the other device to find by mistake.
+- Closes `ahXN00/OwnTV#189`.
+
+*No database change · no backup change · new strings in every packaged locale.*
+
+---
+
 ## core-1.0.43 — 2026-09-14
 
 ### Stalker catch-up actually plays

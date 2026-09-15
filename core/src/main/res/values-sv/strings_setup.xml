@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">OwnTV är endast en mediespelare. Den innehåller inga kanaler, spellistor eller något innehåll. Du ansvarar själv för att lägga till egna, lagligt tillgängliga Xtream-, M3U- eller Stalker-källor.</string>
     <string name="setup_i_understand">Jag förstår</string>
     <string name="setup_set_up_owntv">Konfigurera OwnTV</string>
-    <string name="setup_setup_choice_description">Börja om från början eller återställ dina profiler, spellistor och favoriter från en säkerhetskopia.</string>
+    <string name="setup_setup_choice_description">Börja om från början eller återställ dina profiler, spellistor och favoriter från en säkerhetskopia eller en annan enhet.</string>
     <string name="setup_new_profile">Ny profil</string>
     <string name="setup_create_profile_add_sources">Skapa en profil och lägg till källor</string>
     <string name="setup_restore_backup">Återställ säkerhetskopia</string>
     <string name="setup_import_profiles_playlists">Importera profiler och spellistor från en fil</string>
+    <string name="setup_sync_device">Från en annan enhet</string>
+    <string name="setup_sync_device_description">Kopiera allt från din andra OwnTV-enhet via Wi-Fi</string>
     <string name="setup_add_playlist">Lägg till en spellista</string>
     <string name="setup_add_playlist_description">Lägg till en källa för den här profilen eller konfigurera en senare.</string>
     <string name="setup_new">Ny</string>

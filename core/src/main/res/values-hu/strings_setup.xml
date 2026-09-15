@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">Az OwnTV kizárólag médialejátszó. Nem tartalmaz csatornákat, lejátszási listákat vagy tartalmat. A saját, legálisan elérhető Xtream-, M3U- vagy Stalker-forrásaid hozzáadása a te felelősséged.</string>
     <string name="setup_i_understand">Megértettem</string>
     <string name="setup_set_up_owntv">Az OwnTV beállítása</string>
-    <string name="setup_setup_choice_description">Kezdj tiszta lappal, vagy állítsd vissza a profiljaidat, lejátszási listáidat és kedvenceidet egy biztonsági mentésből.</string>
+    <string name="setup_setup_choice_description">Kezdj tiszta lappal, vagy állítsd vissza a profiljaidat, lejátszási listáidat és kedvenceidet egy biztonsági mentésből vagy egy másik eszközről.</string>
     <string name="setup_new_profile">Új profil</string>
     <string name="setup_create_profile_add_sources">Profil létrehozása és források hozzáadása</string>
     <string name="setup_restore_backup">Mentés visszaállítása</string>
     <string name="setup_import_profiles_playlists">Profilok és lejátszási listák importálása fájlból</string>
+    <string name="setup_sync_device">Másik eszközről</string>
+    <string name="setup_sync_device_description">Másolj át mindent a másik OwnTV-eszközödről Wi-Fin keresztül</string>
     <string name="setup_add_playlist">Lejátszási lista hozzáadása</string>
     <string name="setup_add_playlist_description">Adj forrást ehhez a profilhoz, vagy állíts be egyet később.</string>
     <string name="setup_new">Új</string>

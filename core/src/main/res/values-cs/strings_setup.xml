@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">OwnTV je pouze přehrávač médií. Neobsahuje žádné kanály, playlisty ani obsah. Za přidání vlastních legálně dostupných zdrojů Xtream, M3U nebo Stalker odpovídáte vy.</string>
     <string name="setup_i_understand">Rozumím</string>
     <string name="setup_set_up_owntv">Nastavení OwnTV</string>
-    <string name="setup_setup_choice_description">Začněte od začátku, nebo obnovte profily, playlisty a oblíbené ze souboru zálohy.</string>
+    <string name="setup_setup_choice_description">Začněte od začátku, nebo obnovte profily, playlisty a oblíbené ze souboru zálohy či z jiného zařízení.</string>
     <string name="setup_new_profile">Nový profil</string>
     <string name="setup_create_profile_add_sources">Vytvořit profil a přidat zdroje</string>
     <string name="setup_restore_backup">Obnovení ze zálohy</string>
     <string name="setup_import_profiles_playlists">Import profilů a playlistů ze souboru</string>
+    <string name="setup_sync_device">Z jiného zařízení</string>
+    <string name="setup_sync_device_description">Zkopírujte vše z druhého zařízení OwnTV přes Wi-Fi</string>
     <string name="setup_add_playlist">Přidat playlist</string>
     <string name="setup_add_playlist_description">Přidejte zdroj pro tento profil, nebo jej nastavte později.</string>
     <string name="setup_new">Nový</string>

@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">OwnTV는 미디어 플레이어일 뿐이며 채널, 플레이리스트 또는 콘텐츠가 포함되어 있지 않습니다. 합법적으로 이용할 수 있는 Xtream, M3U 또는 Stalker 소스를 직접 추가할 책임은 사용자에게 있습니다.</string>
     <string name="setup_i_understand">이해했습니다</string>
     <string name="setup_set_up_owntv">OwnTV 설정</string>
-    <string name="setup_setup_choice_description">새로 시작하거나 백업 파일에서 프로필, 플레이리스트 및 즐겨찾기를 복원하세요.</string>
+    <string name="setup_setup_choice_description">새로 시작하거나 백업 파일 또는 다른 기기에서 프로필, 플레이리스트 및 즐겨찾기를 복원하세요.</string>
     <string name="setup_new_profile">새 프로필</string>
     <string name="setup_create_profile_add_sources">프로필을 만들고 소스 추가</string>
     <string name="setup_restore_backup">백업 복원</string>
     <string name="setup_import_profiles_playlists">파일에서 프로필 및 플레이리스트 가져오기</string>
+    <string name="setup_sync_device">다른 기기에서</string>
+    <string name="setup_sync_device_description">Wi‑Fi로 다른 OwnTV 기기에서 모든 항목을 복사합니다</string>
     <string name="setup_add_playlist">플레이리스트 추가</string>
     <string name="setup_add_playlist_description">이 프로필에 소스를 추가하거나 나중에 설정하세요.</string>
     <string name="setup_new">새로 만들기</string>

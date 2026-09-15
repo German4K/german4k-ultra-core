@@ -75,7 +75,7 @@
     <!-- Translators: Heading on the setup-choice screen (first run only) where the user chooses between a new profile or restoring a backup. -->
     <string name="setup_set_up_owntv">Set up OwnTV</string>
     <!-- Translators: Description on the setup-choice screen. -->
-    <string name="setup_setup_choice_description">Start fresh, or bring back your profiles, playlists and favorites from a backup file.</string>
+    <string name="setup_setup_choice_description">Start fresh, or bring back your profiles, playlists and favorites from a backup file or another device.</string>
     <!-- Translators: ChoiceCard title on the setup-choice screen for creating a new profile. -->
     <string name="setup_new_profile">New profile</string>
     <!-- Translators: Description text beneath the "New profile" choice card on the setup-choice screen. -->
@@ -84,6 +84,10 @@
     <string name="setup_restore_backup">Restore backup</string>
     <!-- Translators: Description text beneath the "Restore backup" choice card. -->
     <string name="setup_import_profiles_playlists">Import profiles &amp; playlists from a file</string>
+    <!-- Translators: ChoiceCard title on the setup-choice screen for copying everything from another OwnTV device on the same Wi-Fi. -->
+    <string name="setup_sync_device">From another device</string>
+    <!-- Translators: Description text beneath the "From another device" choice card. "OwnTV" is the app name and must not be translated. -->
+    <string name="setup_sync_device_description">Copy everything from your other OwnTV device over Wi-Fi</string>
     <!-- Translators: Heading on the "add a playlist" step of the setup wizard. -->
     <string name="setup_add_playlist">Add a playlist</string>
     <!-- Translators: Description on the "add a playlist" step. -->

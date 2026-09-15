@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">OwnTV jest wyłącznie odtwarzaczem multimedialnym. Nie zawiera żadnych kanałów, list odtwarzania ani treści. Odpowiadasz za dodawanie własnych, legalnie dostępnych źródeł Xtream, M3U lub Stalker.</string>
     <string name="setup_i_understand">Rozumiem</string>
     <string name="setup_set_up_owntv">Skonfiguruj OwnTV</string>
-    <string name="setup_setup_choice_description">Zacznij od nowa albo przywróć z pliku kopii zapasowej dane profili, listy odtwarzania i ulubione.</string>
+    <string name="setup_setup_choice_description">Zacznij od nowa albo przywróć dane profili, listy odtwarzania i ulubione z pliku kopii zapasowej lub z innego urządzenia.</string>
     <string name="setup_new_profile">Nowy profil</string>
     <string name="setup_create_profile_add_sources">Utwórz profil i dodaj źródła</string>
     <string name="setup_restore_backup">Przywróć kopię zapasową</string>
     <string name="setup_import_profiles_playlists">Zaimportuj z pliku dane profili i listy odtwarzania</string>
+    <string name="setup_sync_device">Z innego urządzenia</string>
+    <string name="setup_sync_device_description">Skopiuj wszystko z drugiego urządzenia OwnTV przez Wi-Fi</string>
     <string name="setup_add_playlist">Dodaj listę odtwarzania</string>
     <string name="setup_add_playlist_description">Dodaj źródło do tego profilu albo skonfiguruj je później.</string>
     <string name="setup_new">Nowe</string>

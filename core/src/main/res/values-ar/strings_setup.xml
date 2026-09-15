@@ -36,11 +36,13 @@
     <string name="setup_disclaimer">OwnTV هو مشغّل وسائط فقط. ولا يتضمن أي قنوات أو قوائم تشغيل أو محتوى. أنت مسؤول عن إضافة مصادر Xtream أو M3U أو Stalker الخاصة بك التي يحق لك الوصول إليها قانونيًا.</string>
     <string name="setup_i_understand">فهمت</string>
     <string name="setup_set_up_owntv">إعداد OwnTV</string>
-    <string name="setup_setup_choice_description">ابدأ من جديد، أو استعد ملفاتك الشخصية وقوائم التشغيل والمفضّلة من ملف نسخة احتياطية.</string>
+    <string name="setup_setup_choice_description">ابدأ من جديد، أو استعد ملفاتك الشخصية وقوائم التشغيل والمفضّلة من ملف نسخة احتياطية أو من جهاز آخر.</string>
     <string name="setup_new_profile">ملف شخصي جديد</string>
     <string name="setup_create_profile_add_sources">أنشئ ملفًا شخصيًا وأضف مصادر</string>
     <string name="setup_restore_backup">استعادة نسخة احتياطية</string>
     <string name="setup_import_profiles_playlists">استيراد الملفات الشخصية وقوائم التشغيل من ملف</string>
+    <string name="setup_sync_device">من جهاز آخر</string>
+    <string name="setup_sync_device_description">انسخ كل شيء من جهاز OwnTV الآخر عبر الواي فاي</string>
     <string name="setup_add_playlist">إضافة قائمة تشغيل</string>
     <string name="setup_add_playlist_description">أضف مصدرًا لهذا الملف الشخصي، أو أعدّه لاحقًا.</string>
     <string name="setup_new">جديد</string>
