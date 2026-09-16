@@ -45,8 +45,8 @@ internal class XtreamSyncer(
             support.sourceDao.updateMaxConnections(s.id, details.maxConnections)
             if (details.maxConnections == 1) tv.own.owntv.core.player.LiveSessionLimit.singleSession(s.url)
         }
-        val semaphore = Semaphore(2)
-        Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2 hlsSupported=${details?.hlsSupported} maxConnections=${details?.maxConnections}")
+        val semaphore = Semaphore(PHASE_CONCURRENCY)
+        Log.i(TAG, "Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=$PHASE_CONCURRENCY hlsSupported=${details?.hlsSupported} maxConnections=${details?.maxConnections}")
         coroutineScope {
             if (contentTypes.live) async { semaphore.withPermit { syncLive(s, progress, stats) } }
             if (contentTypes.movies) async { semaphore.withPermit { syncMovies(s, progress, stats) } }
@@ -67,7 +67,7 @@ internal class XtreamSyncer(
                 countsKey = "channels", timingKey = "live",
                 adapter = support.channelAdapter,
                 fetchCategories = { report -> xtream.liveCategories(s, report) },
-                makeStreams = { catMap ->
+                makeStreams = { catMap, seenCategory ->
                     var order = 0
                     val toChannel = {
                         streamId: String,
@@ -78,6 +78,7 @@ internal class XtreamSyncer(
                         num: Int?,
                         archive: Boolean,
                         archiveDays: Int ->
+                        seenCategory(categoryId)
                         ChannelEntity(
                             sourceId = s.id, categoryId = catMap[categoryId], name = name,
                             logoUrl = icon, streamUrl = xtream.liveUrl(s, streamId),
@@ -104,7 +105,7 @@ internal class XtreamSyncer(
                     countsKey = "movies",
                     adapter = support.movieAdapter,
                     fetchCategories = { report -> xtream.vodCategories(s, report) },
-                    makeStreams = { catMap ->
+                    makeStreams = { catMap, seenCategory ->
                         var order = 0
                         val toMovie = {
                             streamId: String,
@@ -115,6 +116,7 @@ internal class XtreamSyncer(
                             categoryId: String?,
                             containerExt: String?,
                             added: Long? ->
+                            seenCategory(categoryId)
                             MovieEntity(
                                 sourceId = s.id, categoryId = catMap[categoryId], name = name,
                                 posterUrl = icon, rating = rating, plot = plot,
@@ -144,7 +146,7 @@ internal class XtreamSyncer(
                     countsKey = "series",
                     adapter = support.seriesAdapter,
                     fetchCategories = { report -> xtream.seriesCategories(s, report) },
-                    makeStreams = { catMap ->
+                    makeStreams = { catMap, seenCategory ->
                         var order = 0
                         val toSeries = {
                             seriesId: String,
@@ -154,6 +156,7 @@ internal class XtreamSyncer(
                             rating: Double?,
                             categoryId: String?,
                             year: Int?, added: Long?, lastModified: Long? ->
+                            seenCategory(categoryId)
                             SeriesEntity(
                                 sourceId = s.id, categoryId = catMap[categoryId], name = name,
                                 posterUrl = cover, plot = plot, rating = rating,
@@ -186,8 +189,10 @@ internal class XtreamSyncer(
         val adapter: ContentAdapter<T>,
         val fetchCategories: suspend (report: (Long, Long?) -> Unit) -> List<XtCategory>,
         /** Built AFTER the category refresh so the mapper can resolve category remote ids → db ids.
-         *  The mapper's running sortOrder is shared between bulk and fallback (as before). */
-        val makeStreams: (catMap: Map<String, Long>) -> XtreamStreams<T>,
+         *  The mapper's running sortOrder is shared between bulk and fallback (as before).
+         *  [seenCategory] records each item's own category remote id, so the phase can tell which
+         *  categories the bulk list actually covered — see [categoriesMissingFromBulk]. */
+        val makeStreams: (catMap: Map<String, Long>, seenCategory: (String?) -> Unit) -> XtreamStreams<T>,
     )
 
     private class XtreamStreams<T>(
@@ -220,7 +225,12 @@ internal class XtreamSyncer(
         val refreshStart = SystemClock.elapsedRealtime()
         val categories = support.refreshCategories(s, p.type, cats, stats)
         Log.d(TAG, "$label categories refreshed sourceId=${s.id} mapped=${categories.idsByRemoteId.size} ms=${SystemClock.elapsedRealtime() - refreshStart}")
-        val streams = p.makeStreams(categories.idsByRemoteId)
+        // Category remote ids the bulk list actually referenced, so a category it skipped entirely can
+        // be asked for directly before anything is pruned.
+        val bulkCategoryIds = HashSet<String>()
+        val streams = p.makeStreams(categories.idsByRemoteId) { remoteId ->
+            if (!remoteId.isNullOrBlank()) bulkCategoryIds.add(remoteId)
+        }
         val insertFn: suspend (List<T>) -> UpsertStats = if (freshSource) {
             { rows -> support.insertFresh(rows, p.adapter) }
         } else {
@@ -244,7 +254,27 @@ internal class XtreamSyncer(
                 }
             }
             Log.i(TAG, "$label bulk end sourceId=${s.id} complete=$done unique=${total[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}")
-            if (!freshSource && done) {
+            // Categories the dump skipped are fetched HERE, before the prune below: they go into
+            // `remoteIds` with everything else, so rows a previous sync already stored for them are
+            // not seen as stale and deleted — which would take their favourites and history with them.
+            // A category that fails to fetch keeps the prune away entirely, for the same reason.
+            var backfillIncomplete = false
+            if (done) {
+                val missing = categoriesMissingFromBulk(cats, bulkCategoryIds)
+                if (missing.isNotEmpty()) {
+                    Log.i(TAG, "$label bulk omitted ${missing.size} categor(ies) ${missing.joinToString { it.id }} — fetching per-category")
+                    val backfill = sliceByCategory(
+                        ctx, p.phase, label, progress, missing, insertFn, total, total[0], remoteIds, p.adapter.remoteIdOf,
+                    ) { cat, add -> streams.byCategory(cat, add) }
+                    // Only the prune is held back — `done` stays true, or the whole per-category
+                    // fallback below would re-fetch every category to recover a handful.
+                    backfillIncomplete = !backfill.complete
+                    if (backfillIncomplete) {
+                        Log.w(TAG, "$label backfill incomplete succeeded=${backfill.succeededCategoryRemoteIds.size}/${backfill.attempted} — prune skipped")
+                    }
+                }
+            }
+            if (!freshSource && done && !backfillIncomplete) {
                 support.pruneRemoteIds(label, s.id, remoteIds!!, stats, p.adapter.remoteIdsForSource, p.adapter.deleteByRemoteIds)
                 support.pruneCategories(s.id, p.type, categories.seenRemoteIds, label, stats)
             } else if (!freshSource) {
@@ -431,5 +461,31 @@ internal class XtreamSyncer(
 
     companion object {
         private const val TAG = SyncSupport.TAG
+
+        /**
+         * How many of live/movies/series may be in flight at once. Three lets all of them overlap
+         * instead of leaving one waiting on the other two — the panel answers each phase with one
+         * bulk request, so this is three requests, not three streams, and a panel's `max_connections`
+         * limit counts streams. Raise it no further: the per-category fallback fans out underneath
+         * this, and a panel that rate-limits answers 429.
+         */
+        private const val PHASE_CONCURRENCY = 3
+
+        /**
+         * The categories the bulk stream list never referenced. A panel can serve a complete-looking
+         * `get_live_streams` / `get_vod_streams` while filtering out everything the line is not
+         * entitled to — adult content is the usual case, gated per line in XUI-style panels — and
+         * still list the category in `get_*_categories`, which is how a category ends up on screen
+         * with nothing in it. `&category_id=` serves those items, so they are asked for directly.
+         *
+         * [seenRemoteIds] empty means the dump carried no category ids at all: it said nothing about
+         * which categories it covered, so every one of them would look absent and the whole catalog
+         * would be fetched a second time. That is not this bug, so nothing is backfilled.
+         */
+        internal fun categoriesMissingFromBulk(
+            categories: List<XtCategory>,
+            seenRemoteIds: Set<String>,
+        ): List<XtCategory> =
+            if (seenRemoteIds.isEmpty()) emptyList() else categories.filter { it.id !in seenRemoteIds }
     }
 }

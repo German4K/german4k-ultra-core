@@ -19,6 +19,38 @@ Core is versioned independently of the apps. A core version never lines up with 
 
 ---
 
+## core-1.0.45 — 2026-09-16
+
+### A category the provider lists is no longer allowed to arrive empty
+
+A panel can answer the bulk "give me everything" request with a list that quietly leaves a whole
+category out, while still listing that category in its category list. The category then appears in
+the app with nothing in it. Adult categories are the usual case — Stalker flags the genre `censored`,
+Xtream-style panels gate the content per line — but nothing here is specific to adult content.
+
+- **Stalker live** — `get_all_channels` is checked against the genres the portal published, and any
+  genre the dump never mentioned is fetched with `get_ordered_list`. Verified against a live portal:
+  its adult genre holds 174 channels, every one absent from the dump. The existing truncation guard
+  could not see this, because the `"*"` total it compares against is filtered the same way — both
+  numbers agreed at 11,494 while 174 channels were missing.
+- **Xtream live, movies and series** — the same rule on `get_live_streams` / `get_vod_streams` /
+  `get_series_streams`: a category no streamed item referenced is re-fetched with `&category_id=`.
+- **The backfill runs before the prune**, so rows an earlier sync stored for a hidden category are
+  not seen as stale and deleted — which would have taken their favourites, history and resume
+  positions with them. A backfill category that fails to fetch holds the prune back entirely.
+- **A dump that carries no category information at all backfills nothing.** Every category would look
+  absent, the whole catalog would be fetched twice, and a first sync has no duplicate filter. Stalker
+  guards the same case by remembering the remote ids the dump already inserted.
+
+### Xtream sync overlaps all three sections
+
+- Live, movies and series may now be in flight together (was two at a time). Each is one bulk request
+  per section, not a stream, so a panel's `max_connections` is unaffected.
+
+*No database change · no backup change · no new strings.*
+
+---
+
 ## core-1.0.44 — 2026-09-15
 
 ### A new device can be set up from the one you already have

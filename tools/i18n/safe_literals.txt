@@ -2850,6 +2850,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/sync/M3uSyncer.kt	totalShows=$seriesProcessed ms=${SystemClock.elapsedRealtime() - start}
 1	empty	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	\0
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label bulk fast path sourceId=${s.id} count=${bulk.items.size} single-dump=true
+1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label bulk omitted ${absent.size} genre(s) ${absent.joinToString { it.id }} — fetching per-genre
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label bulk probe failed (${e.message}) — using per-category paging
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label bulk probe not a single-dump (items=${bulk?.items?.size ?: 0} total=${bulk?.totalItems ?: 0}) — per-category paging
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label bulk verification probe failed (${e.message}) — accepting dump unverified
@@ -2861,7 +2862,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label delta-skip sourceId=${s.id} unchangedCategories=${skippedCatDbIds.size}
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label fetch done sourceId=${s.id} pages=${pagesFetched.get()} failures=${pageFailures.get()} emitted=$emitted fetchMs=${SystemClock.elapsedRealtime() - fetchStart}
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label fieldDiff sourceId=$sourceId remoteId=${c.remoteId} hash=${c.computeContentHash()}
-1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label genre ${gi + 1}/${genres.size} id=${genre.id} '${genre.title}' total=${first.totalItems} maxPer=$maxPer pages=$pages
+1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label genre ${gi + 1}/${list.size} id=${genre.id} '${genre.title}' total=${first.totalItems} maxPer=$maxPer pages=$pages
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label genre=${genre.id} page1 failed (${e.message})
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label genre=${genre.id} page=$p failed (${e.message})
 1	log	core/src/main/java/tv/own/owntv/core/sync/StalkerSyncer.kt	$label genres sourceId=${s.id} count=${genres.size}
@@ -2949,8 +2950,10 @@
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncSupport.kt	refreshCategories upsert sourceId=${s.id} type=$type rows=${entities.size}
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncSupport.kt	skippedDuplicates=$skippedDuplicates elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncSupport.kt	totalSkipped=$skippedDuplicates totalUnique=${total[0]} filterMs=$filterMs elapsedMs=${SystemClock.elapsedRealtime() - chunkRunStart}
+1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	$label backfill incomplete succeeded=${backfill.succeededCategoryRemoteIds.size}/${backfill.attempted} — prune skipped
 1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	$label bulk end sourceId=${s.id} complete=$done unique=${total[0]} ms=${SystemClock.elapsedRealtime() - bulkStart}
 1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	$label bulk fetch failed (${e.message}) — falling back to per-category requests
+1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	$label bulk omitted ${missing.size} categor(ies) ${missing.joinToString { it.id }} — fetching per-category
 1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	$label bulk start sourceId=${s.id}
 1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	$label categories fetched sourceId=${s.id} count=${cats.size} ms=${SystemClock.elapsedRealtime() - categoriesStart}
 1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	$label categories refreshed sourceId=${s.id} mapped=${categories.idsByRemoteId.size} ms=${SystemClock.elapsedRealtime() - refreshStart}
@@ -2972,7 +2975,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	ABORTING fallback
 1	technical	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	HTTP
 4	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	SyncManager
-1	technical	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=2 hlsSupported=${details?.hlsSupported} maxConnections=${details?.maxConnections}
+1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	Xtream sync scheduling sourceId=${s.id} contentTypes=$contentTypes concurrency=$PHASE_CONCURRENCY hlsSupported=${details?.hlsSupported} maxConnections=${details?.maxConnections}
 2	technical	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	channels
 1	technical	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	channels_fts
 1	log	core/src/main/java/tv/own/owntv/core/sync/XtreamSyncer.kt	complete=$complete newUnique=$delta totalUnique=${total[0]} ms=${SystemClock.elapsedRealtime() - categoryStart}

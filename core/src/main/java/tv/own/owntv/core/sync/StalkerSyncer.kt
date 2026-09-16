@@ -172,17 +172,17 @@ internal class StalkerSyncer(
                     }
                 } else 0
                 val bulkComplete = bulk != null && bulk.isNotEmpty() && bulk.size >= declaredTotal
-                if (bulkComplete) {
-                    Log.i(TAG, "$label get_all_channels ok count=${bulk.size} declaredTotal=$declaredTotal ms=${SystemClock.elapsedRealtime() - bulkStart}")
-                    bulk.forEach { emit(it, null) }
-                } else {
-                    if (bulk != null && bulk.isNotEmpty()) {
-                        Log.w(TAG, "$label get_all_channels truncated count=${bulk.size} declaredTotal=$declaredTotal — falling back to per-genre paging")
-                    }
-                    // FALLBACK: per-genre paged fetch (portal denied/emptied the bulk list). Pages fetched
-                    // CONCURRENTLY in windows; add() runs single-threaded after each window's awaitAll.
-                    Log.i(TAG, "$label per-genre fallback begin genres=${genres.size}")
-                    genres.forEachIndexed { gi, genre ->
+                // Remote ids already emitted from the bulk dump, so the genre backfill below cannot
+                // insert one of them a second time. A FRESH source passes no `seenKeys` to chunked()
+                // — its duplicate filter is off — so this is the only thing standing between a portal
+                // that omits `tv_genre_id` from its dump and a doubled first sync. Stays empty (and
+                // costs nothing) on the fallback path, where no bulk dump was accepted.
+                val bulkEmittedIds = HashSet<String>()
+                // Per-genre paged fetch. Pages fetched CONCURRENTLY in windows; add() runs
+                // single-threaded after each window's awaitAll. Used for the whole catalog when the
+                // portal denies/empties the bulk list, and for the few genres a bulk dump left empty.
+                val pageGenres: suspend (List<StalkerClient.Genre>) -> Unit = { list ->
+                    list.forEachIndexed { gi, genre ->
                         ctx.ensureActive()
                         // A genre that can't be fetched must not silently shrink the pass: count the
                         // failure so the prune below is skipped (mirrors the VOD path's pageFailures).
@@ -195,11 +195,11 @@ internal class StalkerSyncer(
                             Log.w(TAG, "$label genre=${genre.id} page1 failed (${e.message})")
                             return@forEachIndexed
                         }
-                        first.items.forEach { emit(it, genre.id) }
+                        first.items.forEach { if (it.id !in bulkEmittedIds) emit(it, genre.id) }
                         val maxPer = first.maxPageItems.takeIf { it > 0 } ?: first.items.size
                         val pages = (if (maxPer > 0) (first.totalItems + maxPer - 1) / maxPer else 1)
                             .coerceAtMost(MAX_PAGES_PER_GENRE)
-                        Log.i(TAG, "$label genre ${gi + 1}/${genres.size} id=${genre.id} '${genre.title}' total=${first.totalItems} maxPer=$maxPer pages=$pages")
+                        Log.i(TAG, "$label genre ${gi + 1}/${list.size} id=${genre.id} '${genre.title}' total=${first.totalItems} maxPer=$maxPer pages=$pages")
                         var page = 2
                         while (page <= pages) {
                             ctx.ensureActive()
@@ -221,10 +221,32 @@ internal class StalkerSyncer(
                                     }
                                 }.awaitAll()
                             }
-                            window.forEach { pageResult -> pageResult?.items?.forEach { emit(it, genre.id) } }
+                            window.forEach { pageResult ->
+                                pageResult?.items?.forEach { if (it.id !in bulkEmittedIds) emit(it, genre.id) }
+                            }
                             page = windowEnd + 1
                         }
                     }
+                }
+
+                if (bulkComplete) {
+                    Log.i(TAG, "$label get_all_channels ok count=${bulk.size} declaredTotal=$declaredTotal ms=${SystemClock.elapsedRealtime() - bulkStart}")
+                    bulk.forEach { emit(it, null) }
+                    // A complete-looking dump can still be missing whole genres — see
+                    // [genresMissingFromBulk]. Ask for those directly; costs nothing when the portal
+                    // hid nothing.
+                    val absent = genresMissingFromBulk(genres, bulk)
+                    if (absent.isNotEmpty()) {
+                        bulk.forEach { bulkEmittedIds.add(it.id) }
+                        Log.i(TAG, "$label bulk omitted ${absent.size} genre(s) ${absent.joinToString { it.id }} — fetching per-genre")
+                        pageGenres(absent)
+                    }
+                } else {
+                    if (bulk != null && bulk.isNotEmpty()) {
+                        Log.w(TAG, "$label get_all_channels truncated count=${bulk.size} declaredTotal=$declaredTotal — falling back to per-genre paging")
+                    }
+                    Log.i(TAG, "$label per-genre fallback begin genres=${genres.size}")
+                    pageGenres(genres)
                 }
             }
             if (pageFailures.get() > 0) {
@@ -672,5 +694,21 @@ internal class StalkerSyncer(
 
         /** Safety cap: ignore an absurd total_items from a portal that mis-reports or ignores `p=`. */
         private const val MAX_PAGES_PER_GENRE = 5_000
+
+        /**
+         * The genres [bulk] never mentioned — the ones a `get_all_channels` dump left out entirely.
+         * Portals omit censored genres (adult, in practice) from that dump *and* from the `"*"` total
+         * the completeness check compares against, so the dump looks whole while a whole genre is
+         * missing; `get_ordered_list` still serves them. Channels with no `tv_genre_id` say nothing
+         * about which genres are covered, so they are ignored here.
+         */
+        internal fun genresMissingFromBulk(
+            genres: List<StalkerClient.Genre>,
+            bulk: List<StalkerClient.Channel>,
+        ): List<StalkerClient.Genre> {
+            val seen = HashSet<String>()
+            bulk.forEach { ch -> ch.genreId?.takeIf { it.isNotBlank() }?.let { seen.add(it) } }
+            return genres.filter { it.id !in seen }
+        }
     }
 }
