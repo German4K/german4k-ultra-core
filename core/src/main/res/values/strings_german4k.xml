@@ -43,4 +43,49 @@
     <string name="g4k_feature_dev_body">This area is not finished yet. Things may be missing or wrong – view it anyway?</string>
     <string name="g4k_feature_dev_open">View anyway</string>
     <string name="g4k_about_expires">Access valid until <xliff:g id="date" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <!-- Build 8: help screen, self-test and what its verdict means for the customer. -->
+    <string name="g4k_help_title">Help &amp; connection</string>
+    <string name="g4k_help_subtitle">Check your connection here or send the error to German4K – nobody has to type anything.</string>
+    <string name="g4k_help_check">Check connection</string>
+    <string name="g4k_help_checking">Checking…</string>
+    <string name="g4k_help_send">Send error to German4K</string>
+    <string name="g4k_help_sent">Sent. We can see what happened now.</string>
+    <string name="g4k_help_device">Device <xliff:g id="mac" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · code <xliff:g id="code" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <string name="g4k_help_build">German4K Ultra <xliff:g id="version" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> (Build <xliff:g id="code" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$d</xliff:g>)</string>
+    <string name="g4k_help_contact">Still stuck? Write to us on WhatsApp or Telegram – german4k.com</string>
+    <string name="g4k_help_open">Help &amp; connection</string>
+
+    <string name="g4k_fehler_alles_gut_title">Everything works</string>
+    <string name="g4k_fehler_alles_gut_body">Connection, access and channels answer normally. If the picture still fails, write to us – we can see the details now.</string>
+    <string name="g4k_fehler_kein_netz_title">No internet</string>
+    <string name="g4k_fehler_kein_netz_body">This device has no connection. Check WiFi or the network cable; if nothing helps, unplug the router for three minutes.</string>
+    <string name="g4k_fehler_zwangsportal_title">Your network wants a login first</string>
+    <string name="g4k_fehler_zwangsportal_body">This WiFi (hotel, guest or company network) asks you to sign in on a web page first. Open any page in a browser, complete the sign-in, then try again.</string>
+    <string name="g4k_fehler_router_sperre_title">Your router blocks us</string>
+    <string name="g4k_fehler_router_sperre_body">The internet works, but this network does not let our address through – usually a filter or parental control in the router. Try a phone hotspot to be sure, then allow german4k.tv in the router.</string>
+    <string name="g4k_fehler_anbieter_sperre_title">Your provider is blocking right now</string>
+    <string name="g4k_fehler_anbieter_sperre_body">Everything of ours answers, but no channel plays. Some providers block during live matches. A VPN helps, and after the match it works again by itself.</string>
+    <string name="g4k_fehler_host_ausfall_title">Switched to the second connection</string>
+    <string name="g4k_fehler_host_ausfall_body">One of our two connections was unreachable, the app switched by itself. The picture is back – nothing to do.</string>
+    <string name="g4k_fehler_leitung_belegt_title">Access busy on another device</string>
+    <string name="g4k_fehler_leitung_belegt_body">Your access is in use somewhere else, or an old session is stuck. Close the app on the other device – or release the connection here.</string>
+    <string name="g4k_fehler_abgelaufen_title">Access expired</string>
+    <string name="g4k_fehler_abgelaufen_body">This access has run out. Renew it, then press “Check again” – the list comes straight back.</string>
+    <string name="g4k_fehler_land_gesperrt_title">Not available in this country</string>
+    <string name="g4k_fehler_land_gesperrt_body">Your access is not enabled for this country. Write to us, we will sort it out.</string>
+    <string name="g4k_fehler_uhrzeit_title">The clock of this device is wrong</string>
+    <string name="g4k_fehler_uhrzeit_body">The time is far off. The guide then looks shifted and catch-up misses. Set date and time to automatic in the device settings.</string>
+    <string name="g4k_fehler_unbekannt_title">Something is not working</string>
+    <string name="g4k_fehler_unbekannt_body">We could not narrow it down. Send the error to us – then we can see what happened without you typing anything.</string>
+
+    <string name="g4k_update_quellen_text">Android asks once before German4K Ultra may install an update. Allow it in the next screen, then start the update again.</string>
+    <string name="g4k_update_quellen_firetv">Fire TV asks once before German4K Ultra may install an update: Settings › My Fire TV › Developer options › Apps from unknown sources › German4K Ultra. Then start the update again.</string>
+    <string name="g4k_update_quellen_button">Open settings</string>
+    <string name="g4k_uhr_hinweis">The clock of this device is wrong – the guide will look shifted. Set date and time to automatic.</string>
+    <string name="g4k_schritt_netz">Network</string>
+    <string name="g4k_schritt_internet">Internet</string>
+    <string name="g4k_schritt_panel">German4K</string>
+    <string name="g4k_schritt_host">Connection</string>
+    <string name="g4k_schritt_stream">Channel</string>
+    <string name="g4k_schritt_uhr">Clock</string>
 </resources>

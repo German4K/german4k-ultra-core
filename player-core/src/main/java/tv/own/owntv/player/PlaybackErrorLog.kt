@@ -23,7 +23,8 @@ import java.util.concurrent.Executors
 object PlaybackErrorLog {
     private const val MAX = 25
     private const val FILE_NAME = "playback_errors.json"
-    private const val EXPORT_NAME = "owntv-playback-report.txt"
+    // German4K: der Dateiname landet im Download-Ordner des Kunden.
+    private const val EXPORT_NAME = "german4k-fehlerbericht.txt"
 
     /** What an entry is. The log used to hold hard failures only, which is exactly why a "the picture
      *  judders / the sound drifts" report produced an empty log (F18). */
@@ -294,7 +295,7 @@ object PlaybackErrorLog {
         val appContext = context.applicationContext
         val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US)
         val text = buildString {
-            appendLine("OwnTV playback report")
+            appendLine("German4K Ultra playback report")
             appendLine("${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
             appendLine("Exported ${stamp.format(java.util.Date())}")
             appendLine()

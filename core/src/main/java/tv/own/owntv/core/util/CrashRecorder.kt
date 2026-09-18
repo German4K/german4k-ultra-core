@@ -45,6 +45,11 @@ object CrashRecorder {
         }
     }
 
+    /** German4K: forget the recorded crash — called once it has reached us (German4kDiagnose). */
+    fun clear(context: Context) {
+        runCatching { file(context).delete() }
+    }
+
     /** The recorded crash, or null when the app has never gone down on this device. */
     fun read(context: Context): String? =
         runCatching { file(context).takeIf { it.exists() }?.readText()?.takeIf { it.isNotBlank() } }.getOrNull()
@@ -53,7 +58,9 @@ object CrashRecorder {
         val stamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US)
             .format(java.util.Date())
         val text = buildString {
-            appendLine("OwnTV ${CoreBuildInfo.versionName} (${CoreBuildInfo.versionCode})")
+            // German4K: der Bericht landet bei uns UND (über den Export) beim Kunden — hier steht
+            // nie ein fremder Markenname.
+            appendLine("German4K Ultra ${CoreBuildInfo.versionName} (${CoreBuildInfo.versionCode})")
             appendLine("${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
             appendLine("Crashed $stamp on thread \"${thread.name}\"")
             appendLine()

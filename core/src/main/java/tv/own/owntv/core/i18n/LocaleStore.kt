@@ -58,7 +58,13 @@ class LocaleStore internal constructor(
         // locale must never take down Application.attachBaseContext, so treat every read failure as
         // the system-default selection.
         val stored = runCatching { preferences.getString(KEY_UI_LANGUAGE, "") }.getOrNull()
-        return normalize(stored) ?: AppLocale.SYSTEM_DEFAULT_TAG
+        normalize(stored)?.let { return it }
+        // German4K: only German and English ship in this build. On a device set to Turkish, Polish or
+        // Russian the system default lands on English — and our customers are German-speaking, so
+        // English is the wrong guess for a language we do not ship. German is the fallback; a device
+        // actually set to English keeps English, and the language picker overrides both.
+        val geraet = runCatching { java.util.Locale.getDefault().language.lowercase() }.getOrDefault("")
+        return if (geraet == "de" || geraet == "en") AppLocale.SYSTEM_DEFAULT_TAG else GERMAN4K_FALLBACK
     }
 
     /** Canonicalizes a persisted/imported value, or returns null when it is not supported. */
@@ -93,6 +99,9 @@ class LocaleStore internal constructor(
     }
 
     companion object {
+        /** German4K: Rückfallsprache für Geräte, deren Sprache wir nicht ausliefern. */
+        const val GERMAN4K_FALLBACK = "de"
+
         private const val KEY_UI_LANGUAGE = "ui_language"
         private const val PREFS_NAME = "owntv_locale"
 

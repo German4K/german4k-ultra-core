@@ -47,6 +47,10 @@ data class German4kPanelAnswer(
     val update: German4kUpdate? = null,
     /** Feature switches: aus | entwicklung | beta | an. */
     val features: Map<String, String> = emptyMap(),
+    /** The panel asks this device to upload its error log on the next start (`/mac diagnose <MAC>`). */
+    val diagnoseRequested: Boolean = false,
+    /** Server clock (UTC, ISO). A device clock far off this makes the guide look shifted. */
+    val serverTime: String = "",
 ) {
     companion object {
         fun parse(json: String): German4kPanelAnswer {
@@ -88,6 +92,8 @@ data class German4kPanelAnswer(
                     German4kUpdate(u.optString("channel"), u.optString("version_name"), u.optInt("version_code", 0), u.optString("url"), u.optString("notes"), u.optBoolean("required", false))
                 },
                 features = o.optJSONObject("features")?.let { f -> f.keys().asSequence().associateWith { k -> f.optString(k) } } ?: emptyMap(),
+                diagnoseRequested = o.optBoolean("diagnose_requested", false),
+                serverTime = o.optString("server_time"),
             )
         }
     }
@@ -99,6 +105,7 @@ data class German4kPanelAnswer(
         put("note_typ", noteTyp); put("note_id", noteId); put("verlaengern_url", verlaengernUrl)
         update?.let { u -> put("update", JSONObject().apply { put("channel", u.channel); put("version_name", u.versionName); put("version_code", u.versionCode); put("url", u.url); put("notes", u.notes); put("required", u.required) }) }
         put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
+        put("diagnose_requested", diagnoseRequested); put("server_time", serverTime)
         put("sources", org.json.JSONArray().apply {
             sources.forEach { s ->
                 put(JSONObject().apply {
@@ -137,6 +144,31 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
                 val text = response.body.string()
                 Log.d(TAG, "panel answered: ${text.length} chars")
                 German4kPanelAnswer.parse(text)
+            }
+        }
+
+    /** Sends a diagnostics report (crash, playback errors, self-test). Fire and forget: never blocks the UI. */
+    suspend fun sendDiagnose(deviceId: String, appVersion: String, versionCode: Int, typ: String, text: String, meta: JSONObject?): Boolean =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("version", appVersion)
+                put("build", versionCode)
+                put("typ", typ)
+                put("text", text)
+                if (meta != null) put("meta", meta)
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/diagnose")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { it.isSuccessful }
+            }.getOrElse {
+                Log.w(TAG, "diagnose not delivered: ${it.message}")
+                false
             }
         }
 

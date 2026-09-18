@@ -1681,10 +1681,120 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	sources
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	ua
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	url
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	$model · Android ${Build.VERSION.RELEASE} (API $api)${if (fireTv) " · Fire TV" else ""}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	${Build.MANUFACTURER} ${Build.MODEL}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	(4K)
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	+DV
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	10
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	Amazon
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	DEPRECATION
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	German4kCaps
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	amazon.hardware.fire_tv
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	codec list unreadable: ${it.message}
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	ja
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	nein
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	· Fire TV
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	· HDR ${if (hdr10) "10" else "nein"}${if (dolbyVision) "+DV" else ""}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	· HEVC ${if (hevc) "ja" else "nein"}${if (hevc4k) " (4K)" else ""}
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceId.kt	\0
 1	compiler	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceId.kt	HardwareIds
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	$typ ${if (ok) "delivered" else "not delivered"} (${text.length} chars)
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	${it.groupValues[1]}***
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	${it.groupValues[1]}***/***
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	${it.groupValues[1]}***:***@
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	((?:username|password|pass|user|token|key)=)[^&\\s"'<>]*
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	(/(?:live|movie|series|timeshift|streaming)/)[^/\\s]+/[^/\\s]+
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	(https?://)[^/\\s:@]+:[^/\\s@]+@
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	--- Host-Wechsel in dieser Sitzung ---
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	--- Wiedergabe ---
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	--- live ---
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	German4K Ultra ${CoreBuildInfo.versionName} (${CoreBuildInfo.versionCode})
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	German4kDiagnose
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	[${stempel.format(java.util.Date(e.zeitMs))}] ${e.art} · ${e.engine} · ${if (e.live) "live" else "vod"}
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	api
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	crash
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	delivered
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	dolby_vision
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	fire_tv
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	grund: $it
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	hdr10
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	hevc
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	hevc4k
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	live
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	manuell
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	model
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	not delivered
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	roh : $it
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	selbsttest
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	send failed: ${it.message}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	spec : $it
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	sprache
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	tv
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	vod
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	yyyy-MM-dd HH:mm:ss
+4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_HOST ${kurz(host)}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${abweichung}s daneben
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${host.trimEnd('/')}/player_api.php?username=${enc(user)}&password=${enc(pass)}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${if (it.ok) "ok " else "FEHL"} ${it.name}: ${it.info}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${uhrAbweichungSek}s daneben
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	(?:http(?: error)? |response code[:= ]+|status(?: code)?[:= ]+|code[:= ]+)(\\d{3})\\b
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Anmeldeseite des Netzes
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Banned
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Disabled
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Expired
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	FEHL
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	German4K
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	German4K-Ultra
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	German4kHealth
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	HTTP ${r.code}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Internet
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	LAN
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Location
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Mobilfunk
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Netz: $netzart · Uhr ${if (abs(uhrAbweichungSek) < 60) "ok" else "${uhrAbweichungSek}s daneben"}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Netzwerk
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Range
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Selbsttest: $klasse
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Sender
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	UTF-8
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Uhrzeit
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	User-Agent
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Verbindung
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	WLAN
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Zugang abgelehnt ($zustand)
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	antwortet ($zustand)
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	auth
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	bytes=0-65535
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	connection limit
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	erreichbar
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	expired
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	german4k.com
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	host
+1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	http://
+1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	https://
+1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	https://german4k.com/
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	internet
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	keine Antwort
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	keins
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	leitung
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	max connections
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	netz
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	ok
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	panel
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	panel check: ${it.message}
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	status
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	stimmt
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	stream
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	uhr
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	user_info
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	$host abgestuft ($reason) → ${if (switched) after else "kein gesunder Ausweich-Host"}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	${java.text.SimpleDateFormat("HH:mm:ss", Locale.US).format(java.util.Date())} $text
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	(?:http(?: error)? |response code[:= ]+|status(?: code)?[:= ]+|http )(\\d{3})\\b
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	German4kHostFailover
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	HH:mm:ss
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	^https?://[^/?#]+
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	connection closed
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	connection refused
@@ -1699,6 +1809,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	failed to connect
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	gave up after
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	handshake failed
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	kein gesunder Ausweich-Host
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	lost connection
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	network is unreachable
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	no healthy alternative
@@ -1713,21 +1824,25 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unknown host
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unknownhost
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unreachable
-3	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	\0
-1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
-1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
+4	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/diagnose
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4kPanel
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	HTTP ${response.code} vom German4K-Panel
-1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	alt_servers
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	apk_link
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app
-1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_version
-1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
-1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
+2	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
+2	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	build
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	channel
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	device_key
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	diagnose not delivered: ${it.message}
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	diagnose_requested
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	einrichten_url
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	expire_date
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	features
@@ -1738,6 +1853,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	login_host
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	mac
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	mac_registered
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	meta
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	name
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_content
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_id
@@ -1748,13 +1864,16 @@
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	password
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	required
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server_time
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	text
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	typ
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	ultra
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	update
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	url
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	username
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	verlaengern_url
-1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_code
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_name
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	\0
@@ -1782,6 +1901,7 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	wartung
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	entwicklung
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kUserAgent.kt	German4K Ultra/${CoreBuildInfo.versionName} (Build ${CoreBuildInfo.versionCode}; ${Build.MODEL})
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	${snapshot.mediaType.name}:${snapshot.tmdbId}
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	1080p FHD
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	4K
@@ -1797,9 +1917,11 @@
 1	technical	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	live:${channel.id}
 1	technical	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	movie:${movie.id}
 1	empty	core/src/main/java/tv/own/owntv/core/i18n/AppLocale.kt	\0
-1	empty	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	\0
+2	empty	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	Failed to persist application locale
 1	assertion	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	Unsupported application locale: ${tag.trim()}
+2	json	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	de
+1	json	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	en
 1	technical	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	owntv_locale
 1	preference-key	core/src/main/java/tv/own/owntv/core/i18n/LocaleStore.kt	ui_language
 3	uri	core/src/main/java/tv/own/owntv/core/launcher/LauncherDeepLink.kt	episode
@@ -3386,6 +3508,7 @@
 1	json	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	name
 1	file-path	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	owntv-update
 1	file-path	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	owntv-update.apk
+1	technical	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	package:${context.packageName}
 1	json	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	tag_name
 1	log	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	truncated: got $copied of $total bytes
 1	uri	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	tv.own.owntv.UPDATE_INSTALL_STATUS
@@ -3398,7 +3521,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	wrong package ${info.packageName}
 2	technical	core/src/main/java/tv/own/owntv/core/update/UpdateManager.kt	x86_64
 1	technical	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	Crashed $stamp on thread "${thread.name}"
-1	technical	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	OwnTV ${CoreBuildInfo.versionName} (${CoreBuildInfo.versionCode})
+1	technical	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	German4K Ultra ${CoreBuildInfo.versionName} (${CoreBuildInfo.versionCode})
 1	file-path	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	diagnostics
 1	file-path	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	last_crash.txt
 1	technical	core/src/main/java/tv/own/owntv/core/util/CrashRecorder.kt	yyyy-MM-dd HH:mm:ss
@@ -4287,11 +4410,11 @@
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	DRM / secure-decoder error
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Device ran out of memory for the decoder — try closing other apps
 1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Exported ${stamp.format(java.util.Date())}
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	German4K Ultra playback report
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder error — transient, try again
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Hardware video decoder is busy or can't handle this stream
 1	compiler	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	InlinedApi
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Network problem reaching the provider
-1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	OwnTV playback report
 1	log	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	PlaybackErrorLog
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider blocked the connection — too many streams at once (HTTP 509)
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	Provider denied access (HTTP 403) — credentials, subscription, or IP block
@@ -4310,13 +4433,13 @@
 2	json	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	decoderKind
 2	json	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	decoderName
 2	json	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	engine
+1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	german4k-fehlerbericht.txt
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	hardware
 1	protocol	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	hardware:direct
 2	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	kind
 3	json	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	live
 2	json	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	model
 1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	owntv-errorlog
-1	file-path	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	owntv-playback-report.txt
 1	log	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	playback error log unreadable — starting a new one
 1	technical	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	playback_errors.json
 2	json	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	raw

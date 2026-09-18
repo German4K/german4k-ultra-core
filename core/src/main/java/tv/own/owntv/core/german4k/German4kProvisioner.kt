@@ -116,7 +116,13 @@ class German4kProvisioner(
         cached()?.let { registerHosts(it); German4kFeatures.set(it.features); if (_answer.value == null) _answer.value = it }
         var fromCache = false
         val answer: German4kPanelAnswer = try {
-            panel.fetch(deviceId, version, username, password).also { cache(it); registerHosts(it); _answer.value = it; German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features); pendingTestNote?.let(::debugTestNote) }
+            panel.fetch(deviceId, version, username, password).also {
+                cache(it); registerHosts(it); _answer.value = it
+                German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features)
+                pendingTestNote?.let(::debugTestNote)
+                // Absturz vom letzten Mal und, wenn das Panel darum bittet, das Fehlerprotokoll.
+                German4kDiagnose.nachPanelAntwort(context, panel, deviceId, it)
+            }
         } catch (e: Exception) {
             Log.w(TAG, "panel unreachable: ${e.message}")
             val cached = cached()
@@ -172,8 +178,9 @@ class German4kProvisioner(
         for (src in answer.sources.sortedByDescending { it.isDefault }) {
             val match = existing.firstOrNull { sameSource(it, src) }
             if (match != null) {
-                if (match.password != src.password || match.name != src.name || !match.url.trimEnd('/').equals(src.server.trimEnd('/'), ignoreCase = true)) {
-                    sourceDao.update(match.copy(name = src.name, password = src.password, url = src.server))
+                val ua = German4kUserAgent.wert()
+                if (match.password != src.password || match.name != src.name || match.userAgent != ua || !match.url.trimEnd('/').equals(src.server.trimEnd('/'), ignoreCase = true)) {
+                    sourceDao.update(match.copy(name = src.name, password = src.password, url = src.server, userAgent = ua))
                 }
                 kept += match.id
                 managed += match.id.toString()
@@ -186,6 +193,7 @@ class German4kProvisioner(
             val live = if (src.isDefault || kept.isEmpty()) SyncScopeChoice.Now else SyncScopeChoice.Later
             importer.xtream(
                 name = src.name, server = src.server, username = src.username, password = src.password,
+                userAgent = German4kUserAgent.wert(),
                 autoRefresh = PlaylistRefresh(PlaylistAutoRefresh.HOURS_12),
                 live = live, movies = SyncScopeChoice.Later, series = SyncScopeChoice.Later,
             )

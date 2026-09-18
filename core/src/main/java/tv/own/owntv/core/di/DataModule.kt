@@ -51,7 +51,9 @@ val dataModule = module {
             .proxyAuthenticator(proxyHolder.proxyAuthenticator)
             // Global custom DNS: a Dns that reads the live snapshot so the DNS server can be changed
             // at runtime without rebuilding this singleton client. Off = system DNS = exact prior behavior.
-            .dns(dnsHolder.dns)
+            // German4K: IPv4 zuerst. Mehrere deutsche Anschlüsse bekommen ein IPv6-Präfix, das unsere
+            // Stream-Hosts nicht erreicht — auf dem iPhone rettet Happy Eyeballs das, auf Android nicht.
+            .dns(tv.own.owntv.core.german4k.German4kDns(dnsHolder.dns))
             // Force HTTP/1.1. Several IPTV panels / EPG hosts (and their CDNs) have flaky HTTP/2 stacks
             // that send RST_STREAM(PROTOCOL_ERROR) on large/slow responses — e.g. big EPG XML downloads
             // (#17) — which OkHttp surfaces as "stream was reset: PROTOCOL_ERROR". HTTP/1.1 sidesteps it
@@ -77,6 +79,8 @@ val dataModule = module {
     single { HttpClient(get()) }
     // German4K panel: zero-setup provisioning (device id → sources). See core/german4k/.
     single { tv.own.owntv.core.german4k.German4kPanelClient(get()) }
+    // Selbsttest „Verbindung prüfen“ (Hilfe-Bildschirm und Player-Fehler).
+    single { tv.own.owntv.core.german4k.German4kHealth(androidContext(), get(), get(), get(), get()) }
     single {
         tv.own.owntv.core.german4k.German4kProvisioner(
             androidContext(), get(), get(), get(), get(), get(), get(), get(), get(),

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageInstaller
+import android.os.Build
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
@@ -64,6 +65,8 @@ class UpdateManager(
         data class Available(val info: UpdateInfo) : State
         data class Downloading(val percent: Int) : State
         data class Failed(val failure: Failure, val retryInfo: UpdateInfo? = null) : State
+        /** German4K: the system refuses installs from this app until the user allows it once. */
+        data class NeedsInstallPermission(val info: UpdateInfo) : State
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -145,9 +148,32 @@ class UpdateManager(
         }
     }
 
+    /**
+     * German4K: whether this app may hand an APK to the installer at all.
+     *
+     * On Fire TV the answer is no until "Apps aus unbekannten Quellen" is switched on for German4K
+     * Ultra — and until it is, the install session fails without any dialog the customer could act
+     * on (Traian's Fire TV, Build 6 → 7). Asking first turns a dead end into one screen with one button.
+     */
+    fun installErlaubt(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.O || context.packageManager.canRequestPackageInstalls()
+
+    /** The settings screen that grants it, or null when this device has no such screen (old Fire OS). */
+    fun installFreigabeIntent(): Intent? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null
+        val intent = Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+            .setData(android.net.Uri.parse("package:${context.packageName}"))
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return intent.takeIf { it.resolveActivity(context.packageManager) != null }
+    }
+
     /** Downloads the release APK with progress, then opens the system installer. */
     fun downloadAndInstall() {
-        val info = (_state.value as? State.Available)?.info ?: return
+        val info = (_state.value as? State.Available)?.info
+            ?: (_state.value as? State.NeedsInstallPermission)?.info
+            ?: return
+        // German4K: no point downloading 50 MB the installer will refuse to take.
+        if (!installErlaubt()) { _state.value = State.NeedsInstallPermission(info); return }
         _state.value = State.Downloading(0)
         scope.launch {
             runCatching {

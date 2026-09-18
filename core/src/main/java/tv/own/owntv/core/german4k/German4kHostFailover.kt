@@ -43,7 +43,25 @@ object German4kHostFailover {
         }
     }
 
-    fun clear() { groups = emptyList() }
+    fun clear() { groups = emptyList(); synchronized(ereignisse) { ereignisse.clear() } }
+
+    // --- Ereignis-Ring für Diagnosen -------------------------------------------------------
+    //
+    // Ein Host-Wechsel ist die halbe Antwort auf "das Bild war kurz weg": er sagt, dass der erste
+    // Host nicht erreichbar war, und wann. Der Ring hält die letzten Wechsel im Speicher — er ist
+    // Beiwerk eines Berichts, nichts, wofür eine Datei angelegt würde.
+    private val ereignisse = ArrayDeque<String>()
+    private const val RING = 20
+
+    /** The last host switches / demotions, oldest first. Empty when nothing happened this run. */
+    fun recentEvents(): List<String> = synchronized(ereignisse) { ereignisse.toList() }
+
+    private fun note(text: String) {
+        synchronized(ereignisse) {
+            ereignisse.addLast("${java.text.SimpleDateFormat("HH:mm:ss", Locale.US).format(java.util.Date())} $text")
+            while (ereignisse.size > RING) ereignisse.removeFirst()
+        }
+    }
 
     /** Whether [url] belongs to a registered host group. */
     fun knows(url: String): Boolean = groupFor(url) != null
@@ -77,6 +95,7 @@ object German4kHostFailover {
         val healthy = synchronized(g) { g.failedAt[after]?.let { now - it >= COOLDOWN_MS } ?: true }
         val switched = healthy && !after.equals(host, ignoreCase = true)
         Log.w(TAG, "demote $host ($reason) -> ${if (switched) "now $after" else "no healthy alternative"}")
+        note("$host abgestuft ($reason) → ${if (switched) after else "kein gesunder Ausweich-Host"}")
         return switched
     }
 

@@ -42,4 +42,49 @@
     <string name="g4k_feature_dev_body">Dieser Bereich ist noch nicht fertig. Es kann etwas fehlen oder falsch sein – trotzdem ansehen?</string>
     <string name="g4k_feature_dev_open">Trotzdem ansehen</string>
     <string name="g4k_about_expires">Zugang gültig bis <xliff:g id="date" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <!-- Build 8: Hilfe-Bildschirm, Selbsttest und was sein Ergebnis für den Kunden heißt. -->
+    <string name="g4k_help_title">Hilfe &amp; Verbindung</string>
+    <string name="g4k_help_subtitle">Hier kannst du deine Verbindung prüfen oder uns den Fehler schicken – du musst nichts abtippen.</string>
+    <string name="g4k_help_check">Verbindung prüfen</string>
+    <string name="g4k_help_checking">Wird geprüft…</string>
+    <string name="g4k_help_send">Fehler an German4K senden</string>
+    <string name="g4k_help_sent">Ist bei uns. Wir sehen jetzt, was passiert ist.</string>
+    <string name="g4k_help_device">Gerät <xliff:g id="mac" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · Code <xliff:g id="code" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <string name="g4k_help_build">German4K Ultra <xliff:g id="version" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> (Build <xliff:g id="code" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$d</xliff:g>)</string>
+    <string name="g4k_help_contact">Kommst du nicht weiter? Schreib uns über WhatsApp oder Telegram – german4k.com</string>
+    <string name="g4k_help_open">Hilfe &amp; Verbindung</string>
+
+    <string name="g4k_fehler_alles_gut_title">Alles läuft</string>
+    <string name="g4k_fehler_alles_gut_body">Verbindung, Zugang und Sender antworten normal. Wenn das Bild trotzdem fehlt, schreib uns – wir sehen die Einzelheiten jetzt.</string>
+    <string name="g4k_fehler_kein_netz_title">Kein Internet</string>
+    <string name="g4k_fehler_kein_netz_body">Dieses Gerät hat gerade keine Verbindung. Prüfe WLAN oder Netzwerkkabel; wenn nichts hilft, den Router drei Minuten vom Strom nehmen.</string>
+    <string name="g4k_fehler_zwangsportal_title">Dein Netz verlangt erst eine Anmeldung</string>
+    <string name="g4k_fehler_zwangsportal_body">Dieses WLAN (Hotel, Gast- oder Firmennetz) will, dass du dich zuerst auf einer Internetseite anmeldest. Öffne irgendeine Seite im Browser, melde dich an und versuche es dann noch einmal.</string>
+    <string name="g4k_fehler_router_sperre_title">Dein Router blockiert uns</string>
+    <string name="g4k_fehler_router_sperre_body">Das Internet läuft, aber dieses Netz lässt unsere Adresse nicht durch – meist ein Filter oder die Kindersicherung im Router. Zur Gegenprobe den Handy-Hotspot nehmen, danach german4k.tv im Router freigeben.</string>
+    <string name="g4k_fehler_anbieter_sperre_title">Dein Anbieter sperrt gerade</string>
+    <string name="g4k_fehler_anbieter_sperre_body">Alles von uns antwortet, trotzdem läuft kein Sender. Manche Anbieter sperren während Livespielen. Ein VPN hilft, nach dem Spiel geht es von allein wieder.</string>
+    <string name="g4k_fehler_host_ausfall_title">Auf die zweite Verbindung gewechselt</string>
+    <string name="g4k_fehler_host_ausfall_body">Eine unserer beiden Verbindungen war nicht erreichbar, die App hat von allein gewechselt. Das Bild ist wieder da – du musst nichts tun.</string>
+    <string name="g4k_fehler_leitung_belegt_title">Zugang läuft auf einem anderen Gerät</string>
+    <string name="g4k_fehler_leitung_belegt_body">Dein Zugang wird gerade woanders benutzt, oder eine alte Verbindung hängt noch. Schließe die App auf dem anderen Gerät – oder gib die Verbindung hier frei.</string>
+    <string name="g4k_fehler_abgelaufen_title">Zugang abgelaufen</string>
+    <string name="g4k_fehler_abgelaufen_body">Dieser Zugang ist abgelaufen. Verlängere ihn und drücke dann „Erneut prüfen“ – die Liste ist sofort wieder da.</string>
+    <string name="g4k_fehler_land_gesperrt_title">In diesem Land nicht freigeschaltet</string>
+    <string name="g4k_fehler_land_gesperrt_body">Dein Zugang ist für dieses Land nicht freigegeben. Schreib uns, wir stellen das ein.</string>
+    <string name="g4k_fehler_uhrzeit_title">Die Uhr dieses Geräts geht falsch</string>
+    <string name="g4k_fehler_uhrzeit_body">Die Uhrzeit weicht stark ab. Dann sieht der Programmführer verschoben aus und die Aufnahme greift daneben. Stelle Datum und Uhrzeit in den Geräteeinstellungen auf automatisch.</string>
+    <string name="g4k_fehler_unbekannt_title">Etwas läuft nicht</string>
+    <string name="g4k_fehler_unbekannt_body">Wir konnten es nicht eingrenzen. Schick uns den Fehler – dann sehen wir, was passiert ist, ohne dass du etwas abtippen musst.</string>
+
+    <string name="g4k_update_quellen_text">Android fragt einmal nach, bevor German4K Ultra ein Update installieren darf. Erlaube es im nächsten Bildschirm und starte das Update dann noch einmal.</string>
+    <string name="g4k_update_quellen_firetv">Fire TV fragt einmal nach, bevor German4K Ultra ein Update installieren darf: Einstellungen › Mein Fire TV › Entwickleroptionen › Apps aus unbekannten Quellen › German4K Ultra. Danach das Update noch einmal starten.</string>
+    <string name="g4k_update_quellen_button">Einstellungen öffnen</string>
+    <string name="g4k_uhr_hinweis">Die Uhr dieses Geräts geht falsch – der Programmführer sieht dann verschoben aus. Stelle Datum und Uhrzeit auf automatisch.</string>
+    <string name="g4k_schritt_netz">Netzwerk</string>
+    <string name="g4k_schritt_internet">Internet</string>
+    <string name="g4k_schritt_panel">German4K</string>
+    <string name="g4k_schritt_host">Verbindung</string>
+    <string name="g4k_schritt_stream">Sender</string>
+    <string name="g4k_schritt_uhr">Uhrzeit</string>
 </resources>
