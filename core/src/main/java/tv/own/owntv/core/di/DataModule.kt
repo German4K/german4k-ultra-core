@@ -75,6 +75,14 @@ val dataModule = module {
     // for EPG, panel API, metadata and image traffic (F28).
     single { tv.own.owntv.core.network.StreamingHttpClient(get()) }
     single { HttpClient(get()) }
+    // German4K panel: zero-setup provisioning (device id → sources). See core/german4k/.
+    single { tv.own.owntv.core.german4k.German4kPanelClient(get()) }
+    single {
+        tv.own.owntv.core.german4k.German4kProvisioner(
+            androidContext(), get(), get(), get(), get(), get(), get(),
+            newImporter = { get<tv.own.owntv.core.setup.SourceImporter>() },
+        )
+    }
     single { ConnectivityObserver(androidContext()) }
     single { CustomizationStore(androidContext()) }
     single { tv.own.owntv.core.epg.EpgSourceStore(androidContext()) }

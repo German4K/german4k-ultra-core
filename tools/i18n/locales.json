@@ -39,8 +39,8 @@
     "script": "Arab",
     "rtl": true,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "pt-BR",
@@ -53,8 +53,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "pt-PT",
@@ -67,8 +67,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "zh-CN",
@@ -81,8 +81,8 @@
     "script": "Hans",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "zh-TW",
@@ -95,8 +95,8 @@
     "script": "Hant",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "cs",
@@ -109,8 +109,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "da",
@@ -123,8 +123,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "nl",
@@ -137,8 +137,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "fr",
@@ -151,8 +151,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "de",
@@ -179,8 +179,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "ja",
@@ -193,8 +193,8 @@
     "script": "Jpan",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "ko",
@@ -207,8 +207,8 @@
     "script": "Hang",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "nb",
@@ -221,8 +221,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "pl",
@@ -235,8 +235,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "ru",
@@ -249,8 +249,8 @@
     "script": "Cyrl",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "es-US",
@@ -263,8 +263,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "es-ES",
@@ -277,8 +277,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "sv",
@@ -291,8 +291,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "tr",
@@ -305,8 +305,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "ml",
@@ -319,8 +319,8 @@
     "script": "Mlym",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "hi",
@@ -333,8 +333,8 @@
     "script": "Deva",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "bn",
@@ -347,8 +347,8 @@
     "script": "Beng",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "bg",
@@ -459,8 +459,8 @@
     "script": "Latn",
     "rtl": false,
     "tier": 1,
-    "packaged": true,
-    "pickerVisible": true
+    "packaged": false,
+    "pickerVisible": false
   },
   {
     "id": "id",

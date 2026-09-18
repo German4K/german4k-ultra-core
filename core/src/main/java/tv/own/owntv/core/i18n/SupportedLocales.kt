@@ -39,10 +39,10 @@ object SupportedLocales {
     const val TRANSLATION_READINESS_THRESHOLD_PERCENT: Int = 70
 
     /** Canonical Hosted Weblate project overview used by the app and generated documentation. */
-    const val CONTRIBUTION_PROJECT_URL: String = "https://hosted.weblate.org/projects/owntv/"
+    const val CONTRIBUTION_PROJECT_URL: String = "https://github.com/German4K/german4k-ultra"
 
     /** Canonical issue form for requesting a locale before its base files exist. */
-    const val LANGUAGE_REQUEST_URL: String = "https://github.com/ahXN00/OwnTV/issues/new?template=feature_request.yml&title=%5BLanguage%5D%20Add%20"
+    const val LANGUAGE_REQUEST_URL: String = "https://github.com/German4K/german4k-ultra"
 
     /** Tag meaning "follow the current device locale list" (see ``LocaleStore``). */
     const val SYSTEM_DEFAULT_TAG: String = ""

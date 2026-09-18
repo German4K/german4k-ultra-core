@@ -1681,6 +1681,46 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	sources
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	ua
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	url
+1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceId.kt	\0
+1	compiler	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceId.kt	HardwareIds
+1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4kPanel
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	HTTP ${response.code} vom German4K-Panel
+1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	apk_link
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_version
+1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
+1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	device_key
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	einrichten_url
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	expire_date
+1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/ultra
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	id
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	is_default
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	lock
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	login_host
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	mac
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	mac_registered
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	name
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_content
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_title
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	panel answered: ${text.length} chars
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	password
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	ultra
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	username
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version
+1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	\0
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	German4kProvisioner
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	fallback host ${src.server} failed: ${st.failure}
+1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k_panel
+1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
+1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	managed_source_ids
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	${snapshot.mediaType.name}:${snapshot.tmdbId}
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	1080p FHD
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	4K

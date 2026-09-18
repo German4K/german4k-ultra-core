@@ -20,19 +20,19 @@ package tv.own.owntv.core.theme
 object OwnTVPalette {
 
     /** Brand mark colour (the OwnTV play logo) — constant, and the default teal accent. */
-    const val AccentCyan = 0xFF52DBC8L
+    const val AccentCyan = 0xFFA274FBL
 
     // ---------------- DARK (M3 dark over near-black #040e0b) ----------------
-    const val DarkBackground = 0xFF040E0BL
-    const val DarkSurface = 0xFF0E1513L
-    const val DarkSurfaceContainerLowest = 0xFF090F0EL
-    const val DarkSurfaceContainerLow = 0xFF161D1BL
-    const val DarkSurfaceContainer = 0xFF1B211FL
-    const val DarkSurfaceContainerHigh = 0xFF252B29L
-    const val DarkSurfaceContainerHighest = 0xFF303634L
-    const val DarkRailPanel = 0xFF111C18L
-    const val DarkContentPanel = 0xFF0A1512L
-    const val DarkPreviewPanel = 0xFF15201DL
+    const val DarkBackground = 0xFF07050EL
+    const val DarkSurface = 0xFF100C1AL
+    const val DarkSurfaceContainerLowest = 0xFF0B0813L
+    const val DarkSurfaceContainerLow = 0xFF171226L
+    const val DarkSurfaceContainer = 0xFF1C1730L
+    const val DarkSurfaceContainerHigh = 0xFF262040L
+    const val DarkSurfaceContainerHighest = 0xFF302A4CL
+    const val DarkRailPanel = 0xFF130E22L
+    const val DarkContentPanel = 0xFF0C0816L
+    const val DarkPreviewPanel = 0xFF181230L
     const val DarkOnSurface = 0xFFDEE4E1L
     const val DarkOnSurfaceVariant = 0xFFBFC9C4L
     const val DarkOutline = 0xFF89938FL
@@ -105,8 +105,8 @@ private val BluePalette = AccentPalette(
 )
 
 private val VioletPalette = AccentPalette(
-    dark = AccentRoleValues(0xFFCBBEFFL, 0xFF312170L, 0xFF483A88L, 0xFFE7DEFFL),
-    light = AccentRoleValues(0xFF5B45C9L, 0xFFFFFFFFL, 0xFFE5DEFFL, 0xFF190066L),
+    dark = AccentRoleValues(0xFFA274FBL, 0xFF2A0F5EL, 0xFF7C3AEDL, 0xFFF1E9FFL),
+    light = AccentRoleValues(0xFF7C3AEDL, 0xFFFFFFFFL, 0xFFE9DDFFL, 0xFF23005CL),
 )
 
 private val GreenPalette = AccentPalette(

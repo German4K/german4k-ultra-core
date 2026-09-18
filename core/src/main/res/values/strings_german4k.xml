@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra: zero-setup screen (panel provisioning). German is the primary language, see values-de. -->
+<resources>
+    <string name="g4k_checking">Checking your access…</string>
+    <string name="g4k_importing">Setting up your channels…</string>
+    <string name="g4k_uncoupled_title">Almost there</string>
+    <string name="g4k_uncoupled_body">This device is not linked to an access yet. Pick one of three ways:</string>
+    <string name="g4k_way_login_title">1 · Sign in here</string>
+    <string name="g4k_way_login_body">Enter the username and password from your order.</string>
+    <string name="g4k_way_qr_title">2 · Scan the QR code</string>
+    <string name="g4k_way_qr_body">Open the page on your phone and enter your login or M3U link there.</string>
+    <string name="g4k_way_photo_title">3 · Send us a photo</string>
+    <string name="g4k_way_photo_body">Send a photo of this screen via WhatsApp or Telegram – we set everything up for you.</string>
+    <string name="g4k_mac">MAC address</string>
+    <string name="g4k_device_code">Device code</string>
+    <string name="g4k_login_button">Sign in with username &amp; password</string>
+    <string name="g4k_retry_button">Check again</string>
+    <string name="g4k_manual_button">Set up manually</string>
+    <string name="g4k_username">Username</string>
+    <string name="g4k_password">Password</string>
+    <string name="g4k_login_go">Sign in</string>
+    <string name="g4k_back">Back</string>
+    <string name="g4k_offline_title">No connection</string>
+    <string name="g4k_offline_body">german4k.com is not reachable right now. Check the internet connection of this device and try again.</string>
+    <string name="g4k_failed_title">Setup failed</string>
+    <string name="g4k_contact">WhatsApp &amp; Telegram: german4k.com</string>
+    <string name="g4k_expires">Access valid until <xliff:g id="date" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <string name="g4k_continue">Continue</string>
+    <string name="g4k_device_id_unreadable">Device id could not be read</string>
+    <string name="g4k_login_title">Sign in here</string>
+    <string name="g4k_profile_name" translatable="false">German4K</string>
+    <string name="g4k_einrichten_short" translatable="false">german4k.com/app/einrichten</string>
+</resources>

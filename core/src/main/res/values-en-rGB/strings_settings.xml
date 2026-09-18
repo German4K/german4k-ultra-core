@@ -110,7 +110,7 @@ Resync and remove missing titles also allows removing titles the provider no lon
     <string name="local_sync_received_items">Items received: <xliff:g id="count">%1$d</xliff:g></string>
     <string name="local_sync_sent">Your data was sent</string>
     <string name="local_sync_failed">Sync failed</string>
-    <string name="local_sync_error_unreachable">This device could not be reached. On it, open OwnTV → Settings → Data → Local sync and turn Sync mode on. Both devices must be on the same Wi-Fi.</string>
+    <string name="local_sync_error_unreachable">This device could not be reached. On it, open German4K Ultra → Settings → Data → Local sync and turn Sync mode on. Both devices must be on the same Wi-Fi.</string>
     <string name="local_sync_error_unauthorized">The other device refused. The PIN may be wrong, or it may have forgotten this device.</string>
     <string name="local_sync_error_bad_payload">What arrived could not be read. If you used a password, check it is the same on both devices.</string>
     <string name="local_sync_error_unknown">Something went wrong. Try again.</string>
