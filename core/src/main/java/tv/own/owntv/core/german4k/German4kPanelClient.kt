@@ -22,6 +22,8 @@ data class German4kSource(
     val altServers: List<String> = emptyList(),
 )
 
+data class German4kUpdate(val channel: String, val versionName: String, val versionCode: Int, val url: String, val notes: String, val required: Boolean)
+
 /** Answer of `POST https://german4k.com/api/app/ultra` — contract: lib/app-panel/ultra.ts in the website repo. */
 data class German4kPanelAnswer(
     val mac: String,
@@ -36,6 +38,15 @@ data class German4kPanelAnswer(
     val einrichtenUrl: String,
     val loginHost: String,
     val sources: List<German4kSource>,
+    /** Hint kind (verlaengern | abgelaufen | wartung | gesperrt | willkommen | login | info | ""), its stable id
+     *  (so "Verstanden" can hide it for the day) and the QR target for renewing. */
+    val noteTyp: String = "",
+    val noteId: String = "",
+    val verlaengernUrl: String = "",
+    /** What the in-app updater should offer (panel-driven, per device channel), or null. */
+    val update: German4kUpdate? = null,
+    /** Feature switches: aus | entwicklung | beta | an. */
+    val features: Map<String, String> = emptyMap(),
 ) {
     companion object {
         fun parse(json: String): German4kPanelAnswer {
@@ -70,6 +81,13 @@ data class German4kPanelAnswer(
                 einrichtenUrl = o.optString("einrichten_url"),
                 loginHost = o.optString("login_host"),
                 sources = sources,
+                noteTyp = o.optString("note_typ"),
+                noteId = o.optString("note_id"),
+                verlaengernUrl = o.optString("verlaengern_url"),
+                update = o.optJSONObject("update")?.let { u ->
+                    German4kUpdate(u.optString("channel"), u.optString("version_name"), u.optInt("version_code", 0), u.optString("url"), u.optString("notes"), u.optBoolean("required", false))
+                },
+                features = o.optJSONObject("features")?.let { f -> f.keys().asSequence().associateWith { k -> f.optString(k) } } ?: emptyMap(),
             )
         }
     }
@@ -78,6 +96,9 @@ data class German4kPanelAnswer(
         put("mac", mac); put("device_key", deviceKey); put("mac_registered", registered); put("expire_date", expireDate)
         put("lock", if (locked) 1 else 0); put("note_title", noteTitle); put("note_content", noteContent)
         put("app_version", appVersion); put("apk_link", apkLink); put("einrichten_url", einrichtenUrl); put("login_host", loginHost)
+        put("note_typ", noteTyp); put("note_id", noteId); put("verlaengern_url", verlaengernUrl)
+        update?.let { u -> put("update", JSONObject().apply { put("channel", u.channel); put("version_name", u.versionName); put("version_code", u.versionCode); put("url", u.url); put("notes", u.notes); put("required", u.required) }) }
+        put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
         put("sources", org.json.JSONArray().apply {
             sources.forEach { s ->
                 put(JSONObject().apply {

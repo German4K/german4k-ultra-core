@@ -97,6 +97,13 @@ class UpdateManager(
         if (_state.value is State.Checking || _state.value is State.Downloading) return
         _state.value = State.Checking
         scope.launch {
+            // German4K: the panel names the build for this device (stable/beta channel). GitHub only
+            // when the panel has said nothing yet (first start offline).
+            tv.own.owntv.core.german4k.German4kUpdateSource.current?.let { u ->
+                val newer = tv.own.owntv.core.german4k.German4kUpdateSource.newerThan(CoreBuildInfo.versionCode)
+                _state.value = if (newer != null) State.Available(UpdateInfo(newer.versionName, newer.notes, newer.url)) else State.UpToDate
+                return@launch
+            }
             runCatching {
                 val request = Request.Builder()
                     .url("https://api.github.com/repos/${CoreBuildInfo.releaseRepo}/releases/latest")

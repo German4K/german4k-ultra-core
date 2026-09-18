@@ -13,7 +13,7 @@
     <string name="g4k_way_photo_body">Send a photo of this screen via WhatsApp or Telegram – we set everything up for you.</string>
     <string name="g4k_mac">MAC address</string>
     <string name="g4k_device_code">Device code</string>
-    <string name="g4k_login_button">Sign in with username &amp; password</string>
+    <string name="g4k_login_button">Sign in now</string>
     <string name="g4k_retry_button">Check again</string>
     <string name="g4k_manual_button">Set up manually</string>
     <string name="g4k_username">Username</string>
@@ -30,4 +30,17 @@
     <string name="g4k_login_title">Sign in here</string>
     <string name="g4k_profile_name" translatable="false">German4K</string>
     <string name="g4k_einrichten_short" translatable="false">german4k.com/app/einrichten</string>
+    <string name="g4k_hint_renew_button">Renew now</string>
+    <string name="g4k_hint_ok">Got it</string>
+    <string name="g4k_hint_later">Later</string>
+    <string name="g4k_hint_qr_renew">Scan to renew on your phone – or open german4k.com/verlaengern</string>
+    <string name="g4k_hint_qr_setup">Scan to set up on your phone</string>
+    <string name="g4k_expires_chip">Expires in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> days</string>
+    <string name="g4k_expires_today">Expires today</string>
+    <string name="g4k_locked_title">Access not active</string>
+    <string name="g4k_retry_button_short">Check again</string>
+    <string name="g4k_feature_dev_title">Still in development</string>
+    <string name="g4k_feature_dev_body">This area is not finished yet. Things may be missing or wrong – view it anyway?</string>
+    <string name="g4k_feature_dev_open">View anyway</string>
+    <string name="g4k_about_expires">Access valid until <xliff:g id="date" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
 </resources>

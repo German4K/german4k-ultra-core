@@ -77,6 +77,10 @@ class German4kProvisioner(
     private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state.asStateFlow()
 
+    /** The latest panel answer (cached one first, then live) — hint, expiry, update and features for the UI. */
+    private val _answer = MutableStateFlow<German4kPanelAnswer?>(null)
+    val answer: StateFlow<German4kPanelAnswer?> = _answer.asStateFlow()
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var job: Job? = null
 
@@ -109,10 +113,10 @@ class German4kProvisioner(
 
         // Hosts from the last answer are valid before the network is: a start without connectivity to the
         // primary host must already know the alternative.
-        cached()?.let { registerHosts(it) }
+        cached()?.let { registerHosts(it); German4kFeatures.set(it.features); if (_answer.value == null) _answer.value = it }
         var fromCache = false
         val answer: German4kPanelAnswer = try {
-            panel.fetch(deviceId, version, username, password).also { cache(it); registerHosts(it) }
+            panel.fetch(deviceId, version, username, password).also { cache(it); registerHosts(it); _answer.value = it; German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features); pendingTestNote?.let(::debugTestNote) }
         } catch (e: Exception) {
             Log.w(TAG, "panel unreachable: ${e.message}")
             val cached = cached()
@@ -149,8 +153,15 @@ class German4kProvisioner(
         val importer = newImporter()
         val activeProfile = settings.activeProfileId.first()
         val firstRun = activeProfile < 0L || profileDao.getById(activeProfile) == null
-        if (firstRun) importer.createProfile(context.getString(R.string.g4k_profile_name), avatarId = 0, isKids = false, pin = null)
-        else importer.useProfile(activeProfile)
+        if (firstRun) {
+            // A start killed during the first import leaves our profile behind without making it
+            // active — reuse it instead of creating a second "German4K" every time.
+            val ours = profileDao.getAllOnce().firstOrNull { it.name == context.getString(R.string.g4k_profile_name) }
+            if (ours != null) importer.useProfile(ours.id)
+            else importer.createProfile(context.getString(R.string.g4k_profile_name), avatarId = 0, isKids = false, pin = null)
+        } else {
+            importer.useProfile(activeProfile)
+        }
 
         val existing = sourceDao.getAllOnce().filter { it.type == SourceType.XTREAM }
         val managed = managedIds().toMutableSet()
@@ -271,9 +282,45 @@ class German4kProvisioner(
     /** Last panel answer, for screens that only need the hint text / pairing links. */
     suspend fun lastAnswer(): German4kPanelAnswer? = cached()
 
+    /** "Verstanden": hide this hint id for the rest of the day (maintenance hints are never hidden). */
+    suspend fun hinweisGesehen(noteId: String) {
+        context.german4kStore.edit { it[Keys.HINWEIS_GESEHEN] = "$noteId|${today()}" }
+    }
+
+    suspend fun hinweisSchonGesehen(noteId: String): Boolean =
+        context.german4kStore.data.first()[Keys.HINWEIS_GESEHEN] == "$noteId|${today()}"
+
+    private fun today(): String = java.time.LocalDate.now().toString()
+
+    /** Debug builds only: show a sample hint of [typ] without the panel (adb: `--es g4k_note_test verlaengern`). */
+    fun debugTestNote(typ: String) {
+        if (context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE == 0) return
+        // The intent usually arrives before the panel answered: remember it and apply it after the next answer.
+        val base = _answer.value ?: run { pendingTestNote = typ; return }
+        pendingTestNote = null
+        val expire = java.time.LocalDate.now().plusDays(5).toString()
+        val (title, body) = when (typ) {
+            "verlaengern" -> "Zugang läuft bald ab" to "Dein Zugang läuft am $expire ab. Verlängern: QR-Code scannen oder german4k.com – dann läuft alles ohne Unterbrechung weiter."
+            "abgelaufen" -> "Zugang abgelaufen" to "Der Zugang auf diesem Gerät ist abgelaufen. Verlängern: QR-Code scannen oder german4k.com – danach ist die Liste sofort wieder da."
+            "wartung" -> "Wartungsarbeiten" to "Beim Rechenzentrum laufen gerade angekündigte Wartungsarbeiten. Bild und Liste können in dieser Zeit fehlen – das ist keine Störung deines Zugangs."
+            else -> "Hinweis" to "Testhinweis vom Panel."
+        }
+        // Like the panel: an expired or locked line comes without sources.
+        val expired = typ == "abgelaufen" || typ == "gesperrt"
+        _answer.value = base.copy(
+            noteTyp = typ, noteId = "$typ:test", noteTitle = title, noteContent = body,
+            expireDate = when (typ) { "verlaengern" -> expire; "abgelaufen" -> java.time.LocalDate.now().minusDays(1).toString(); else -> base.expireDate },
+            locked = typ == "gesperrt",
+            sources = if (expired) emptyList() else base.sources,
+        )
+    }
+
+    private var pendingTestNote: String? = null
+
     private object Keys {
         val LAST_ANSWER = stringPreferencesKey("last_answer")
         val MANAGED_IDS = stringSetPreferencesKey("managed_source_ids")
+        val HINWEIS_GESEHEN = stringPreferencesKey("hinweis_gesehen")
     }
 
     companion object {

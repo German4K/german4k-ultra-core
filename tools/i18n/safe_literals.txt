@@ -1713,6 +1713,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unknown host
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unknownhost
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unreachable
+3	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	\0
 1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4kPanel
@@ -1725,9 +1726,11 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_version
 1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
 1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	channel
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	device_key
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	einrichten_url
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	expire_date
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	features
 1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/ultra
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	is_default
@@ -1737,25 +1740,48 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	mac_registered
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	name
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_content
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_title
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_typ
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	notes
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	panel answered: ${text.length} chars
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	password
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	required
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	ultra
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	update
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	url
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	username
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	verlaengern_url
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_code
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_name
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	\0
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$noteId|${today()}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$typ:test
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	German4kProvisioner
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Hinweis
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Testhinweis vom Panel.
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Wartungsarbeiten
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Zugang abgelaufen
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Zugang läuft bald ab
+3	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	abgelaufen
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	background install failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	fallback host ${src.server} failed: ${st.failure}
 1	file-path	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k-hintergrund.jpg
 1	file-path	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k/hintergrund.jpg
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k_panel
+2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	gesperrt
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	guide sync failed: ${e.message}
+1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	hinweis_gesehen
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	managed_source_ids
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}
+2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	verlaengern
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	wartung
+2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	entwicklung
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	${snapshot.mediaType.name}:${snapshot.tmdbId}
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	1080p FHD
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	4K
