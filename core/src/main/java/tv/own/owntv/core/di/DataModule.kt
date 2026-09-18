@@ -79,7 +79,7 @@ val dataModule = module {
     single { tv.own.owntv.core.german4k.German4kPanelClient(get()) }
     single {
         tv.own.owntv.core.german4k.German4kProvisioner(
-            androidContext(), get(), get(), get(), get(), get(), get(),
+            androidContext(), get(), get(), get(), get(), get(), get(), get(), get(),
             newImporter = { get<tv.own.owntv.core.setup.SourceImporter>() },
         )
     }

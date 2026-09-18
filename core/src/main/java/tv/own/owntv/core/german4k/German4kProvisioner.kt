@@ -24,7 +24,9 @@ import tv.own.owntv.core.database.dao.SourceDao
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.model.SourceType
 import tv.own.owntv.core.network.ConnectivityObserver
+import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.repository.SourceRepository
+import tv.own.owntv.core.epg.EpgSourceStore
 import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.core.setup.SourceImporter
 import tv.own.owntv.core.sync.SyncScopeChoice
@@ -48,6 +50,8 @@ class German4kProvisioner(
     private val sourceRepository: SourceRepository,
     private val settings: SettingsRepository,
     private val connectivity: ConnectivityObserver,
+    private val epgRepository: EpgRepository,
+    private val epgStore: EpgSourceStore,
     private val newImporter: () -> SourceImporter,
 ) {
     sealed interface State {
@@ -121,17 +125,21 @@ class German4kProvisioner(
         }
 
         try {
-            reconcile(answer)
+            val fresh = reconcile(answer)
             val pid = settings.activeProfileId.first().takeIf { it >= 0L }
             _state.value = State.Ready(answer, fromCache, pid)
+            // Guide for the default host, once — like OwnTV's semi-auto EPG after the wizard, but without
+            // asking. Runs after Ready so the customer is already in the shell while it downloads.
+            fresh?.let { syncGuide(it) }
         } catch (e: Exception) {
             Log.e(TAG, "reconcile failed", e)
             _state.value = State.Failed(e.message ?: context.getString(R.string.g4k_failed_title))
         }
     }
 
-    /** Make the DB match [answer]: update matching sources, import missing ones, drop withdrawn ones. */
-    private suspend fun reconcile(answer: German4kPanelAnswer) {
+    /** Make the DB match [answer]: update matching sources, import missing ones, drop withdrawn ones.
+     *  Returns the default source when it was imported fresh (its guide still needs a first sync). */
+    private suspend fun reconcile(answer: German4kPanelAnswer): SourceEntity? {
         val importer = newImporter()
         val activeProfile = settings.activeProfileId.first()
         val firstRun = activeProfile < 0L || profileDao.getById(activeProfile) == null
@@ -141,6 +149,7 @@ class German4kProvisioner(
         val existing = sourceDao.getAllOnce().filter { it.type == SourceType.XTREAM }
         val managed = managedIds().toMutableSet()
         val kept = mutableSetOf<Long>()
+        var freshDefault: SourceEntity? = null
 
         for (src in answer.sources.sortedByDescending { it.isDefault }) {
             val match = existing.firstOrNull { sameSource(it, src) }
@@ -161,7 +170,7 @@ class German4kProvisioner(
                 live = live, movies = SyncScopeChoice.Later, series = SyncScopeChoice.Later,
             )
             when (val st = importer.state.value) {
-                is SourceImporter.ImportState.Success -> st.source?.let { kept += it.id; managed += it.id.toString() }
+                is SourceImporter.ImportState.Success -> st.source?.let { kept += it.id; managed += it.id.toString(); if (freshDefault == null) freshDefault = it }
                 is SourceImporter.ImportState.Failed -> {
                     if (kept.isEmpty()) throw IllegalStateException(failureText(st.failure))
                     Log.w(TAG, "fallback host ${src.server} failed: ${st.failure}")
@@ -173,6 +182,21 @@ class German4kProvisioner(
         saveManaged(managed)
         dropStale(kept)
         if (firstRun) importer.finish()
+        return freshDefault
+    }
+
+    private suspend fun syncGuide(source: SourceEntity) {
+        for (url in epgRepository.guideUrls(source)) {
+            val epgSource = epgStore.getAll().firstOrNull { it.url == url } ?: epgStore.add(source.name, url, source.userAgent)
+            val now = System.currentTimeMillis()
+            try {
+                epgRepository.refreshUrl(epgSource.id, epgSource.url, epgSource.userAgent) { _, _ -> }
+                epgStore.setSynced(epgSource.id, now, null)
+            } catch (e: Exception) {
+                Log.w(TAG, "guide sync failed: ${e.message}")
+                epgStore.setSynced(epgSource.id, now, e.message)
+            }
+        }
     }
 
     /** Delete sources we created earlier that the panel no longer delivers (never the customer's own). */

@@ -1718,6 +1718,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	German4kProvisioner
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	fallback host ${src.server} failed: ${st.failure}
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k_panel
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	guide sync failed: ${e.message}
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	managed_source_ids
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}
