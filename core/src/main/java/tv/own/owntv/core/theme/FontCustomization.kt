@@ -51,7 +51,7 @@ object PopupSizeScale {
 data class FontCustomization(
     val sizePercent: Int = UiFontScale.DEFAULT,
     val mainFamily: AppFontFamily = AppFontFamily.SYSTEM_SANS,
-    val popupFamily: AppFontFamily = AppFontFamily.LORA,
+    val popupFamily: AppFontFamily = AppFontFamily.SYSTEM_SANS,
     val popupFontSizePercent: Int = PopupFontScale.DEFAULT,
     val popupSizePercent: Int = PopupSizeScale.DEFAULT,
 )
