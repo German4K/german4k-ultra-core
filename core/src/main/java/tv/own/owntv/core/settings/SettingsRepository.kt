@@ -1572,7 +1572,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     }
 
     /** Preferred audio language (ISO code, mpv alang); blank = no preference. */
-    val preferredAudioLang: Flow<String> = prefsFlow { it[Keys.PREF_AUDIO_LANG] ?: "" }
+    // German4K Ultra: German audio track by default (customers expect the German dub without touching settings).
+    val preferredAudioLang: Flow<String> = prefsFlow { it[Keys.PREF_AUDIO_LANG] ?: "de" }
 
     suspend fun setPreferredAudioLang(lang: String) {
         context.dataStore.edit { it[Keys.PREF_AUDIO_LANG] = lang }

@@ -27,7 +27,10 @@ import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.repository.SourceRepository
 import tv.own.owntv.core.epg.EpgSourceStore
+import tv.own.owntv.core.settings.PlaylistAutoRefresh
+import tv.own.owntv.core.settings.PlaylistRefresh
 import tv.own.owntv.core.settings.SettingsRepository
+import java.io.File
 import tv.own.owntv.core.setup.SourceImporter
 import tv.own.owntv.core.sync.SyncScopeChoice
 
@@ -150,6 +153,7 @@ class German4kProvisioner(
         val managed = managedIds().toMutableSet()
         val kept = mutableSetOf<Long>()
         var freshDefault: SourceEntity? = null
+        var defaultId: Long? = null
 
         for (src in answer.sources.sortedByDescending { it.isDefault }) {
             val match = existing.firstOrNull { sameSource(it, src) }
@@ -159,6 +163,7 @@ class German4kProvisioner(
                 }
                 kept += match.id
                 managed += match.id.toString()
+                if (src.isDefault && defaultId == null) defaultId = match.id
                 continue
             }
             _state.value = State.Importing(answer, importer)
@@ -167,10 +172,11 @@ class German4kProvisioner(
             val live = if (src.isDefault || kept.isEmpty()) SyncScopeChoice.Now else SyncScopeChoice.Later
             importer.xtream(
                 name = src.name, server = src.server, username = src.username, password = src.password,
+                autoRefresh = PlaylistRefresh(PlaylistAutoRefresh.HOURS_12),
                 live = live, movies = SyncScopeChoice.Later, series = SyncScopeChoice.Later,
             )
             when (val st = importer.state.value) {
-                is SourceImporter.ImportState.Success -> st.source?.let { kept += it.id; managed += it.id.toString(); if (freshDefault == null) freshDefault = it }
+                is SourceImporter.ImportState.Success -> st.source?.let { kept += it.id; managed += it.id.toString(); if (freshDefault == null) freshDefault = it; if (src.isDefault && defaultId == null) defaultId = it.id }
                 is SourceImporter.ImportState.Failed -> {
                     if (kept.isEmpty()) throw IllegalStateException(failureText(st.failure))
                     Log.w(TAG, "fallback host ${src.server} failed: ${st.failure}")
@@ -181,8 +187,24 @@ class German4kProvisioner(
 
         saveManaged(managed)
         dropStale(kept)
-        if (firstRun) importer.finish()
+        if (firstRun) {
+            // One clean list, not "all playlists" with every channel twice: the first host is the
+            // active playlist; the fallback host stays selectable under "All playlists".
+            defaultId?.let { settings.setDefaultSource(it) }
+            installBackground()
+            importer.finish()
+        }
         return freshDefault
+    }
+
+    /** German4K home background from the app's assets — only if the customer has not chosen one. */
+    private suspend fun installBackground() {
+        runCatching {
+            if (settings.bgImagePath.first().isNotBlank()) return
+            val target = File(context.filesDir, "german4k-hintergrund.jpg")
+            if (!target.exists()) context.assets.open("german4k/hintergrund.jpg").use { input -> target.outputStream().use { input.copyTo(it) } }
+            settings.setBgImagePath(target.absolutePath)
+        }.onFailure { Log.w(TAG, "background install failed: ${it.message}") }
     }
 
     private suspend fun syncGuide(source: SourceEntity) {

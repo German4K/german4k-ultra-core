@@ -1716,7 +1716,10 @@
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	\0
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	German4kProvisioner
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	background install failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	fallback host ${src.server} failed: ${st.failure}
+1	file-path	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k-hintergrund.jpg
+1	file-path	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k/hintergrund.jpg
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k_panel
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	guide sync failed: ${e.message}
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
@@ -2349,7 +2352,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/repository/SourceTester.kt	test sourceId=${source.id} type=${source.type} -> ${result::class.simpleName}
 1	protocol	core/src/main/java/tv/own/owntv/core/settings/RemoteShortcuts.kt	$keyCode:${press.name}
 1	protocol	core/src/main/java/tv/own/owntv/core/settings/RemoteShortcuts.kt	${it.keyCode}$SEPARATOR${it.press.name}$SEPARATOR${it.action.name}
-32	empty	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	\0
+31	empty	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	\0
 1	protocol	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	${mode.name}$SEPARATOR$manualDays
 3	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	,
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ALL
@@ -2390,6 +2393,7 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	customize_pin_$pid
 2	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	customize_pin_$profileId
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	data_saver
+1	locale	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	de
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	default_source_id
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	default_volume
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	default_zoom
