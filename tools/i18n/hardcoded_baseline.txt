@@ -289,6 +289,7 @@
 1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	hls
 1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpegts
 1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	playback failed — retrying once as ${HttpClient.FALLBACK_USER_AGENT}
+1	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	player retry
 2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-align-x
 2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-ass-override
 2	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sub-back-color

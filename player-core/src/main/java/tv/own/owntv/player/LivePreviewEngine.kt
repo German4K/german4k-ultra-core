@@ -1184,7 +1184,7 @@ class LivePreviewEngine(
     /** [prerollSecsOverride] = the tuned channel's playlist "Pre-buffer" override in
      *  seconds; null follows the global setting. */
     fun play(
-        url: String,
+        urlIn: String,
         muted: Boolean,
         meta: MediaMeta = MediaMeta(),
         userAgent: String? = null,
@@ -1196,6 +1196,7 @@ class LivePreviewEngine(
         /** Widevine/ClearKey licence details for this channel (#115); null for an unprotected stream. */
         drmConfig: String? = null,
     ) {
+        val url = tv.own.owntv.core.german4k.German4kHostFailover.rewrite(urlIn)
         LiveDiagnosticsLog.event("play() engine=$engineId url=${HttpClient.redactUrl(url)} muted=$muted")
         // THE reset. Everything a new channel must not inherit from the previous one lives in
         // [TuneState], so forgetting it is one assignment that cannot be partially done.

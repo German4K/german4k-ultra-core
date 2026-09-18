@@ -2540,7 +2540,7 @@ class OwnTVPlayer(
     }
 
     private fun loadUrl(
-        url: String,
+        urlIn: String,
         meta: MediaMeta,
         isLive: Boolean,
         startPositionMs: Long,
@@ -2549,6 +2549,8 @@ class OwnTVPlayer(
         isArchive: Boolean = false,
         startPaused: Boolean = false,
     ) {
+        // German4K Multi-DNS: play on the host currently preferred for this line (unchanged for foreign URLs).
+        val url = tv.own.owntv.core.german4k.German4kHostFailover.rewrite(urlIn)
         // Internal retries keep the current item's notice; a new item must never inherit it.
         if (resetRetries) clearToast()
         ensureInit()
@@ -3279,6 +3281,8 @@ class OwnTVPlayer(
      */
     fun retry() {
         val url = currentUrl ?: return
+        // German4K Multi-DNS: a retry after a failure goes to the other host first (no-op for foreign URLs).
+        tv.own.owntv.core.german4k.German4kHostFailover.demote(url, "player retry")
         reload(url, isLive = isLiveContent, resetRetries = true)
     }
 

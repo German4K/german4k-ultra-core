@@ -107,9 +107,12 @@ class German4kProvisioner(
         if (deviceId.isEmpty()) { _state.value = State.Failed(context.getString(R.string.g4k_device_id_unreadable)); return }
         val version = CoreBuildInfo.versionName
 
+        // Hosts from the last answer are valid before the network is: a start without connectivity to the
+        // primary host must already know the alternative.
+        cached()?.let { registerHosts(it) }
         var fromCache = false
         val answer: German4kPanelAnswer = try {
-            panel.fetch(deviceId, version, username, password).also { cache(it) }
+            panel.fetch(deviceId, version, username, password).also { cache(it); registerHosts(it) }
         } catch (e: Exception) {
             Log.w(TAG, "panel unreachable: ${e.message}")
             val cached = cached()
@@ -158,8 +161,8 @@ class German4kProvisioner(
         for (src in answer.sources.sortedByDescending { it.isDefault }) {
             val match = existing.firstOrNull { sameSource(it, src) }
             if (match != null) {
-                if (match.password != src.password || match.name != src.name) {
-                    sourceDao.update(match.copy(name = src.name, password = src.password))
+                if (match.password != src.password || match.name != src.name || !match.url.trimEnd('/').equals(src.server.trimEnd('/'), ignoreCase = true)) {
+                    sourceDao.update(match.copy(name = src.name, password = src.password, url = src.server))
                 }
                 kept += match.id
                 managed += match.id.toString()
@@ -236,9 +239,16 @@ class German4kProvisioner(
         saveManaged(remaining)
     }
 
-    private fun sameSource(entity: SourceEntity, src: German4kSource): Boolean =
-        entity.url.trimEnd('/').equals(src.server.trimEnd('/'), ignoreCase = true) &&
-            (entity.username ?: "").equals(src.username, ignoreCase = true)
+    /** Same line on any of the panel's hosts — the stored URL may sit on an alternative host from an older answer. */
+    private fun sameSource(entity: SourceEntity, src: German4kSource): Boolean {
+        val hosts = (listOf(src.server) + src.altServers).map { it.trimEnd('/').lowercase() }
+        return entity.url.trimEnd('/').lowercase() in hosts && (entity.username ?: "").equals(src.username, ignoreCase = true)
+    }
+
+    /** Hand the host groups of this answer to the failover (one group per source with alternatives). */
+    private fun registerHosts(answer: German4kPanelAnswer) {
+        German4kHostFailover.register(answer.sources.map { listOf(it.server) + it.altServers })
+    }
 
     private fun failureText(f: SourceImporter.SetupFailure): String = when (f) {
         is SourceImporter.SetupFailure.Sync -> f.failure.toString()

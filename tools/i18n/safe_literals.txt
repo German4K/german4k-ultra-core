@@ -1683,11 +1683,42 @@
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	url
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceId.kt	\0
 1	compiler	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceId.kt	HardwareIds
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	(?:http(?: error)? |response code[:= ]+|status(?: code)?[:= ]+|http )(\\d{3})\\b
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	German4kHostFailover
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	^https?://[^/?#]+
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	connection closed
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	connection refused
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	connection reset
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	demote $host ($reason) -> ${if (switched) "now $after" else "no healthy alternative"}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	did not open
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	econnrefused
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	econnreset
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	ehostunreach
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	enetunreach
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	eof
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	failed to connect
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	gave up after
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	handshake failed
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	lost connection
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	network is unreachable
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	no healthy alternative
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	no route to host
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	now $after
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	socket closed
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	software caused connection abort
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	ssl handshake
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	timed out
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	timeout
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unexpected end of stream
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unknown host
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unknownhost
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unreachable
 1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4kPanel
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	HTTP ${response.code} vom German4K-Panel
 1	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	alt_servers
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	apk_link
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
@@ -1994,6 +2025,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET failed for $safeUrl
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET failed url=$safeUrl attempt=$attempt/$attempts totalMs=${SystemClock.elapsedRealtime() - startedAt}
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET headers url=$safeUrl code=${response.code} contentLength=${totalBytes ?: -1}
+1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET host failover url=$safeUrl -> retrying on alternative host
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	GET start url=$safeUrl ua=${ua.take(48)} attempt=$attempt/$attempts
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	HTTP ${response.code} for ${redact(url)}
 2	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	HttpClient
@@ -2002,6 +2034,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	contentEncoding=${response.header("Content-Encoding").orEmpty()} headersMs=${headersAt - startedAt}
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	deltaBytes=$bytesDelta deltaMs=$timeDelta kbps=$kbps
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	elapsedMs=${now - startedAt}
+1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	http: ${e.message}
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	message=${e.message}${if (retrying) " retrying" else ""}
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	readCalls=$readCalls readBlockedMs=$readBlockedMs maxReadMs=$maxReadMs
 1	log	core/src/main/java/tv/own/owntv/core/network/HttpClient.kt	retrying

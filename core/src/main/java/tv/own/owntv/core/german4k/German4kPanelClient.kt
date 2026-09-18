@@ -18,6 +18,8 @@ data class German4kSource(
     val username: String,
     val password: String,
     val isDefault: Boolean,
+    /** Further hosts serving the same line (Multi-DNS stage 2); the app switches between them on failure. */
+    val altServers: List<String> = emptyList(),
 )
 
 /** Answer of `POST https://german4k.com/api/app/ultra` — contract: lib/app-panel/ultra.ts in the website repo. */
@@ -50,6 +52,7 @@ data class German4kPanelAnswer(
                             username = s.optString("username"),
                             password = s.optString("password"),
                             isDefault = s.optBoolean("is_default", false),
+                            altServers = s.optJSONArray("alt_servers")?.let { a -> List(a.length()) { a.optString(it) }.filter { it.isNotBlank() } } ?: emptyList(),
                         ),
                     )
                 }
@@ -80,6 +83,7 @@ data class German4kPanelAnswer(
                 put(JSONObject().apply {
                     put("id", s.id); put("name", s.name); put("server", s.server); put("username", s.username)
                     put("password", s.password); put("is_default", s.isDefault)
+                    put("alt_servers", org.json.JSONArray(s.altServers))
                 })
             }
         })

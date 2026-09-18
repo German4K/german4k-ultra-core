@@ -34,6 +34,9 @@ class HttpClient(private val client: OkHttpClient) {
         block: suspend (InputStream) -> T,
     ): T = withContext(Dispatchers.IO) {
         val ua = userAgent?.takeIf { it.isNotBlank() } ?: DEFAULT_USER_AGENT
+        // German4K Multi-DNS: talk to the host currently preferred for this line; on a host-level failure
+        // demote it and try the same request once more on the alternative (see German4kHostFailover).
+        val url = tv.own.owntv.core.german4k.German4kHostFailover.rewrite(url)
         val request = Request.Builder()
             .url(url)
             .header("User-Agent", ua)
@@ -81,6 +84,12 @@ class HttpClient(private val client: OkHttpClient) {
                 // have consumed items, and the truncation fallback handles those.
                 val retryableStatus = e is HttpStatusException && (e.code in 500..599 || e.code == 429)
                 val retrying = (!responseReceived || retryableStatus) && attempt < attempts
+                if (!retrying && (!responseReceived || retryableStatus) &&
+                    tv.own.owntv.core.german4k.German4kHostFailover.demote(url, "http: ${e.message}")
+                ) {
+                    Log.w(TAG, "GET host failover url=$safeUrl -> retrying on alternative host")
+                    return@withContext get(url, userAgent, onProgress, maxAttempts = 1, headers = headers, block = block)
+                }
                 Log.w(
                     TAG,
                     "GET failed url=$safeUrl attempt=$attempt/$attempts totalMs=${SystemClock.elapsedRealtime() - startedAt} " +

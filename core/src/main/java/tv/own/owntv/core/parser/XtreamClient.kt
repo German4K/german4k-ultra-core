@@ -689,7 +689,8 @@ class XtreamClient(private val http: HttpClient) {
     }
 
     // --- helpers ---
-    private fun base(s: SourceEntity) = s.url.trimEnd('/')
+    // German4K Multi-DNS: API, guide and stream URLs are built on the host currently preferred for this line.
+    private fun base(s: SourceEntity) = tv.own.owntv.core.german4k.German4kHostFailover.rewrite(s.url.trimEnd('/'))
 
     private fun api(s: SourceEntity, action: String, extra: String = ""): String {
         val u = URLEncoder.encode(s.username.orEmpty(), "UTF-8")
