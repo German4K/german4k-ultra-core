@@ -1735,6 +1735,10 @@
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	tv
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	vod
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	yyyy-MM-dd HH:mm:ss
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	${rubrik.orEmpty()} ${titel.orEmpty()}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	\\bdv\\b
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	dolby vision
 12	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_HOST ${kurz(host)}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_SPRUNG ${sp.nr}

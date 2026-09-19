@@ -97,4 +97,7 @@
     <string name="g4k_schritt_sprung">Route</string>
     <string name="g4k_fehler_vpn_filter_title">Your connection is being filtered</string>
     <string name="g4k_fehler_vpn_filter_body">Your access is fine — the connection this device goes out through is being turned away. This happens with some VPN locations and with the \"threat protection\" some VPNs have built in. Pick another country in your VPN, or switch that protection off; without a VPN it usually works straight away.</string>
+    <string name="g4k_dolby_title">This TV cannot show Dolby Vision</string>
+    <string name="g4k_dolby_body">This is our best version, encoded in Dolby Vision. Your TV cannot decode it, so the picture looks green-purple and too dark — the file is fine. Look for the same title in another section, or watch it anyway.</string>
+    <string name="g4k_dolby_ok">Watch anyway</string>
 </resources>

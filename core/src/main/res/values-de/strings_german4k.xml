@@ -96,4 +96,7 @@
     <string name="g4k_schritt_sprung">Weg</string>
     <string name="g4k_fehler_vpn_filter_title">Deine Verbindung wird gefiltert</string>
     <string name="g4k_fehler_vpn_filter_body">An deinem Zugang liegt es nicht — die Verbindung, über die dieses Gerät hinausgeht, wird abgewiesen. Das passiert bei manchen VPN-Standorten und beim „Bedrohungsschutz“, den einige VPNs eingebaut haben. Wähle im VPN ein anderes Land oder schalte diesen Schutz aus; ohne VPN läuft es meist sofort.</string>
+    <string name="g4k_dolby_title">Dieser Fernseher kann kein Dolby Vision</string>
+    <string name="g4k_dolby_body">Das ist unsere beste Fassung, sie ist in Dolby Vision kodiert. Dein Fernseher kann das nicht darstellen, deshalb wirkt das Bild grün-lila und zu dunkel — an der Datei liegt es nicht. Such denselben Titel in einem anderen Bereich, oder schau ihn trotzdem an.</string>
+    <string name="g4k_dolby_ok">Trotzdem ansehen</string>
 </resources>

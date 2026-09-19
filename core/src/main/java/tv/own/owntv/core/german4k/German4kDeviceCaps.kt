@@ -60,6 +60,14 @@ object German4kDeviceCaps {
     var debugKein4k: Boolean = false
         set(wert) { field = wert; cached = null }
 
+    /**
+     * Was beim Start ermittelt wurde, ohne Context — oder null, wenn noch nichts gemessen ist.
+     *
+     * Für Aufrufer, die keinen Context haben (ViewModels). `null` heißt „wir wissen es nicht", und das
+     * bedeutet hier immer: den Kunden machen lassen, keine Warnung, keine Umleitung.
+     */
+    fun letzte(): Caps? = cached
+
     /** Cheap after the first call; safe to call from any thread. */
     fun get(context: Context): Caps {
         cached?.let { return it }
