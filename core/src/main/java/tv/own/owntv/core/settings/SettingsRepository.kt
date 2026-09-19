@@ -223,6 +223,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     private val GLASS_HIGHLIGHT_DEFAULT_PCT: Int = 55
 
     private object Keys {
+        val G4K_SYNC_STAND = stringPreferencesKey("g4k_sync_stand")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val UI_ZOOM_PCT = intPreferencesKey("ui_zoom_percent")
         val FONT_SIZE_PCT = intPreferencesKey("font_size_percent")
@@ -2334,6 +2335,87 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     // --- Backup / restore of pure UI/player preferences (device-agnostic) ---
     // Deliberately EXCLUDES the download folder (a device-specific path) and the profile/source-coupled
     // keys (active profile, default source, refresh-on-startup) — those ride with the sources backup.
+
+    // ── German4K: Einstellungen, die über Geräte hinweg gelten dürfen ──────────────────────────
+    //
+    // Bewusst eine EIGENE, viel kürzere Liste als `backupStringKeys`. Eine Sicherung wird auf dasselbe
+    // oder ein gleichartiges Gerät zurückgespielt; der Abgleich über den Zugang trifft einen Fire-TV-Stick
+    // und ein Tablet gleichzeitig. Alles, was von der Hardware abhängt — Wiedergabe-Engine, Bildrate, HDR,
+    // Decoder, Download-Ordner —, bleibt deshalb draußen: es über den Zugang zu verteilen hieße, auf einem
+    // Gerät kaputtzumachen, was auf dem anderen richtig ist. Hier steht nur Geschmack.
+    private val g4kTexte = listOf(
+        "ton_sprache" to Keys.PREF_AUDIO_LANG,
+        "untertitel_sprache" to Keys.PREF_SUB_LANG,
+        "sortierung_live" to Keys.SORT_LIVE,
+        "sortierung_programm" to Keys.SORT_GUIDE,
+        "sortierung_filme" to Keys.SORT_MOVIES,
+        "sortierung_serien" to Keys.SORT_SERIES,
+        "weiterschauen" to Keys.RESUME_MODE,
+        "ansicht_programm" to Keys.GUIDE_VIEW,
+        "ansicht_filme" to Keys.VOD_VIEW_MODE,
+        "ansicht_folgen" to Keys.EPISODE_VIEW_MODE,
+        "erscheinungsbild" to Keys.THEME_MODE,
+        "akzent" to Keys.ACCENT,
+    )
+    private val g4kSchalter = listOf(
+        "naechste_folge" to Keys.AUTO_PLAY_NEXT,
+        "vorschau_live" to Keys.LIVE_PREVIEW,
+        "vorschau_ton" to Keys.LIVE_PREVIEW_AUDIO,
+    )
+
+    /**
+     * Der Stand, den der letzte Abgleich gesehen hat.
+     *
+     * Ohne ihn ließe sich „hier geändert" nicht von „hier nie angefasst" unterscheiden, und dann
+     * gewönne schlicht das Gerät, das zuletzt gestartet wurde — es würde die Änderung vom anderen
+     * Fernseher jedes Mal wieder überschreiben. Verglichen wird gegen diesen Stand, geschickt wird
+     * nur, was sich wirklich geändert hat.
+     */
+    suspend fun german4kAbgleichStand(): Map<String, String> {
+        val roh = context.dataStore.data.first()[Keys.G4K_SYNC_STAND] ?: return emptyMap()
+        return runCatching {
+            val o = org.json.JSONObject(roh)
+            buildMap { o.keys().forEach { k -> put(k, o.optString(k)) } }
+        }.getOrDefault(emptyMap())
+    }
+
+    suspend fun german4kAbgleichStandMerken(werte: Map<String, String>) {
+        val o = org.json.JSONObject()
+        werte.forEach { (k, v) -> o.put(k, v) }
+        context.dataStore.edit { it[Keys.G4K_SYNC_STAND] = o.toString() }
+    }
+
+    /** Die abgleichbaren Einstellungen als Text, oder leer wenn nie etwas gesetzt wurde. */
+    suspend fun german4kEinstellungenLesen(): Map<String, String> {
+        val p = context.dataStore.data.first()
+        val out = LinkedHashMap<String, String>()
+        g4kTexte.forEach { (name, key) -> p[key]?.takeIf { it.isNotBlank() }?.let { out[name] = it } }
+        g4kSchalter.forEach { (name, key) -> p[key]?.let { out[name] = it.toString() } }
+        return out
+    }
+
+    /**
+     * Übernimmt, was von einem anderen Gerät kam. Unbekannte Namen werden übergangen — eine ältere
+     * App-Fassung darf an einem neuen Schlüssel nicht scheitern.
+     *
+     * Gibt zurück, wie viele Werte sich wirklich geändert haben: Ein Schreibvorgang ohne Änderung
+     * würde den Zeitstempel hochsetzen und den Wert beim nächsten Abgleich fälschlich gewinnen lassen.
+     */
+    suspend fun german4kEinstellungenSchreiben(werte: Map<String, String>): Int {
+        if (werte.isEmpty()) return 0
+        var geaendert = 0
+        context.dataStore.edit { p ->
+            g4kTexte.forEach { (name, key) ->
+                val neu = werte[name] ?: return@forEach
+                if (p[key] != neu) { p[key] = neu; geaendert++ }
+            }
+            g4kSchalter.forEach { (name, key) ->
+                val neu = werte[name]?.toBooleanStrictOrNull() ?: return@forEach
+                if (p[key] != neu) { p[key] = neu; geaendert++ }
+            }
+        }
+        return geaendert
+    }
 
     private val backupStringKeys = listOf(
         Keys.THEME_MODE, Keys.ACCENT, Keys.ACCENT_CUSTOM, Keys.FOCUS_HIGHLIGHT, Keys.DEFAULT_ZOOM,

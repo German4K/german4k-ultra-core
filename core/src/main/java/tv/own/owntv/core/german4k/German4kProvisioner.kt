@@ -56,9 +56,9 @@ class German4kProvisioner(
     private val epgRepository: EpgRepository,
     private val epgStore: EpgSourceStore,
     private val newImporter: () -> SourceImporter,
-    /** Favoriten-Abgleich je Zugang. Als Lambda, weil er den Provisioner nicht braucht, aber
-     *  erst nach ihm gebaut wird — so bleibt die Reihenfolge in der DI-Karte frei. */
-    private val favoriten: () -> German4kFavoriten = { error("kein Favoriten-Abgleich") },
+    /** Abgleich von Favoriten und Einstellungen je Zugang. Als Lambda, weil er den Provisioner nicht
+     *  braucht, aber erst nach ihm gebaut wird — so bleibt die Reihenfolge in der DI-Karte frei. */
+    private val abgleich: () -> German4kAbgleich = { error("kein Abgleich") },
 ) {
     sealed interface State {
         data object Idle : State
@@ -150,9 +150,9 @@ class German4kProvisioner(
             val fresh = reconcile(answer)
             val pid = settings.activeProfileId.first().takeIf { it >= 0L }
             _state.value = State.Ready(answer, fromCache, pid)
-            // Favoriten je Zugang, nachdem die Quellen stimmen. Still und ohne Folgen bei Fehlschlag:
-            // ein misslungener Abgleich darf niemandem die Favoriten wegnehmen.
-            runCatching { favoriten().abgleichen() }.onFailure { Log.w(TAG, "Favoriten-Abgleich: ${it.message}") }
+            // Favoriten und Einstellungen je Zugang, nachdem die Quellen stimmen. Still und ohne Folgen
+            // bei Fehlschlag: ein misslungener Abgleich darf niemandem die Favoriten wegnehmen.
+            runCatching { abgleich().abgleichen() }.onFailure { Log.w(TAG, "Abgleich: ${it.message}") }
             // Guide for the default host, once — like OwnTV's semi-auto EPG after the wizard, but without
             // asking. Runs after Ready so the customer is already in the shell while it downloads.
             fresh?.let { syncGuide(it) }

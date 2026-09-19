@@ -1682,6 +1682,29 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	sources
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	ua
 2	json	core/src/main/java/tv/own/owntv/core/epg/EpgSourceStore.kt	url
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	$SET${it.key}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	${zuloeschen.length()} entfernt, $uebernommen Einstellungen
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	-
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	Abgleich: ${eigene.size} eigene, ${gemeinsam.size} gemeinsam, ${zusetzen.length()} neu,
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	Abgleich: Panel nicht erreichbar
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	EPISODE
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	Favoriten nicht übernommen: ${it.message}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	German4kAbgleich
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	Löschmarken nicht angewandt: ${it.message}
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	at
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	fav
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	fav|${profil.trim().lowercase()}|$typ|$kennung
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	kind
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	n:$name
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	name
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	p
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	profil
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	quelle
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	rid
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	set|
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	src
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	t
 3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	$model · Android ${Build.VERSION.RELEASE} (API $api)${if (fireTv) " · Fire TV" else ""}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDeviceCaps.kt	${Build.MANUFACTURER} ${Build.MODEL}
@@ -1739,26 +1762,6 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	${rubrik.orEmpty()} ${titel.orEmpty()}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	\\bdv\\b
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	dolby vision
-2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	\0
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	-
-1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Abgleich: ${eigene.size} eigene, ${gemeinsam.size} gemeinsam, ${zusetzen.length()} neu, ${zuloeschen.length()} entfernt
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Abgleich: Panel nicht erreichbar
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	EPISODE
-1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Favoriten nicht übernommen: ${it.message}
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	German4kFavoriten
-1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Löschmarken nicht angewandt: ${it.message}
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	at
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	fav
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	fav|${profil.trim().lowercase()}|$typ|$kennung
-1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	kind
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	n:$name
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	name
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	p
-3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	profil
-3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	quelle
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	rid
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	src
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	t
 12	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_HOST ${kurz(host)}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_SPRUNG ${sp.nr}
@@ -1951,11 +1954,11 @@
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	\0
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$noteId|${today()}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$typ:test
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Abgleich: ${it.message}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Test läuft bald ab
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Testzugang endet in $dauer. Scanne den Code, dann geht es ohne Unterbrechung weiter.
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Testzugang läuft
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Du schaust gerade mit einem Testzugang — er läuft noch $dauer. Wenn es dir gefällt, scanne den Code und hol dir den vollen Zugang.
-1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Favoriten-Abgleich: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	German4kProvisioner
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Hinweis
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Testhinweis vom Panel.
@@ -1972,7 +1975,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	guide sync failed: ${e.message}
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	hinweis_gesehen
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	https://german4k.com/kaufen
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	kein Favoriten-Abgleich
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	kein Abgleich
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	managed_source_ids
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}
@@ -2641,10 +2644,14 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	accent_color
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	accent_custom
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	active_profile_id
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	akzent
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ambient_glow_enabled
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ambient_glow_pulse
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	android_tv_home
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	animation_level
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ansicht_filme
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ansicht_folgen
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ansicht_programm
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	audio_delay_ms
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	audio_on_mobile_data
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	audio_on_screen_off
@@ -2681,11 +2688,13 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	epg_refill_checked
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	epg_use_logos
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	episode_view_mode
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	erscheinungsbild
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	external_player
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	external_player_live
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	external_player_movies
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	external_player_series
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	font_size_percent
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	g4k_sync_stand
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	gesture_sensitivity_pct
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_allow_full_transparency
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	glass_alpha
@@ -2738,6 +2747,7 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	multiview_enabled
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	multiview_tiles
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	multiview_warning_accepted
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	naechste_folge
 2	json	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	name
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	nav_menu_hidden
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	nav_menu_mode
@@ -2803,6 +2813,10 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sort_live
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sort_movies
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sort_series
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sortierung_filme
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sortierung_live
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sortierung_programm
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sortierung_serien
 2	json	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	sourceId
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	startup_channel_
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	startup_channel_$pid
@@ -2820,16 +2834,21 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	surround_sound
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	theme_mode
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	tmdb_api_key
+1	json	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ton_sprache
 1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ui_language
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	ui_zoom_percent
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	untertitel_sprache
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	update_check_on_start
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_engine
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_grid_columns
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_prefer_exo
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_view_mode
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vorschau_live
+1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vorschau_ton
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	weather_enabled
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	weather_fahrenheit
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	weather_location
+1	json	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	weiterschauen
 1	empty	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	\0
 1	protocol	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG250 stbapp ver: 2 rev: 250 Safari/533.3
 1	protocol	core/src/main/java/tv/own/owntv/core/setup/SetupText.kt	Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG254 stbapp ver: 2 rev: 250 Safari/533.3

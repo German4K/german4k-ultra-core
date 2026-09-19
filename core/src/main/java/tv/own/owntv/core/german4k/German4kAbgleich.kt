@@ -8,9 +8,10 @@ import tv.own.owntv.core.CoreBuildInfo
 import tv.own.owntv.core.backup.UserDataResolver
 import tv.own.owntv.core.database.dao.ProfileDao
 import tv.own.owntv.core.database.dao.SourceDao
+import tv.own.owntv.core.settings.SettingsRepository
 
 /**
- * Favoriten über alle Geräte eines Zugangs.
+ * Favoriten und Einstellungen über alle Geräte eines Zugangs.
  *
  * Zwei Nachrichten, die wir bisher nicht beantworten konnten, weil nie etwas gespeichert war:
  * „Am Fernseher habe ich alles eingerichtet, am Tablet ist nichts da" und „nach dem Neuaufsetzen
@@ -29,12 +30,13 @@ import tv.own.owntv.core.database.dao.SourceDao
  *    Favoriten des Kinderprofils im Profil der Eltern, sobald zwei Geräte ihre Profile in
  *    unterschiedlicher Reihenfolge angelegt haben.
  */
-class German4kFavoriten(
+class German4kAbgleich(
     private val context: Context,
     private val panel: German4kPanelClient,
     private val resolver: UserDataResolver,
     private val profileDao: ProfileDao,
     private val sourceDao: SourceDao,
+    private val settings: SettingsRepository,
 ) {
 
     /**
@@ -65,15 +67,32 @@ class German4kFavoriten(
             }
         }
 
+        // Einstellungen daneben, im selben Aufruf. Eigener Vorsatz, damit beides in einer Karte Platz
+        // hat, ohne sich in die Quere zu kommen.
+        //
+        // Geschickt wird NUR, was sich hier seit dem letzten Abgleich geändert hat. Würde jedes Gerät
+        // bei jedem Start seinen ganzen Stand mit frischem Zeitstempel hochladen, gewönne immer das
+        // zuletzt gestartete — und die Änderung vom anderen Fernseher wäre jedes Mal wieder weg.
+        val einstellungen = runCatching { settings.german4kEinstellungenLesen() }.getOrNull().orEmpty()
+        val letzterStand = runCatching { settings.german4kAbgleichStand() }.getOrNull().orEmpty()
+        val jetzt = System.currentTimeMillis()
+        val hierGeaendert = einstellungen.filter { (name, wert) -> letzterStand[name] != wert }
+        val eigenerStand = eigene + hierGeaendert.mapKeys { "$SET${it.key}" }.mapValues { (_, v) -> v to jetzt }
+
         val geraet = German4kDeviceId.get(context)
-        val gemeinsam = panel.sync(geraet, CoreBuildInfo.versionName, eigene)
+        val gemeinsam = panel.sync(geraet, CoreBuildInfo.versionName, eigenerStand)
         if (gemeinsam == null) { Log.i(TAG, "Abgleich: Panel nicht erreichbar") ; return }
 
         val idJeName = profile.associate { it.name.trim().lowercase() to it.id }
 
         val zusetzen = JSONArray()
         val zuloeschen = JSONArray()
+        val ausDerFerne = LinkedHashMap<String, String>()
         for ((schluessel, eintrag) in gemeinsam) {
+            if (schluessel.startsWith(SET)) {
+                ausDerFerne[schluessel.removePrefix(SET)] = eintrag.first
+                continue
+            }
             if (eigene[schluessel]?.let { it.first == eintrag.first && it.second == eintrag.second } == true) continue
             val (wertRoh, zeit) = eintrag
             val record = runCatching { JSONObject(wertRoh.removePrefix(GELOESCHT)) }.getOrNull() ?: continue
@@ -88,7 +107,16 @@ class German4kFavoriten(
 
         // Eine Zeile je Abgleich: Im Support ist „wie viele Favoriten hat das Gerät gesehen" die
         // erste Frage, und ohne sie bleibt nur Raten.
-        Log.i(TAG, "Abgleich: ${eigene.size} eigene, ${gemeinsam.size} gemeinsam, ${zusetzen.length()} neu, ${zuloeschen.length()} entfernt")
+        val zuUebernehmen = ausDerFerne.filter { (name, wert) -> einstellungen[name] != wert }
+        val uebernommen = runCatching { settings.german4kEinstellungenSchreiben(zuUebernehmen) }.getOrDefault(0)
+        // Was jetzt gilt, ist der Stand für den nächsten Vergleich — sonst gälte jede übernommene
+        // Änderung beim nächsten Start erneut als „hier geändert" und liefe dem anderen Gerät zurück.
+        runCatching { settings.german4kAbgleichStandMerken(einstellungen + ausDerFerne) }
+        Log.i(
+            TAG,
+            "Abgleich: ${eigene.size} eigene, ${gemeinsam.size} gemeinsam, ${zusetzen.length()} neu, " +
+                "${zuloeschen.length()} entfernt, $uebernommen Einstellungen",
+        )
         if (zuloeschen.length() > 0) runCatching { resolver.applyTombstones(zuloeschen) }
             .onFailure { Log.w(TAG, "Löschmarken nicht angewandt: ${it.message}") }
         if (zusetzen.length() > 0) runCatching { resolver.importAll(zusetzen) }
@@ -133,10 +161,12 @@ class German4kFavoriten(
     }
 
     private companion object {
-        const val TAG = "German4kFavoriten"
+        const val TAG = "German4kAbgleich"
         const val KIND = "fav"
         /** Vorsatz am Wert: dieser Eintrag ist eine Löschung, keine Setzung. */
         const val GELOESCHT = "-"
+        /** Vorsatz der Einstellungs-Schlüssel, damit Favoriten und Einstellungen eine Karte teilen. */
+        const val SET = "set|"
         const val MAX_SCHLUESSEL = 160
         const val MAX_WERT = 400
     }
