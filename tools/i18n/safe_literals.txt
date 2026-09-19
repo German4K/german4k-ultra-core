@@ -814,6 +814,7 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND (sortOrder < :beforeSortOrder OR (sortOrder = :beforeSortOrder AND id < :beforeId)) ORDER BY sortOrder DESC, id DESC LIMIT :limit
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND (sortOrder > :afterSortOrder OR (sortOrder = :afterSortOrder AND id > :afterId)) ORDER BY sortOrder ASC, id ASC LIMIT :limit
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND name = :name LIMIT 1
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND name LIKE :basis || '%' ORDER BY name ASC LIMIT 8
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND remoteId = :remoteId LIMIT 1
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT * FROM channels WHERE sourceId IN (:sourceIds)
@@ -1932,6 +1933,14 @@
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	entwicklung
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kUserAgent.kt	German4K Ultra/${CoreBuildInfo.versionName} (Build ${CoreBuildInfo.versionCode}; ${Build.MODEL})
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	4K
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	FHD
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	HD
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	SD
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	UHD
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	\\b(UHD|4K|FHD|HD|SD)\\b
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	\\s+
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	${snapshot.mediaType.name}:${snapshot.tmdbId}
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	1080p FHD
 1	protocol	core/src/main/java/tv/own/owntv/core/home/HomeFeed.kt	4K

@@ -292,6 +292,15 @@ interface ChannelDao {
     )
     fun search(query: String, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
+    /**
+     * German4K: dieselbe Sendung in anderen Qualitätsstufen (`… FHD`, `… HD`, `… SD`).
+     *
+     * Gesucht wird über den Namensanfang ohne Kürzel, weil das Kürzel hinten steht. Acht Treffer sind
+     * reichlich — mehr als vier Stufen gibt es nicht, der Rest sind Dubletten aus anderen Kategorien.
+     */
+    @Query("SELECT * FROM channels WHERE sourceId = :sourceId AND name LIKE :basis || '%' ORDER BY name ASC LIMIT 8")
+    suspend fun geschwister(sourceId: Long, basis: String): List<ChannelEntity>
+
     // --- Inline folder-scoped search (substring LIKE, matches the user's expectation) ---
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC")
     fun searchAll(query: String, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>

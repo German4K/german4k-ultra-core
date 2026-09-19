@@ -50,8 +50,24 @@ object German4kDeviceCaps {
     @Volatile
     private var cached: Caps? = null
 
+    /**
+     * Debug builds only: tut so, als könne dieses Gerät kein 4K (`--ez g4k_no4k true`).
+     *
+     * Der Emulator hat einen 4K-Decoder, der alte Fire TV Stick eines Kunden nicht — ohne diesen
+     * Schalter ließe sich der Ausweichweg auf eine kleinere Qualitätsstufe hier gar nicht vorführen.
+     */
+    @Volatile
+    var debugKein4k: Boolean = false
+        set(wert) { field = wert; cached = null }
+
     /** Cheap after the first call; safe to call from any thread. */
-    fun get(context: Context): Caps = cached ?: compute(context).also { cached = it }
+    fun get(context: Context): Caps {
+        cached?.let { return it }
+        val frisch = compute(context)
+        val wirksam = if (debugKein4k) frisch.copy(hevc4k = false) else frisch
+        cached = wirksam
+        return wirksam
+    }
 
     private fun compute(context: Context): Caps {
         val hevc = runCatching { hevcSupport() }.getOrElse {
