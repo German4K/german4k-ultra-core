@@ -1906,6 +1906,7 @@
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	verlaengern
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	wartung
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	German4kStoerung
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	keine Einordnung für '$sender': $grund
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	entwicklung
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kUserAgent.kt	German4K Ultra/${CoreBuildInfo.versionName} (Build ${CoreBuildInfo.versionCode}; ${Build.MODEL})
