@@ -26,4 +26,11 @@ object German4kSupport {
 
     fun kundeOeffnen() { _kunde.value = true }
     fun kundeSchliessen() { _kunde.value = false }
+
+    /** „Länder & Bereiche": die Senderliste kürzen, ohne uns zu fragen. */
+    private val _bereiche = MutableStateFlow(false)
+    val bereicheSichtbar: StateFlow<Boolean> = _bereiche.asStateFlow()
+
+    fun bereicheOeffnen() { _bereiche.value = true }
+    fun bereicheSchliessen() { _bereiche.value = false }
 }

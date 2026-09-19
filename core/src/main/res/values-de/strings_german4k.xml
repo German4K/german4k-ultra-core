@@ -110,4 +110,10 @@
     <string name="g4k_kunde_kontakt">Schreib uns</string>
     <string name="g4k_kunde_kontakt_text">Scannen — Gerät und Version stehen schon in der Nachricht.</string>
     <string name="g4k_kunde_zu">Schließen</string>
+    <string name="g4k_bereiche_titel">Länder &amp; Bereiche</string>
+    <string name="g4k_bereiche_text">Schalte ab, was du nie schaust — deine Liste wird kürzer und lädt schneller. Du kannst es jederzeit wieder anschalten.</string>
+    <string name="g4k_bereiche_sender"><xliff:g id="count" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Sender</string>
+    <string name="g4k_bereiche_laedt">Wird geladen…</string>
+    <string name="g4k_bereiche_leer">Keine Bereiche — dieses Gerät ist noch nicht mit einem Zugang verbunden.</string>
+    <string name="g4k_bereiche_neu">Deine Liste ist beim nächsten Start aktuell.</string>
 </resources>

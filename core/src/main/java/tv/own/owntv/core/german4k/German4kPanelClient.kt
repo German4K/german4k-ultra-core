@@ -39,6 +39,11 @@ data class German4kKunde(
     val tageOffen: Int? = null,
 )
 
+/** Ein Land oder Bereich der Senderliste, mit Senderzahl — niemand schaltet blind etwas ab. */
+data class German4kBereich(val id: Int, val name: String, val sender: Int, val an: Boolean, val standard: Boolean)
+
+data class German4kBereiche(val ok: Boolean, val grund: String?, val liste: List<German4kBereich>)
+
 /** Answer of `POST https://german4k.com/api/app/ultra` — contract: lib/app-panel/ultra.ts in the website repo. */
 data class German4kPanelAnswer(
     val mac: String,
@@ -224,6 +229,44 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
             }.getOrElse {
                 Log.w(TAG, "reset failed: ${it.message}")
                 Pair(false, null)
+            }
+        }
+
+    /**
+     * Länder und Bereiche lesen (ohne [id]) oder einen schalten. Die Antwort trägt immer den neuen
+     * Stand, damit die Oberfläche nie raten muss, was gerade gilt.
+     */
+    suspend fun bereiche(deviceId: String, appVersion: String, id: Int? = null, an: Boolean? = null): German4kBereiche =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("typ", "live")
+                if (id != null && an != null) { put("id", id); put("an", an) }
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/bereiche")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    val arr = o.optJSONArray("bereiche")
+                    German4kBereiche(
+                        ok = o.optBoolean("ok", false),
+                        grund = o.optString("grund").takeIf { it.isNotBlank() },
+                        liste = buildList {
+                            if (arr != null) for (i in 0 until arr.length()) {
+                                val b = arr.getJSONObject(i)
+                                add(German4kBereich(b.optInt("id"), b.optString("name"), b.optInt("sender"), b.optBoolean("an"), b.optBoolean("standard")))
+                            }
+                        },
+                    )
+                }
+            }.getOrElse {
+                Log.w(TAG, "bereiche failed: ${it.message}")
+                German4kBereiche(ok = false, grund = null, liste = emptyList())
             }
         }
 

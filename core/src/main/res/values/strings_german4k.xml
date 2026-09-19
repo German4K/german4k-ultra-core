@@ -111,4 +111,10 @@
     <string name="g4k_kunde_kontakt">Write to us</string>
     <string name="g4k_kunde_kontakt_text">Scan — your device and version are already in the message.</string>
     <string name="g4k_kunde_zu">Close</string>
+    <string name="g4k_bereiche_titel">Countries &amp; sections</string>
+    <string name="g4k_bereiche_text">Switch off what you never watch — your list gets shorter and loads faster. You can switch it back on any time.</string>
+    <string name="g4k_bereiche_sender"><xliff:g id="count" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> channels</string>
+    <string name="g4k_bereiche_laedt">Loading…</string>
+    <string name="g4k_bereiche_leer">No sections to show — this device is not connected to an access yet.</string>
+    <string name="g4k_bereiche_neu">Your list updates on the next start.</string>
 </resources>
