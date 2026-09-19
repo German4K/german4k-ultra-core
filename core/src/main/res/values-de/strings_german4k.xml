@@ -87,4 +87,10 @@
     <string name="g4k_schritt_host">Verbindung</string>
     <string name="g4k_schritt_stream">Sender</string>
     <string name="g4k_schritt_uhr">Uhrzeit</string>
+    <!-- Build 9: Störungsfenster im Player. -->
+    <string name="g4k_stoerung_freigeben">Verbindung freigeben</string>
+    <string name="g4k_stoerung_freigegeben">Freigegeben. Starte den Sender gleich noch einmal.</string>
+    <string name="g4k_stoerung_pruefen">Verbindung prüfen</string>
+    <string name="g4k_stoerung_zu">Schließen</string>
+    <string name="g4k_stoerung_laeuft">Wird freigegeben…</string>
 </resources>

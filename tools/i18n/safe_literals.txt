@@ -1826,18 +1826,20 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	unreachable
 4	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/diagnose
-2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
-2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/reset
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4kPanel
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	HTTP ${response.code} vom German4K-Panel
-2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	aktion
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	alt_servers
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	apk_link
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_version
-2	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
-2	mime	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	build
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	channel
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	device_key
@@ -1846,9 +1848,11 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	einrichten_url
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	expire_date
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	features
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	grund
 1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/ultra
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	is_default
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kick
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	lock
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	login_host
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	mac
@@ -1860,9 +1864,11 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_title
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_typ
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	notes
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	ok
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	panel answered: ${text.length} chars
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	password
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	required
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	reset failed: ${it.message}
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server_time
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
@@ -1899,6 +1905,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	verlaengern
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	wartung
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	German4kStoerung
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	entwicklung
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kUserAgent.kt	German4K Ultra/${CoreBuildInfo.versionName} (Build ${CoreBuildInfo.versionCode}; ${Build.MODEL})

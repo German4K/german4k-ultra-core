@@ -172,6 +172,30 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
             }
         }
 
+    /**
+     * „Verbindung freigeben": tritt die Line dieses Geräts einmal durch (Soft-Reset im Panel,
+     * kostet nichts). Antwort ist `{ok, grund?}` — `grund` ist bereits Kundentext.
+     */
+    suspend fun sendReset(deviceId: String, appVersion: String): Pair<Boolean, String?> =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply { put("app_device_id", deviceId); put("aktion", "kick") }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/reset")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    Pair(o.optBoolean("ok", false), o.optString("grund").takeIf { it.isNotBlank() })
+                }
+            }.getOrElse {
+                Log.w(TAG, "reset failed: ${it.message}")
+                Pair(false, null)
+            }
+        }
+
     companion object {
         const val ENDPOINT = "https://german4k.com/api/app/ultra"
         private const val TAG = "German4kPanel"

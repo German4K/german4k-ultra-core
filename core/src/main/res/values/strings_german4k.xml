@@ -88,4 +88,10 @@
     <string name="g4k_schritt_host">Connection</string>
     <string name="g4k_schritt_stream">Channel</string>
     <string name="g4k_schritt_uhr">Clock</string>
+    <!-- Build 9: Störungsfenster im Player. -->
+    <string name="g4k_stoerung_freigeben">Release connection</string>
+    <string name="g4k_stoerung_freigegeben">Released. Start the channel again in a moment.</string>
+    <string name="g4k_stoerung_pruefen">Check connection</string>
+    <string name="g4k_stoerung_zu">Close</string>
+    <string name="g4k_stoerung_laeuft">Releasing…</string>
 </resources>
