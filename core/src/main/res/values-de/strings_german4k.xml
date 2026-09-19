@@ -99,4 +99,15 @@
     <string name="g4k_dolby_title">Dieser Fernseher kann kein Dolby Vision</string>
     <string name="g4k_dolby_body">Das ist unsere beste Fassung, sie ist in Dolby Vision kodiert. Dein Fernseher kann das nicht darstellen, deshalb wirkt das Bild grün-lila und zu dunkel — an der Datei liegt es nicht. Such denselben Titel in einem anderen Bereich, oder schau ihn trotzdem an.</string>
     <string name="g4k_dolby_ok">Trotzdem ansehen</string>
+    <string name="g4k_kunde_titel">Dein Zugang</string>
+    <string name="g4k_kunde_tage">Läuft noch <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tage</string>
+    <string name="g4k_kunde_verlaengern">Verlängern</string>
+    <string name="g4k_kunde_verlaengern_text">Scannen und am Handy verlängern — dauert eine Minute, deine Zugangsdaten bleiben gleich.</string>
+    <string name="g4k_kunde_zweitgeraet">Zweites Gerät</string>
+    <string name="g4k_kunde_zweitgeraet_text">Scannen, um German4K auf einem weiteren Fernseher, Handy oder Tablet einzurichten.</string>
+    <string name="g4k_kunde_werben">Freunde werben</string>
+    <string name="g4k_kunde_werben_text">Scannen, um deinen persönlichen Einladungslink zu teilen.</string>
+    <string name="g4k_kunde_kontakt">Schreib uns</string>
+    <string name="g4k_kunde_kontakt_text">Scannen — Gerät und Version stehen schon in der Nachricht.</string>
+    <string name="g4k_kunde_zu">Schließen</string>
 </resources>

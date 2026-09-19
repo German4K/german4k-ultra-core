@@ -24,6 +24,21 @@ data class German4kSource(
 
 data class German4kUpdate(val channel: String, val versionName: String, val versionCode: Int, val url: String, val notes: String, val required: Boolean)
 
+/**
+ * Vier Wege, die am Fernseher sonst fremde Hilfe brauchen: verlängern, ein zweites Gerät einrichten,
+ * jemanden werben, uns schreiben. Die App macht QR-Codes daraus — das Handy übernimmt den Rest.
+ */
+data class German4kKunde(
+    val verlaengernUrl: String = "",
+    val zweitgeraetUrl: String = "",
+    /** Leer, solange das Gerät an keine Line gekoppelt ist. */
+    val werbenUrl: String = "",
+    /** WhatsApp mit vorbereitetem Text (Gerät, Gerätecode). */
+    val kontaktUrl: String = "",
+    /** Restlaufzeit in Tagen, oder null. */
+    val tageOffen: Int? = null,
+)
+
 /** Answer of `POST https://german4k.com/api/app/ultra` — contract: lib/app-panel/ultra.ts in the website repo. */
 data class German4kPanelAnswer(
     val mac: String,
@@ -47,6 +62,8 @@ data class German4kPanelAnswer(
     val update: German4kUpdate? = null,
     /** Feature switches: aus | entwicklung | beta | an. */
     val features: Map<String, String> = emptyMap(),
+    /** Verlängern, Zweitgerät, Werben, Kontakt — siehe [German4kKunde]. */
+    val kunde: German4kKunde = German4kKunde(),
     /** The panel asks this device to upload its error log on the next start (`/mac diagnose <MAC>`). */
     val diagnoseRequested: Boolean = false,
     /** Server clock (UTC, ISO). A device clock far off this makes the guide look shifted. */
@@ -92,6 +109,15 @@ data class German4kPanelAnswer(
                     German4kUpdate(u.optString("channel"), u.optString("version_name"), u.optInt("version_code", 0), u.optString("url"), u.optString("notes"), u.optBoolean("required", false))
                 },
                 features = o.optJSONObject("features")?.let { f -> f.keys().asSequence().associateWith { k -> f.optString(k) } } ?: emptyMap(),
+                kunde = o.optJSONObject("kunde")?.let { k ->
+                    German4kKunde(
+                        verlaengernUrl = k.optString("verlaengern_url"),
+                        zweitgeraetUrl = k.optString("zweitgeraet_url"),
+                        werbenUrl = k.optString("werben_url"),
+                        kontaktUrl = k.optString("kontakt_url"),
+                        tageOffen = if (k.isNull("tage_offen")) null else k.optInt("tage_offen"),
+                    )
+                } ?: German4kKunde(),
                 diagnoseRequested = o.optBoolean("diagnose_requested", false),
                 serverTime = o.optString("server_time"),
             )
@@ -106,6 +132,11 @@ data class German4kPanelAnswer(
         update?.let { u -> put("update", JSONObject().apply { put("channel", u.channel); put("version_name", u.versionName); put("version_code", u.versionCode); put("url", u.url); put("notes", u.notes); put("required", u.required) }) }
         put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
         put("diagnose_requested", diagnoseRequested); put("server_time", serverTime)
+        put("kunde", JSONObject().apply {
+            put("verlaengern_url", kunde.verlaengernUrl); put("zweitgeraet_url", kunde.zweitgeraetUrl)
+            put("werben_url", kunde.werbenUrl); put("kontakt_url", kunde.kontaktUrl)
+            if (kunde.tageOffen != null) put("tage_offen", kunde.tageOffen) else put("tage_offen", JSONObject.NULL)
+        })
         put("sources", org.json.JSONArray().apply {
             sources.forEach { s ->
                 put(JSONObject().apply {

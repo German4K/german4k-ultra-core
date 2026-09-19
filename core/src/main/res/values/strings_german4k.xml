@@ -100,4 +100,15 @@
     <string name="g4k_dolby_title">This TV cannot show Dolby Vision</string>
     <string name="g4k_dolby_body">This is our best version, encoded in Dolby Vision. Your TV cannot decode it, so the picture looks green-purple and too dark — the file is fine. Look for the same title in another section, or watch it anyway.</string>
     <string name="g4k_dolby_ok">Watch anyway</string>
+    <string name="g4k_kunde_titel">Your access</string>
+    <string name="g4k_kunde_tage">Valid for another <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> days</string>
+    <string name="g4k_kunde_verlaengern">Renew</string>
+    <string name="g4k_kunde_verlaengern_text">Scan and renew on your phone — takes a minute, your login stays the same.</string>
+    <string name="g4k_kunde_zweitgeraet">Second device</string>
+    <string name="g4k_kunde_zweitgeraet_text">Scan to set German4K up on another TV, phone or tablet.</string>
+    <string name="g4k_kunde_werben">Refer a friend</string>
+    <string name="g4k_kunde_werben_text">Scan to share your personal invite link.</string>
+    <string name="g4k_kunde_kontakt">Write to us</string>
+    <string name="g4k_kunde_kontakt_text">Scan — your device and version are already in the message.</string>
+    <string name="g4k_kunde_zu">Close</string>
 </resources>

@@ -19,4 +19,11 @@ object German4kSupport {
 
     fun oeffnen() { _sichtbar.value = true }
     fun schliessen() { _sichtbar.value = false }
+
+    /** „Dein Zugang": Verlängern, Zweitgerät, Werben, Kontakt — dieselbe Bauart wie oben. */
+    private val _kunde = MutableStateFlow(false)
+    val kundeSichtbar: StateFlow<Boolean> = _kunde.asStateFlow()
+
+    fun kundeOeffnen() { _kunde.value = true }
+    fun kundeSchliessen() { _kunde.value = false }
 }
