@@ -1739,6 +1739,26 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	${rubrik.orEmpty()} ${titel.orEmpty()}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	\\bdv\\b
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDolby.kt	dolby vision
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	\0
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	-
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Abgleich: ${eigene.size} eigene, ${gemeinsam.size} gemeinsam, ${zusetzen.length()} neu, ${zuloeschen.length()} entfernt
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Abgleich: Panel nicht erreichbar
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	EPISODE
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Favoriten nicht übernommen: ${it.message}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	German4kFavoriten
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	Löschmarken nicht angewandt: ${it.message}
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	at
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	fav
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	fav|${profil.trim().lowercase()}|$typ|$kennung
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	kind
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	n:$name
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	name
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	p
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	profil
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	quelle
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	rid
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	src
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kFavoriten.kt	t
 12	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_HOST ${kurz(host)}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_SPRUNG ${sp.nr}
@@ -1854,20 +1874,21 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/bereiche
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/diagnose
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/reset
-4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
-4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/sync
+5	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
+5	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4kPanel
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	HTTP ${response.code} vom German4K-Panel
-4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
+5	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	aktion
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	alt_servers
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	an
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	apk_link
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app
-4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
+5	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_version
-4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
-4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
+5	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
+5	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche failed: ${it.message}
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	build
@@ -1876,6 +1897,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	diagnose not delivered: ${it.message}
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	diagnose_requested
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	einrichten_url
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	erwachsen
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	expire_date
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	features
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	grund
@@ -1898,7 +1920,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_title
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	note_typ
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	notes
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	ok
+3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	ok
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	panel answered: ${text.length} chars
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	password
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	required
@@ -1907,6 +1929,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server_time
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stand
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	standard
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stunden_offen
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	tage_offen
@@ -1922,6 +1945,8 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_code
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_name
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	werben_url
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	wert
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	zeit
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	zweitgeraet_url
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	\0
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$noteId|${today()}
@@ -1930,6 +1955,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Testzugang endet in $dauer. Scanne den Code, dann geht es ohne Unterbrechung weiter.
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Testzugang läuft
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Du schaust gerade mit einem Testzugang — er läuft noch $dauer. Wenn es dir gefällt, scanne den Code und hol dir den vollen Zugang.
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Favoriten-Abgleich: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	German4kProvisioner
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Hinweis
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Testhinweis vom Panel.
@@ -1946,6 +1972,7 @@
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	guide sync failed: ${e.message}
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	hinweis_gesehen
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	https://german4k.com/kaufen
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	kein Favoriten-Abgleich
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	managed_source_ids
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}

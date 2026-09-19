@@ -29,8 +29,25 @@ object AdultCategoryClassifier {
         Regex("\\brated\\s+r\\b"),
     )
 
+    /**
+     * German4K: Rubriken, die das Panel ausdrücklich als „für Erwachsene" nennt.
+     *
+     * Die Erkennung unten rät am Namen, und für unsere beiden Rubriken trifft sie auch. Verlassen
+     * wollen wir uns darauf nicht: Die Namen im Katalog ändern wir, ohne an die App zu denken, und
+     * eine Rubrik, die durch das Raster fällt, stünde im Kinderprofil. Wer die Namen bekommt, muss
+     * nicht raten. Die Liste ergänzt die Erkennung, sie ersetzt sie nicht — ein Panel, das gerade
+     * nicht erreichbar ist, darf die Kindersicherung nicht abschalten.
+     */
+    @Volatile
+    private var vomPanel: Set<String> = emptySet()
+
+    fun setzeErwachsenRubriken(namen: Collection<String>) {
+        vomPanel = namen.mapNotNull { it.trim().lowercase(Locale.ROOT).takeIf(String::isNotEmpty) }.toSet()
+    }
+
     fun isAdult(categoryName: String?): Boolean {
         if (categoryName.isNullOrBlank()) return false
+        if (categoryName.trim().lowercase(Locale.ROOT) in vomPanel) return true
         val raw = compact(categoryName.lowercase(Locale.ROOT))
         val withoutMarks = Normalizer.normalize(categoryName, Normalizer.Form.NFKD)
             .replace(Regex("\\p{M}+"), "")

@@ -81,10 +81,13 @@ val dataModule = module {
     single { tv.own.owntv.core.german4k.German4kPanelClient(get()) }
     // Selbsttest „Verbindung prüfen“ (Hilfe-Bildschirm und Player-Fehler).
     single { tv.own.owntv.core.german4k.German4kHealth(androidContext(), get(), get(), get(), get()) }
+    // Favoriten je Zugang (E1): benutzt OwnTVs eigenen Abgleich-Apparat, nur über unser Panel.
+    single { tv.own.owntv.core.german4k.German4kFavoriten(androidContext(), get(), get(), get(), get()) }
     single {
         tv.own.owntv.core.german4k.German4kProvisioner(
             androidContext(), get(), get(), get(), get(), get(), get(), get(), get(),
             newImporter = { get<tv.own.owntv.core.setup.SourceImporter>() },
+            favoriten = { get<tv.own.owntv.core.german4k.German4kFavoriten>() },
         )
     }
     single { ConnectivityObserver(androidContext()) }

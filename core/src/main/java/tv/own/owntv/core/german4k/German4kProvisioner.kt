@@ -56,6 +56,9 @@ class German4kProvisioner(
     private val epgRepository: EpgRepository,
     private val epgStore: EpgSourceStore,
     private val newImporter: () -> SourceImporter,
+    /** Favoriten-Abgleich je Zugang. Als Lambda, weil er den Provisioner nicht braucht, aber
+     *  erst nach ihm gebaut wird — so bleibt die Reihenfolge in der DI-Karte frei. */
+    private val favoriten: () -> German4kFavoriten = { error("kein Favoriten-Abgleich") },
 ) {
     sealed interface State {
         data object Idle : State
@@ -119,6 +122,8 @@ class German4kProvisioner(
             panel.fetch(deviceId, version, username, password).also {
                 cache(it); registerHosts(it); _answer.value = it
                 German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features)
+                // Kindersicherung: unsere Rubriken beim Namen nennen, statt sie raten zu lassen.
+                if (it.erwachsen.isNotEmpty()) tv.own.owntv.core.content.AdultCategoryClassifier.setzeErwachsenRubriken(it.erwachsen)
                 pendingTestNote?.let(::debugTestNote)
                 pendingTestStunden?.let(::debugTestzugang)
                 // Absturz vom letzten Mal und, wenn das Panel darum bittet, das Fehlerprotokoll.
@@ -145,6 +150,9 @@ class German4kProvisioner(
             val fresh = reconcile(answer)
             val pid = settings.activeProfileId.first().takeIf { it >= 0L }
             _state.value = State.Ready(answer, fromCache, pid)
+            // Favoriten je Zugang, nachdem die Quellen stimmen. Still und ohne Folgen bei Fehlschlag:
+            // ein misslungener Abgleich darf niemandem die Favoriten wegnehmen.
+            runCatching { favoriten().abgleichen() }.onFailure { Log.w(TAG, "Favoriten-Abgleich: ${it.message}") }
             // Guide for the default host, once — like OwnTV's semi-auto EPG after the wizard, but without
             // asking. Runs after Ready so the customer is already in the shell while it downloads.
             fresh?.let { syncGuide(it) }

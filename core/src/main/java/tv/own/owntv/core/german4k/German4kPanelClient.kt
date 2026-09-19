@@ -79,6 +79,8 @@ data class German4kPanelAnswer(
     val kunde: German4kKunde = German4kKunde(),
     /** Läuft hinter diesem Gerät ein Test, oder null bei einem gewöhnlichen Zugang. */
     val test: German4kTest? = null,
+    /** Rubriken, die wir als „für Erwachsene" führen — das Kinderprofil blendet sie aus. */
+    val erwachsen: List<String> = emptyList(),
     /** The panel asks this device to upload its error log on the next start (`/mac diagnose <MAC>`). */
     val diagnoseRequested: Boolean = false,
     /** Server clock (UTC, ISO). A device clock far off this makes the guide look shifted. */
@@ -134,6 +136,7 @@ data class German4kPanelAnswer(
                     )
                 } ?: German4kKunde(),
                 test = o.optJSONObject("test")?.let { t -> German4kTest(t.optInt("stunden_offen", 0), t.optString("kaufen_url")) },
+                erwachsen = o.optJSONArray("erwachsen")?.let { a -> List(a.length()) { a.optString(it) }.filter { it.isNotBlank() } } ?: emptyList(),
                 diagnoseRequested = o.optBoolean("diagnose_requested", false),
                 serverTime = o.optString("server_time"),
             )
@@ -149,6 +152,7 @@ data class German4kPanelAnswer(
         put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
         put("diagnose_requested", diagnoseRequested); put("server_time", serverTime)
         test?.let { t -> put("test", JSONObject().apply { put("stunden_offen", t.stundenOffen); put("kaufen_url", t.kaufenUrl) }) }
+        put("erwachsen", org.json.JSONArray(erwachsen))
         put("kunde", JSONObject().apply {
             put("verlaengern_url", kunde.verlaengernUrl); put("zweitgeraet_url", kunde.zweitgeraetUrl)
             put("werben_url", kunde.werbenUrl); put("kontakt_url", kunde.kontaktUrl)
@@ -248,6 +252,47 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
      * Länder und Bereiche lesen (ohne [id]) oder einen schalten. Die Antwort trägt immer den neuen
      * Stand, damit die Oberfläche nie raten muss, was gerade gilt.
      */
+    /**
+     * Favoriten je Zugang abgleichen: schickt den eigenen Stand und bekommt den gemeinsamen zurück.
+     *
+     * `stand` ist eine flache Karte `Schlüssel -> { wert, zeit }`. Der Server versteht die Schlüssel
+     * nicht, er führt nur je Schlüssel den jüngeren Eintrag zusammen — damit zwei Geräte sich nicht
+     * gegenseitig überschreiben. Was die Werte bedeuten, weiß allein die App.
+     */
+    suspend fun sync(deviceId: String, appVersion: String, stand: Map<String, Pair<String, Long>>): Map<String, Pair<String, Long>>? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                if (stand.isNotEmpty()) {
+                    put(
+                        "stand",
+                        JSONObject().apply {
+                            stand.forEach { (k, v) -> put(k, JSONObject().put("wert", v.first).put("zeit", v.second)) }
+                        },
+                    )
+                }
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/sync")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    if (!o.optBoolean("ok", false)) return@use null
+                    val st = o.optJSONObject("stand") ?: return@use emptyMap<String, Pair<String, Long>>()
+                    buildMap {
+                        st.keys().forEach { k ->
+                            val e = st.optJSONObject(k) ?: return@forEach
+                            put(k, e.optString("wert") to e.optLong("zeit"))
+                        }
+                    }
+                }
+            }.getOrNull()
+        }
+
     suspend fun bereiche(deviceId: String, appVersion: String, id: Int? = null, an: Boolean? = null): German4kBereiche =
         withContext(Dispatchers.IO) {
             val body = JSONObject().apply {
