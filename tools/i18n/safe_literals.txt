@@ -1734,39 +1734,55 @@
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	tv
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	vod
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kDiagnose.kt	yyyy-MM-dd HH:mm:ss
-4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	\0
+12	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_HOST ${kurz(host)}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	$SCHRITT_SPRUNG ${sp.nr}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${abweichung}s daneben
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${host.trimEnd('/')}/player_api.php?username=${enc(user)}&password=${enc(pass)}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${if (it.ok) "ok " else "FEHL"} ${it.name}: ${it.info}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${it.nr}. ${it.host} → HTTP ${it.status}${it.ziel?.let { z -> " → $z" } ?: ""}${it.fehler?.let { f -> " ($f)" } ?: ""}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	${uhrAbweichungSek}s daneben
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	%.1f
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	($f)
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	(?:http(?: error)? |response code[:= ]+|status(?: code)?[:= ]+|code[:= ]+)(\\d{3})\\b
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Anmeldeseite des Netzes
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Banned
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Disabled
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Endkundennetz
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Expired
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	FEHL
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	German4K
-3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	German4K-Ultra
+4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	German4K-Ultra
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	German4kHealth
-3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	HTTP ${r.code}
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	HTTP $letzterStatus
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	HTTP $letzterStatus · ${bytes / 1000} kB (${"%.1f".format(mbit)} Mbit/s)
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	HTTP ${r.code}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	HTTP ${sp.status}${sp.ziel?.let { " → ${hostVon(it)}" } ?: ""}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Internet
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Kette:
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	LAN
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Location
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Location
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Mobilfunk
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Netz: $netzart · Uhr ${if (abs(uhrAbweichungSek) < 60) "ok" else "${uhrAbweichungSek}s daneben"}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Netzwerk
-1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Range
-2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Selbsttest: $klasse
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Range
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Rechenzentrum/VPN
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Selbsttest: $klasse
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Selbsttest: $klasse${if (it.zweig.isNotBlank()) " · ${it.zweig}" else ""}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Sender
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Sprung ${brech?.nr ?: 1}: ${brech?.fehler ?: "HTTP $letzterStatus"}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	UTF-8
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Uhrzeit
-3	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	User-Agent
+4	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	User-Agent
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Verbindung
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	WLAN
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Weg
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Zugang abgelehnt ($zustand)
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	Zweig: $zweig${if (mbit > 0) " · ${"%.1f".format(mbit)} Mbit/s" else ""}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	^[0-9.]+$
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	antwortet ($zustand)
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	auth
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	bytes=0-2000000
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	bytes=0-65535
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	connection limit
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	erreichbar
@@ -1785,11 +1801,16 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	ok
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	panel
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	panel check: ${it.message}
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	sprung
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	status
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	stimmt
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	stream
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	uhr
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	user_info
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	· ${"%.1f".format(mbit)} Mbit/s
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	· ${it.zweig}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	→ $z
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHealth.kt	→ ${hostVon(it)}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	$host abgestuft ($reason) → ${if (switched) after else "kein gesunder Ausweich-Host"}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	${java.text.SimpleDateFormat("HH:mm:ss", Locale.US).format(java.util.Date())} $text
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kHostFailover.kt	(?:http(?: error)? |response code[:= ]+|status(?: code)?[:= ]+|http )(\\d{3})\\b
@@ -1906,6 +1927,7 @@
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	verlaengern
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	wartung
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	German4kStoerung
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	Störung bei '$sender': $klasse ($grund)
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	keine Einordnung für '$sender': $grund
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	entwicklung

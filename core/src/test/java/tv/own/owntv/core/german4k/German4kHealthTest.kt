@@ -6,6 +6,7 @@ import org.junit.Test
 import tv.own.owntv.core.german4k.German4kHealth.Companion.NETZ_KEINS
 import tv.own.owntv.core.german4k.German4kHealth.Companion.NETZ_WLAN
 import tv.own.owntv.core.german4k.German4kHealth.HostStatus
+import tv.own.owntv.core.german4k.German4kHealth.Sprung
 import tv.own.owntv.core.german4k.German4kHealth.Klasse
 
 /**
@@ -32,7 +33,8 @@ class German4kHealthTest {
         streamStatus: Int? = 200,
         streamOk: Boolean? = true,
         uhr: Long = 0,
-    ) = German4kHealth.entscheide(netzart, internet, portal, panel, hosts, streamStatus, streamOk, uhr)
+        kette: List<Sprung> = emptyList(),
+    ) = German4kHealth.entscheide(netzart, internet, portal, panel, hosts, streamStatus, streamOk, uhr, kette)
 
     @Test
     fun `alles erreichbar ist alles gut`() {
@@ -102,6 +104,55 @@ class German4kHealthTest {
     @Test
     fun `ohne Quelle reicht ein erreichbares Panel`() {
         assertEquals(Klasse.ALLES_GUT, entscheide(hosts = emptyList(), streamStatus = null, streamOk = null))
+    }
+
+    // --- Die Weiterleitungskette (19.09.2026) --------------------------------------------
+    //
+    // Der Fall, der uns Wochen gekostet hat: Anmeldung sagt ja, Bild kommt trotzdem nicht, weil der
+    // Zulieferer die IP dieses Anschlusses am ZWEITEN Sprung abweist. Von außen sieht das aus wie
+    // eine Anbieter-Sperre — der Rat ist aber der umgekehrte.
+
+    private fun sprung(nr: Int, status: Int, ziel: String? = null, host: String = "german4k.tv") =
+        Sprung(nr, status, ziel, host)
+
+    @Test
+    fun `511 am zweiten Sprung ist ein Filter auf der Leitung des Kunden, keine Anbieter-Sperre`() {
+        val kette = listOf(
+            sprung(1, 302, "http://up4.german4k.tv/live/…", "german4k.tv"),
+            sprung(2, 511, null, "up4.german4k.tv"),
+        )
+        assertEquals(Klasse.VPN_FILTER, entscheide(streamStatus = 511, streamOk = false, kette = kette))
+    }
+
+    @Test
+    fun `511 gilt auch dann, wenn die Anmeldung tadellos ist — genau das ist das Tueckische`() {
+        val kette = listOf(sprung(1, 302, "http://up4.german4k.tv/x"), sprung(2, 511, null, "up4.german4k.tv"))
+        // Panel ok, beide Hosts ok, auth=1 — trotzdem kein Bild.
+        assertEquals(Klasse.VPN_FILTER, entscheide(hosts = listOf(gut, gut), streamStatus = 511, streamOk = false, kette = kette))
+    }
+
+    @Test
+    fun `ohne 511 in der Kette bleibt es bei der Anbieter-Sperre`() {
+        val kette = listOf(sprung(1, 302, "http://up4.german4k.tv/x"), sprung(2, 0, null, "up4.german4k.tv"))
+        assertEquals(Klasse.ANBIETER_SPERRE, entscheide(streamStatus = 0, streamOk = false, kette = kette))
+    }
+
+    @Test
+    fun `eine Kette, die durchlaeuft, aendert nichts am guten Befund`() {
+        val kette = listOf(
+            sprung(1, 302, "http://up4.german4k.tv/x"),
+            sprung(2, 302, "http://185.245.1.184/live/play/abc", "up4.german4k.tv"),
+            sprung(3, 200, null, "185.245.1.184"),
+        )
+        assertEquals(Klasse.ALLES_GUT, entscheide(streamStatus = 200, streamOk = true, kette = kette))
+    }
+
+    @Test
+    fun `511 ohne erreichbares Panel bleibt ein Zwangsportal-Verdacht, kein VPN-Filter`() {
+        // Ist nicht einmal unser Panel erreichbar, sitzt das Problem vor uns — dann gilt der
+        // Netz-Zweig, nicht der Zulieferer.
+        val kette = listOf(sprung(1, 511, null, "german4k.tv"))
+        assertEquals(Klasse.ROUTER_SPERRE, entscheide(panel = false, hosts = listOf(tot), streamStatus = 511, streamOk = false, kette = kette))
     }
 
     @Test

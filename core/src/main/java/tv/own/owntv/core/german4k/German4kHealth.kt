@@ -47,6 +47,14 @@ class German4kHealth(
         ROUTER_SPERRE,
         /** Everything of ours answers, but no stream plays — typically an ISP block during a match. */
         ANBIETER_SPERRE,
+        /**
+         * Der Zulieferer weist die IP dieses Anschlusses am zweiten Sprung ab (HTTP 511), während die
+         * Anmeldung durchgeht. Gemessen am 19.09.2026 bei einem VPN mit deutschem Ausgang: dieselbe
+         * Line, derselbe Sender, zwanzig Minuten später über ein anderes Land — Bild. Von außen sieht
+         * das aus wie [ANBIETER_SPERRE], der Rat ist aber der umgekehrte: nicht VPN einschalten,
+         * sondern das Land wechseln oder den Bedrohungsschutz abschalten.
+         */
+        VPN_FILTER,
         /** One host is unreachable; the app switched to the other by itself. */
         HOST_AUSFALL,
         /** The line is busy on another device (or a stuck session). */
@@ -73,11 +81,21 @@ class German4kHealth(
         /** Clock difference to the panel in seconds (positive: device ahead). */
         val uhrAbweichungSek: Long,
         val netzart: String,
+        /** Die Weiterleitungskette bis zum Bild — leer, wenn keine Quelle eingerichtet ist. */
+        val kette: List<Sprung> = emptyList(),
+        /** Endkundennetz oder Rechenzentrum/VPN. Nur Einordnung, kein Urteil. */
+        val zweig: String = "",
+        val mbit: Double = 0.0,
     ) {
         fun bericht(): String = buildString {
             appendLine("Selbsttest: $klasse")
             appendLine("Netz: $netzart · Uhr ${if (abs(uhrAbweichungSek) < 60) "ok" else "${uhrAbweichungSek}s daneben"}")
+            if (zweig.isNotBlank()) appendLine("Zweig: $zweig${if (mbit > 0) " · ${"%.1f".format(mbit)} Mbit/s" else ""}")
             schritte.forEach { appendLine("${if (it.ok) "ok  " else "FEHL"} ${it.name}: ${it.info}") }
+            if (kette.isNotEmpty()) {
+                appendLine("Kette:")
+                kette.forEach { appendLine("  ${it.nr}. ${it.host} → HTTP ${it.status}${it.ziel?.let { z -> " → $z" } ?: ""}${it.fehler?.let { f -> " ($f)" } ?: ""}") }
+            }
         }
     }
 
@@ -116,9 +134,19 @@ class German4kHealth(
             schritte += Schritt(KEY_HOST, "$SCHRITT_HOST ${kurz(host)}", b.ok, b.info, zusatz = kurz(host))
         }
 
-        // 4. One real stream — the only step that proves a picture would come.
-        val stream = pruefeStream(quelle?.id)
-        if (stream != null) schritte += stream.schritt
+        // 4. Die Kette bis zum Bild, Sprung für Sprung — der Schritt, der den 511-Fall überhaupt sichtbar macht.
+        val kanal = runCatching { quelle?.id?.let { channelDao.allForSources(listOf(it), 1).firstOrNull() } }.getOrNull()
+        val stream = pruefeKette(quelle?.id, kanal?.streamUrl)
+        if (stream != null) {
+            schritte += stream.schritt
+            stream.kette.forEach { sp ->
+                schritte += Schritt(
+                    KEY_SPRUNG, "$SCHRITT_SPRUNG ${sp.nr}", sp.status in 200..399,
+                    sp.fehler ?: "HTTP ${sp.status}${sp.ziel?.let { " → ${hostVon(it)}" } ?: ""}",
+                    zusatz = sp.nr.toString(),
+                )
+            }
+        }
 
         // 5. Clock. A guide that looks two hours off is almost always this.
         val serverZeit = (answer ?: panelOk)?.serverTime.orEmpty()
@@ -136,8 +164,10 @@ class German4kHealth(
             streamStatus = stream?.status,
             streamOk = stream?.ok,
             uhrAbweichungSek = abweichung,
+            kette = stream?.kette ?: emptyList(),
         )
-        Befund(klasse, schritte, abweichung, netzart).also { Log.i(TAG, "Selbsttest: $klasse") }
+        Befund(klasse, schritte, abweichung, netzart, stream?.kette ?: emptyList(), zweig(stream?.endziel), stream?.mbit ?: 0.0)
+            .also { Log.i(TAG, "Selbsttest: $klasse${if (it.zweig.isNotBlank()) " · ${it.zweig}" else ""}") }
     }
 
     // --- single steps ---------------------------------------------------------------------
@@ -182,21 +212,93 @@ class German4kHealth(
         }.getOrElse { HostBefund(host, false, kurzFehler(it), 0, null, "") }
     }
 
-    private data class StreamBefund(val schritt: Schritt, val status: Int, val ok: Boolean)
+    /**
+     * Ein Sprung der Weiterleitungskette. Unser Eingang antwortet mit 302 auf den Stream-Host, der
+     * wiederum auf eine Ausliefer-Kante — wo genau es bricht, ist die halbe Diagnose.
+     */
+    data class Sprung(val nr: Int, val status: Int, val ziel: String?, val host: String, val fehler: String? = null)
 
-    /** First channel of the active source, first bytes only. Proof that a picture would arrive. */
-    private suspend fun pruefeStream(sourceId: Long?): StreamBefund? {
+    private data class StreamBefund(
+        val schritt: Schritt,
+        val status: Int,
+        val ok: Boolean,
+        val kette: List<Sprung>,
+        val endziel: String?,
+        val bytes: Long,
+        val mbit: Double,
+    )
+
+    /**
+     * Die Kette bis zum Bild, Sprung für Sprung.
+     *
+     * Warum nicht einfach „lädt der Stream?": Am 19.09.2026 wurde gemessen, dass ein Teil der
+     * Kunden-IPs erst am **zweiten** Sprung abgewiesen wird — die Anmeldung antwortet davor brav mit
+     * `auth=1`, und genau deshalb hat jede bisherige Prüfung „alles in Ordnung" gesagt, während der
+     * Kunde schwarz sah. Ein Test, der nur das Ergebnis kennt, kann diesen Fall nicht benennen.
+     *
+     * Dieselbe Logik wie `scripts/tv/vpn-kette.mjs`, damit ein Befund aus der App und einer von der
+     * Kommandozeile vergleichbar sind.
+     */
+    private fun pruefeKette(sourceId: Long?, kanalUrl: String?): StreamBefund? {
+        val start = kanalUrl ?: return null
         if (sourceId == null) return null
-        val kanal = runCatching { channelDao.allForSources(listOf(sourceId), 1).firstOrNull() }.getOrNull() ?: return null
-        val url = German4kHostFailover.rewrite(kanal.streamUrl)
-        val request = Request.Builder().url(url).header("User-Agent", "German4K-Ultra").header("Range", "bytes=0-65535").build()
-        return runCatching {
-            client.newCall(request).execute().use { r ->
-                runCatching { r.body.bytes() }
-                StreamBefund(Schritt(KEY_STREAM, SCHRITT_STREAM, r.isSuccessful, "HTTP ${r.code}"), r.code, r.isSuccessful)
+        val ohneFolgen = client.newBuilder().followRedirects(false).followSslRedirects(false).build()
+        val spruenge = mutableListOf<Sprung>()
+        var ziel: String? = German4kHostFailover.rewrite(start)
+        var letzterStatus = 0
+
+        for (nr in 1..MAX_SPRUENGE) {
+            val url = ziel ?: break
+            val request = Request.Builder().url(url).header("User-Agent", "German4K-Ultra").header("Range", "bytes=0-65535").build()
+            val ergebnis = runCatching {
+                ohneFolgen.newCall(request).execute().use { r ->
+                    runCatching { r.body.bytes() }
+                    Triple(r.code, r.header("Location"), null as String?)
+                }
+            }.getOrElse { Triple(0, null, kurzFehler(it)) }
+            letzterStatus = ergebnis.first
+            spruenge += Sprung(nr, ergebnis.first, ergebnis.second, hostVon(url), ergebnis.third)
+            val weiter = ergebnis.first in 300..399 && !ergebnis.second.isNullOrBlank()
+            if (!weiter) break
+            ziel = ergebnis.second
+        }
+
+        // Datenrate nur, wenn das Endziel überhaupt ausliefert — sonst misst man die Zeit bis zum Nein.
+        var bytes = 0L
+        var mbit = 0.0
+        if (letzterStatus in 200..299 && ziel != null) {
+            val t0 = System.currentTimeMillis()
+            runCatching {
+                val r = Request.Builder().url(ziel!!).header("User-Agent", "German4K-Ultra").header("Range", "bytes=0-2000000").build()
+                ohneFolgen.newCall(r).execute().use { antwort ->
+                    val gelesen = antwort.body.bytes().size.toLong()
+                    val sek = (System.currentTimeMillis() - t0) / 1000.0
+                    bytes = gelesen
+                    if (sek > 0) mbit = (gelesen * 8 / sek / 1_000_000)
+                }
             }
-        }.getOrElse { StreamBefund(Schritt(KEY_STREAM, SCHRITT_STREAM, false, kurzFehler(it)), 0, false) }
+        }
+
+        val ok = letzterStatus in 200..299
+        val info = if (ok) {
+            if (bytes > 0) "HTTP $letzterStatus · ${bytes / 1000} kB (${"%.1f".format(mbit)} Mbit/s)" else "HTTP $letzterStatus"
+        } else {
+            val brech = spruenge.lastOrNull()
+            "Sprung ${brech?.nr ?: 1}: ${brech?.fehler ?: "HTTP $letzterStatus"}"
+        }
+        return StreamBefund(
+            Schritt(KEY_STREAM, SCHRITT_STREAM, ok, info),
+            letzterStatus, ok, spruenge, ziel, bytes, mbit,
+        )
     }
+
+    /** Endkundennetz oder Rechenzentrum? Eine nackte IP als Endziel heißt VPN/Serverraum — beides normal. */
+    private fun zweig(ziel: String?): String {
+        val host = ziel?.let { hostVon(it) } ?: return ""
+        return if (host.matches(Regex("""^[0-9.]+$"""))) ZWEIG_RZ else ZWEIG_ENDKUNDE
+    }
+
+    private fun hostVon(url: String): String = runCatching { java.net.URI(url).host.orEmpty() }.getOrDefault("")
 
     // --- classification -------------------------------------------------------------------
 
@@ -213,6 +315,7 @@ class German4kHealth(
         const val KEY_PANEL = "panel"
         const val KEY_HOST = "host"
         const val KEY_STREAM = "stream"
+        const val KEY_SPRUNG = "sprung"
         const val KEY_UHR = "uhr"
 
         const val SCHRITT_NETZ = "Netzwerk"
@@ -220,6 +323,12 @@ class German4kHealth(
         const val SCHRITT_PANEL = "German4K"
         const val SCHRITT_HOST = "Verbindung"
         const val SCHRITT_STREAM = "Sender"
+        const val SCHRITT_SPRUNG = "Weg"
+
+        const val ZWEIG_RZ = "Rechenzentrum/VPN"
+        const val ZWEIG_ENDKUNDE = "Endkundennetz"
+        /** Wie viele Weiterleitungen die Prüfung verfolgt. Der Kundenweg hat zwei, drei sind Reserve. */
+        const val MAX_SPRUENGE = 4
         const val SCHRITT_UHR = "Uhrzeit"
 
         const val NETZ_WLAN = "WLAN"
@@ -265,6 +374,7 @@ class German4kHealth(
             streamStatus: Int?,
             streamOk: Boolean?,
             uhrAbweichungSek: Long,
+            kette: List<Sprung> = emptyList(),
         ): Klasse {
             if (netzart == NETZ_KEINS) return Klasse.KEIN_NETZ
             if (portal) return Klasse.ZWANGSPORTAL
@@ -278,6 +388,10 @@ class German4kHealth(
                     h.zustand.equals("Banned", true) || h.zustand.equals("Disabled", true)
                 ) return Klasse.ABGELAUFEN
             }
+            // Ein 511 IN DER KETTE ist kein Zwangsportal (das hätte schon den Internet-Test gefangen),
+            // sondern die Abweisung dieser IP durch den Zulieferer — und die Anmeldung sagt trotzdem ja.
+            // Deshalb steht diese Prüfung vor allen anderen Stream-Urteilen.
+            if (kette.any { it.status == 511 } && (panelOk || hosts.any { it.ok })) return Klasse.VPN_FILTER
             if (hosts.any { it.status == 456 } || streamStatus == 456) return Klasse.LAND_GESPERRT
             if (streamStatus == 458 || streamStatus == 460) return Klasse.LEITUNG_BELEGT
             // Some hosts answer, some do not: the failover has it covered, the customer saw a hiccup.

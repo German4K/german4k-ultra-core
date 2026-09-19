@@ -93,4 +93,7 @@
     <string name="g4k_stoerung_pruefen">Verbindung prüfen</string>
     <string name="g4k_stoerung_zu">Schließen</string>
     <string name="g4k_stoerung_laeuft">Wird freigegeben…</string>
+    <string name="g4k_schritt_sprung">Weg</string>
+    <string name="g4k_fehler_vpn_filter_title">Deine Verbindung wird gefiltert</string>
+    <string name="g4k_fehler_vpn_filter_body">An deinem Zugang liegt es nicht — die Verbindung, über die dieses Gerät hinausgeht, wird abgewiesen. Das passiert bei manchen VPN-Standorten und beim „Bedrohungsschutz“, den einige VPNs eingebaut haben. Wähle im VPN ein anderes Land oder schalte diesen Schutz aus; ohne VPN läuft es meist sofort.</string>
 </resources>
