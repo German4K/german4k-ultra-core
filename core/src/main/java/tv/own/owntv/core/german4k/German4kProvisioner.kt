@@ -120,6 +120,7 @@ class German4kProvisioner(
                 cache(it); registerHosts(it); _answer.value = it
                 German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features)
                 pendingTestNote?.let(::debugTestNote)
+                pendingTestStunden?.let(::debugTestzugang)
                 // Absturz vom letzten Mal und, wenn das Panel darum bittet, das Fehlerprotokoll.
                 German4kDiagnose.nachPanelAntwort(context, panel, deviceId, it)
             }
@@ -323,7 +324,31 @@ class German4kProvisioner(
         )
     }
 
+    /**
+     * Debug builds only: tut so, als liefe ein Test mit [stunden] Reststunden
+     * (adb: `--ei g4k_test 4`). Zeigt Chip und Hinweis ohne echten Testzugang.
+     */
+    fun debugTestzugang(stunden: Int) {
+        if (context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE == 0) return
+        val base = _answer.value ?: run { pendingTestStunden = stunden; return }
+        pendingTestStunden = null
+        val knapp = stunden <= 6
+        val dauer = if (stunden <= 1) "weniger als einer Stunde" else "$stunden Stunden"
+        _answer.value = base.copy(
+            test = German4kTest(stunden, "https://german4k.com/kaufen"),
+            noteTyp = "test",
+            noteId = "test:debug-$stunden",
+            noteTitle = if (knapp) "Dein Test läuft bald ab" else "Dein Testzugang läuft",
+            noteContent = if (knapp) {
+                "Dein Testzugang endet in $dauer. Scanne den Code, dann geht es ohne Unterbrechung weiter."
+            } else {
+                "Du schaust gerade mit einem Testzugang — er läuft noch $dauer. Wenn es dir gefällt, scanne den Code und hol dir den vollen Zugang."
+            },
+        )
+    }
+
     private var pendingTestNote: String? = null
+    private var pendingTestStunden: Int? = null
 
     private object Keys {
         val LAST_ANSWER = stringPreferencesKey("last_answer")

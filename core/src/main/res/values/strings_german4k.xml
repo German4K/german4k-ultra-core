@@ -117,4 +117,7 @@
     <string name="g4k_bereiche_laedt">Loading…</string>
     <string name="g4k_bereiche_leer">No sections to show — this device is not connected to an access yet.</string>
     <string name="g4k_bereiche_neu">Your list updates on the next start.</string>
+    <string name="g4k_test_chip">Trial · <xliff:g id="hours" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> h left</string>
+    <string name="g4k_test_chip_bald">Trial · ending soon</string>
+    <string name="g4k_hint_qr_kaufen">Scan to get it on your phone – or open german4k.com/kaufen</string>
 </resources>

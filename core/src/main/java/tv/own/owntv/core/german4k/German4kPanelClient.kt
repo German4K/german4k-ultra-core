@@ -39,6 +39,14 @@ data class German4kKunde(
     val tageOffen: Int? = null,
 )
 
+/**
+ * Ein laufender Testzugang.
+ *
+ * Ein Testkunde sieht dasselbe Bild wie ein zahlender und merkt oft erst, dass es ein Test war,
+ * wenn das Bild weg ist. Die Stundenzahl gehört deshalb dorthin, wo sonst das Ablaufdatum steht.
+ */
+data class German4kTest(val stundenOffen: Int, val kaufenUrl: String)
+
 /** Ein Land oder Bereich der Senderliste, mit Senderzahl — niemand schaltet blind etwas ab. */
 data class German4kBereich(val id: Int, val name: String, val sender: Int, val an: Boolean, val standard: Boolean)
 
@@ -69,6 +77,8 @@ data class German4kPanelAnswer(
     val features: Map<String, String> = emptyMap(),
     /** Verlängern, Zweitgerät, Werben, Kontakt — siehe [German4kKunde]. */
     val kunde: German4kKunde = German4kKunde(),
+    /** Läuft hinter diesem Gerät ein Test, oder null bei einem gewöhnlichen Zugang. */
+    val test: German4kTest? = null,
     /** The panel asks this device to upload its error log on the next start (`/mac diagnose <MAC>`). */
     val diagnoseRequested: Boolean = false,
     /** Server clock (UTC, ISO). A device clock far off this makes the guide look shifted. */
@@ -123,6 +133,7 @@ data class German4kPanelAnswer(
                         tageOffen = if (k.isNull("tage_offen")) null else k.optInt("tage_offen"),
                     )
                 } ?: German4kKunde(),
+                test = o.optJSONObject("test")?.let { t -> German4kTest(t.optInt("stunden_offen", 0), t.optString("kaufen_url")) },
                 diagnoseRequested = o.optBoolean("diagnose_requested", false),
                 serverTime = o.optString("server_time"),
             )
@@ -137,6 +148,7 @@ data class German4kPanelAnswer(
         update?.let { u -> put("update", JSONObject().apply { put("channel", u.channel); put("version_name", u.versionName); put("version_code", u.versionCode); put("url", u.url); put("notes", u.notes); put("required", u.required) }) }
         put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
         put("diagnose_requested", diagnoseRequested); put("server_time", serverTime)
+        test?.let { t -> put("test", JSONObject().apply { put("stunden_offen", t.stundenOffen); put("kaufen_url", t.kaufenUrl) }) }
         put("kunde", JSONObject().apply {
             put("verlaengern_url", kunde.verlaengernUrl); put("zweitgeraet_url", kunde.zweitgeraetUrl)
             put("werben_url", kunde.werbenUrl); put("kontakt_url", kunde.kontaktUrl)

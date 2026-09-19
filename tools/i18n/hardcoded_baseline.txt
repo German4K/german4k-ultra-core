@@ -157,10 +157,12 @@
 1	core/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	custom_category_members
 1	core/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	itemId
 2	core/src/main/java/tv/own/owntv/core/database/entity/UserDataEntities.kt	mediaType
+1	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$stunden Stunden
 1	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Beim Rechenzentrum laufen gerade angekündigte Wartungsarbeiten. Bild und Liste können in dieser Zeit fehlen – das ist keine Störung deines Zugangs.
 1	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Zugang läuft am $expire ab. Verlängern: QR-Code scannen oder german4k.com – dann läuft alles ohne Unterbrechung weiter.
 1	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Der Zugang auf diesem Gerät ist abgelaufen. Verlängern: QR-Code scannen oder german4k.com – danach ist die Liste sofort wieder da.
 1	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	reconcile failed
+1	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	weniger als einer Stunde
 1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_count
 1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	day_start
 1	core/src/main/java/tv/own/owntv/core/metadata/MetadataBudget.kt	hour_count

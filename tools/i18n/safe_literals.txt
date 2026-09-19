@@ -1882,6 +1882,7 @@
 1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/ultra
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	is_default
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kaufen_url
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kick
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kontakt_url
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kunde
@@ -1907,7 +1908,9 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server_time
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	standard
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stunden_offen
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	tage_offen
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	test
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	text
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	typ
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	ultra
@@ -1923,6 +1926,10 @@
 1	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	\0
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$noteId|${today()}
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	$typ:test
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Test läuft bald ab
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Testzugang endet in $dauer. Scanne den Code, dann geht es ohne Unterbrechung weiter.
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Dein Testzugang läuft
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Du schaust gerade mit einem Testzugang — er läuft noch $dauer. Wenn es dir gefällt, scanne den Code und hol dir den vollen Zugang.
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	German4kProvisioner
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Hinweis
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Testhinweis vom Panel.
@@ -1938,9 +1945,12 @@
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	gesperrt
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	guide sync failed: ${e.message}
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	hinweis_gesehen
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	https://german4k.com/kaufen
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	managed_source_ids
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	test
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	test:debug-$stunden
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	verlaengern
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	wartung
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	German4kStoerung

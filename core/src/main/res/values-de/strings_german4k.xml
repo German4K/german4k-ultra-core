@@ -116,4 +116,7 @@
     <string name="g4k_bereiche_laedt">Wird geladen…</string>
     <string name="g4k_bereiche_leer">Keine Bereiche — dieses Gerät ist noch nicht mit einem Zugang verbunden.</string>
     <string name="g4k_bereiche_neu">Deine Liste ist beim nächsten Start aktuell.</string>
+    <string name="g4k_test_chip">Test · noch <xliff:g id="hours" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> h</string>
+    <string name="g4k_test_chip_bald">Test · endet gleich</string>
+    <string name="g4k_hint_qr_kaufen">Scannen und am Handy holen – oder german4k.com/kaufen öffnen</string>
 </resources>
