@@ -126,4 +126,17 @@
     <string name="g4k_prozent">%1$d %%</string>
     <string name="g4k_detailseite_titel">Detailseite vor dem Abspielen</string>
     <string name="g4k_detailseite_text">Erst eine Seite mit Bewertung, Besetzung und Fassungen öffnen. Aus: sofort abspielen, Vorschau rechts.</string>
+    <!-- Detailseite (Build 10): Querbild, Noten, Knoepfe, Besetzung, Fassungen. -->
+    <string name="g4k_detail_abspielen">Abspielen</string>
+    <string name="g4k_detail_fortsetzen">Fortsetzen bei %1$s</string>
+    <string name="g4k_detail_von_vorn">Von vorn</string>
+    <string name="g4k_detail_favorit">Favorit</string>
+    <string name="g4k_detail_favorit_entfernen">Favorit entfernen</string>
+    <string name="g4k_detail_folgen">Folgen</string>
+    <string name="g4k_detail_trailer">Trailer</string>
+    <string name="g4k_detail_besetzung">Regie &amp; Besetzung</string>
+    <string name="g4k_detail_regie">Regie</string>
+    <string name="g4k_detail_fassungen">Weitere Fassungen</string>
+    <string name="g4k_detail_dauer">%1$d Min.</string>
+    <string name="g4k_detail_laedt">Wird geladen…</string>
 </resources>

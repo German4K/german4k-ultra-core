@@ -127,4 +127,17 @@
     <string name="g4k_prozent">%1$d%%</string>
     <string name="g4k_detailseite_titel">Details before playing</string>
     <string name="g4k_detailseite_text">Open a page with rating, cast and versions first. Off: play right away, preview on the right.</string>
+    <!-- Detailseite (Build 10): Querbild, Noten, Knoepfe, Besetzung, Fassungen. -->
+    <string name="g4k_detail_abspielen">Play</string>
+    <string name="g4k_detail_fortsetzen">Resume at %1$s</string>
+    <string name="g4k_detail_von_vorn">From the start</string>
+    <string name="g4k_detail_favorit">Favorite</string>
+    <string name="g4k_detail_favorit_entfernen">Remove favorite</string>
+    <string name="g4k_detail_folgen">Episodes</string>
+    <string name="g4k_detail_trailer">Trailer</string>
+    <string name="g4k_detail_besetzung">Director &amp; cast</string>
+    <string name="g4k_detail_regie">Director</string>
+    <string name="g4k_detail_fassungen">Other versions</string>
+    <string name="g4k_detail_dauer">%1$d min</string>
+    <string name="g4k_detail_laedt">Loading…</string>
 </resources>
