@@ -22,4 +22,8 @@
     <string name="settings_font_playfair_display" translatable="false">Playfair Display</string>
     <string name="settings_font_dancing_script" translatable="false">Dancing Script</string>
     <string name="settings_font_poppins" translatable="false">Poppins</string>
+    <!-- German4K: Namen der Bewertungsseiten (Notenzeile, 21.09.2026) -->
+    <string name="g4k_marke_imdb" translatable="false">IMDb</string>
+    <string name="g4k_marke_tmdb" translatable="false">TMDB</string>
+    <string name="g4k_marke_metacritic" translatable="false">Metacritic</string>
 </resources>

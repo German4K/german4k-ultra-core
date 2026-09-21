@@ -119,4 +119,9 @@
     <string name="g4k_test_chip">Test · noch <xliff:g id="hours" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> h</string>
     <string name="g4k_test_chip_bald">Test · endet gleich</string>
     <string name="g4k_hint_qr_kaufen">Scannen und am Handy holen – oder german4k.com/kaufen öffnen</string>
+    <!-- Notenzeile: IMDb-Stimmen, kurz -->
+    <string name="g4k_stimmen_mio">(%1$.1f Mio.)</string>
+    <string name="g4k_stimmen_tsd">(%1$d Tsd.)</string>
+    <string name="g4k_stimmen">(%1$d)</string>
+    <string name="g4k_prozent">%1$d %%</string>
 </resources>

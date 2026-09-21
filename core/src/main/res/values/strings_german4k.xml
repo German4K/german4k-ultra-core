@@ -120,4 +120,9 @@
     <string name="g4k_test_chip">Trial · <xliff:g id="hours" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> h left</string>
     <string name="g4k_test_chip_bald">Trial · ending soon</string>
     <string name="g4k_hint_qr_kaufen">Scan to get it on your phone – or open german4k.com/kaufen</string>
+    <!-- Notenzeile: IMDb-Stimmen, kurz -->
+    <string name="g4k_stimmen_mio">(%1$.1f M)</string>
+    <string name="g4k_stimmen_tsd">(%1$d K)</string>
+    <string name="g4k_stimmen">(%1$d)</string>
+    <string name="g4k_prozent">%1$d%%</string>
 </resources>
