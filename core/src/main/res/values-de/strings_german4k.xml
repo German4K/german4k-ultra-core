@@ -139,4 +139,9 @@
     <string name="g4k_detail_fassungen">Weitere Fassungen</string>
     <string name="g4k_detail_dauer">%1$d Min.</string>
     <string name="g4k_detail_laedt">Wird geladen…</string>
+    <!-- Personenseite (Task 5): weitere Titel dieser Person im eigenen Katalog. -->
+    <string name="g4k_person_filme">Filme</string>
+    <string name="g4k_person_serien">Serien</string>
+    <string name="g4k_person_leer">Sonst nichts von dieser Person in deinem Katalog.</string>
+    <string name="g4k_person_laedt">Wird geladen…</string>
 </resources>
