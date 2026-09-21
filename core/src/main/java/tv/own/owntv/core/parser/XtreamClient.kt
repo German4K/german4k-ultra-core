@@ -246,6 +246,12 @@ class XtreamClient(private val http: HttpClient) {
     suspend fun getNoten(s: SourceEntity, serie: Boolean, id: String): tv.own.owntv.core.german4k.German4kNoten? =
         getDetails(s, serie, id)?.noten
 
+    /** German4K: Titel einer Person (get_person_titles) — Erweiterung unseres Servers. */
+    suspend fun getPersonTitles(s: SourceEntity, personId: Long): tv.own.owntv.core.german4k.German4kPersonAntwort? {
+        val text = runCatching { http.getText(api(s, "get_person_titles", "&person_id=$personId"), s.userAgent) }.getOrNull() ?: return null
+        return tv.own.owntv.core.german4k.German4kPersonAntwort.parse(text)
+    }
+
     /** `episodes` as `{ season → [episodes] }`. */
     private fun readEpisodesObject(reader: JsonReader, out: MutableList<XtEpisode>) {
         reader.beginObject()
