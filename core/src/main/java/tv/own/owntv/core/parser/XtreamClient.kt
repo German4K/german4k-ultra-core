@@ -234,50 +234,17 @@ class XtreamClient(private val http: HttpClient) {
         return XtSeriesInfo(episodes)
     }
 
-    /**
-     * German4K: Bewertungen je Quelle aus `get_vod_info` (Film) bzw. `get_series_info` (Serie) —
-     * nur der `info`-Block, alles andere wird überlesen. `null`, wenn der Server keine kennt.
-     */
-    suspend fun getNoten(s: SourceEntity, serie: Boolean, id: String): tv.own.owntv.core.german4k.German4kNoten? {
-        var noten: tv.own.owntv.core.german4k.German4kNoten? = null
+    /** German4K: alles fuer die Detailseite aus get_vod_info / get_series_info — null bei Fehler. */
+    suspend fun getDetails(s: SourceEntity, serie: Boolean, id: String): tv.own.owntv.core.german4k.German4kDetails? {
         val aktion = if (serie) "get_series_info" else "get_vod_info"
         val feld = if (serie) "series_id" else "vod_id"
-        http.get(api(s, aktion, "&$feld=$id"), s.userAgent) { input ->
-            JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
-                reader.isLenient = true
-                if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
-                reader.beginObject()
-                while (reader.hasNext()) {
-                    if (reader.nextName() == "info" && reader.peek() == JsonToken.BEGIN_OBJECT) {
-                        noten = readNoten(reader)
-                    } else {
-                        reader.skipValue()
-                    }
-                }
-                reader.endObject()
-            }
-        }
-        return noten?.takeUnless { it.leer }
+        val text = runCatching { http.getText(api(s, aktion, "&$feld=$id"), s.userAgent) }.getOrNull() ?: return null
+        return tv.own.owntv.core.german4k.German4kDetails.parse(text)
     }
 
-    private fun readNoten(reader: JsonReader): tv.own.owntv.core.german4k.German4kNoten {
-        var n = tv.own.owntv.core.german4k.German4kNoten()
-        reader.beginObject()
-        while (reader.hasNext()) {
-            when (reader.nextName()) {
-                "imdb_rating" -> n = n.copy(imdb = reader.nextDoubleOrNull()?.takeIf { it > 0 })
-                "imdb_votes" -> n = n.copy(imdbStimmen = reader.nextIntOrNull()?.takeIf { it > 0 })
-                "tmdb_rating" -> n = n.copy(tmdb = reader.nextDoubleOrNull()?.takeIf { it > 0 })
-                "rt_rating" -> n = n.copy(rt = reader.nextIntOrNull()?.takeIf { it > 0 })
-                "metacritic" -> n = n.copy(metacritic = reader.nextIntOrNull()?.takeIf { it > 0 })
-                "letterboxd" -> n = n.copy(letterboxd = reader.nextDoubleOrNull()?.takeIf { it > 0 })
-                "trakt" -> n = n.copy(trakt = reader.nextIntOrNull()?.takeIf { it > 0 })
-                else -> reader.skipValue()
-            }
-        }
-        reader.endObject()
-        return n
-    }
+    /** Nur die Noten — fuer die Vorschau rechts im kompakten Modus. */
+    suspend fun getNoten(s: SourceEntity, serie: Boolean, id: String): tv.own.owntv.core.german4k.German4kNoten? =
+        getDetails(s, serie, id)?.noten
 
     /** `episodes` as `{ season → [episodes] }`. */
     private fun readEpisodesObject(reader: JsonReader, out: MutableList<XtEpisode>) {
