@@ -360,6 +360,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val GUIDE_VIEW = stringPreferencesKey("guide_view")
         val GUIDE_DENSITY_PCT = intPreferencesKey("guide_density_pct")
         val EPISODE_VIEW_MODE = stringPreferencesKey("episode_view_mode")
+        val G4K_DETAILSEITE = booleanPreferencesKey("g4k_detailseite")
         // Touch-host settings. A television has no home button to shrink a video into, no metered
         // connection to save, and no swipe to calibrate — so all four default to the behaviour the TV
         // app already has, and only the phone app ever shows a row for them.
@@ -683,6 +684,11 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     suspend fun setAmbientGlowPulse(enabled: Boolean) {
         context.dataStore.edit { it[Keys.AMBIENT_GLOW_PULSE] = enabled }
     }
+
+    // German4K: Detailseite vor dem Abspielen (Kundenwunsch 21.09.2026). Standard AN — wer den
+    // alten Weg will, schaltet ab; dann kommt die Vorschau rechts zurueck.
+    val g4kDetailseite: Flow<Boolean> = prefsFlow { it[Keys.G4K_DETAILSEITE] ?: true }
+    suspend fun setG4kDetailseite(an: Boolean) { context.dataStore.edit { it[Keys.G4K_DETAILSEITE] = an } }
 
     // --- Weather chip (top bar): show/hide + manual location override for VPN users ---
 
@@ -2495,6 +2501,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.BACKGROUND_PLAYBACK, Keys.PIP_ENABLED, Keys.DATA_SAVER, Keys.DOWNLOADS_WIFI_ONLY,
         Keys.PIP_ON_BACK, Keys.PIP_SNAP, Keys.AUDIO_ON_SCREEN_OFF, Keys.AUDIO_ON_MOBILE_DATA,
         Keys.AUDIO_PER_CHANNEL,
+        Keys.G4K_DETAILSEITE,
     )
     private val backupFloatKeys = listOf(Keys.SUB_SCALE, Keys.SUB_SCALE_MPV, Keys.SUB_SCALE_EXO)
 

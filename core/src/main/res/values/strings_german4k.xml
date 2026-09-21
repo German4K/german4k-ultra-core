@@ -125,4 +125,6 @@
     <string name="g4k_stimmen_tsd">(%1$d K)</string>
     <string name="g4k_stimmen">(%1$d)</string>
     <string name="g4k_prozent">%1$d%%</string>
+    <string name="g4k_detailseite_titel">Details before playing</string>
+    <string name="g4k_detailseite_text">Open a page with rating, cast and versions first. Off: play right away, preview on the right.</string>
 </resources>
