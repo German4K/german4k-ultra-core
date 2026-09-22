@@ -2747,6 +2747,7 @@
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	external_player_movies
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	external_player_series
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	font_size_percent
+1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	g4k_darstellung
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	g4k_detailseite
 1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	g4k_sync_stand
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	gesture_sensitivity_pct

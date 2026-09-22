@@ -126,6 +126,12 @@
     <string name="g4k_prozent">%1$d %%</string>
     <string name="g4k_detailseite_titel">Detailseite vor dem Abspielen</string>
     <string name="g4k_detailseite_text">Erst eine Seite mit Bewertung, Besetzung und Fassungen öffnen. Aus: sofort abspielen, Vorschau rechts.</string>
+    <string name="g4k_darstellung_titel">Darstellung</string>
+    <string name="g4k_darstellung_text">Automatisch: Fernseher bekommt die Seitenleiste, Handy und Tablet die untere Leiste.</string>
+    <string name="g4k_darstellung_auto">Automatisch</string>
+    <string name="g4k_darstellung_tv">Fernseher</string>
+    <string name="g4k_darstellung_mobil">Handy / Tablet</string>
+    <string name="g4k_darstellung_dialog">Darstellung</string>
     <!-- Detailseite (Build 10): Querbild, Noten, Knoepfe, Besetzung, Fassungen. -->
     <string name="g4k_detail_abspielen">Abspielen</string>
     <string name="g4k_detail_fortsetzen">Fortsetzen bei %1$s</string>

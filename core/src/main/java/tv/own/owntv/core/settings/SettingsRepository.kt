@@ -160,6 +160,12 @@ enum class EpgAutoRefresh(val thresholdMs: Long? = null) {
     val isInterval: Boolean get() = thresholdMs != null && this != STARTUP
 }
 
+// German4K: Darstellung (22.09.2026). AUTO = Fernseher mit Leanback bekommt die Seitenleiste, alles
+// andere die untere Leiste; TV/MOBIL erzwingen es — der Ausweg, wenn eine Box falsch erkannt wird.
+// Top-level (nicht in der Klasse verschachtelt wie ResumeMode/NavMenuMode), damit App-seitiger Code
+// (German4kFormfaktor.kt, Tests) ihn ohne SettingsRepository-Praefix importieren kann.
+enum class G4kDarstellung { AUTO, TV, MOBIL }
+
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "owntv_settings")
 
 /** CH+- key paging limits. Top-level so any caller (VM, UI) can reference them via the class. */
@@ -361,6 +367,7 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val GUIDE_DENSITY_PCT = intPreferencesKey("guide_density_pct")
         val EPISODE_VIEW_MODE = stringPreferencesKey("episode_view_mode")
         val G4K_DETAILSEITE = booleanPreferencesKey("g4k_detailseite")
+        val G4K_DARSTELLUNG = stringPreferencesKey("g4k_darstellung")
         // Touch-host settings. A television has no home button to shrink a video into, no metered
         // connection to save, and no swipe to calibrate — so all four default to the behaviour the TV
         // app already has, and only the phone app ever shows a row for them.
@@ -689,6 +696,13 @@ class SettingsRepository(private val context: Context, private val localeStore: 
     // alten Weg will, schaltet ab; dann kommt die Vorschau rechts zurueck.
     val g4kDetailseite: Flow<Boolean> = prefsFlow { it[Keys.G4K_DETAILSEITE] ?: true }
     suspend fun setG4kDetailseite(an: Boolean) { context.dataStore.edit { it[Keys.G4K_DETAILSEITE] = an } }
+
+    // German4K: Darstellung (22.09.2026) — Formfaktor-Schalter fuer Handy-/Tablet-Layout, siehe
+    // G4kDarstellung oben. Standard AUTO.
+    val g4kDarstellung: Flow<G4kDarstellung> = prefsFlow { p ->
+        p[Keys.G4K_DARSTELLUNG]?.let { runCatching { G4kDarstellung.valueOf(it) }.getOrNull() } ?: G4kDarstellung.AUTO
+    }
+    suspend fun setG4kDarstellung(d: G4kDarstellung) { context.dataStore.edit { it[Keys.G4K_DARSTELLUNG] = d.name } }
 
     // --- Weather chip (top bar): show/hide + manual location override for VPN users ---
 
@@ -2446,6 +2460,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         Keys.DOWNLOAD_ROOT,
         // Nav menu mode rides with settings backup so a reinstall keeps the user's DYNAMIC/STATIC choice.
         Keys.NAV_MENU_MODE,
+        // German4K: Darstellung (AUTO/TV/MOBIL) rides with backup like nav menu mode above.
+        Keys.G4K_DARSTELLUNG,
         // Docked mini-player position rides with settings backup (size is an int key, see backupIntKeys).
         Keys.MINI_PLAYER_POSITION,
         // Live TV latency preset (custom seconds is an int key, see backupIntKeys).
