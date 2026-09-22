@@ -153,4 +153,7 @@
     <string name="g4k_person_leer">Nothing else by this person in your catalog.</string>
     <string name="g4k_person_laedt">Loading…</string>
     <string name="g4k_mehr_bereich_summary">Open this section</string>
+    <!-- Handy-/Tablet-Layout (Task 3): Drill-down Kategorien -> Inhalt. -->
+    <string name="g4k_mobil_zurueck">Back</string>
+    <string name="g4k_mobil_kategorien">Categories</string>
 </resources>

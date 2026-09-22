@@ -152,4 +152,7 @@
     <string name="g4k_person_leer">Sonst nichts von dieser Person in deinem Katalog.</string>
     <string name="g4k_person_laedt">Wird geladen…</string>
     <string name="g4k_mehr_bereich_summary">Bereich öffnen</string>
+    <!-- Handy-/Tablet-Layout (Task 3): Drill-down Kategorien -> Inhalt. -->
+    <string name="g4k_mobil_zurueck">Zurück</string>
+    <string name="g4k_mobil_kategorien">Kategorien</string>
 </resources>
