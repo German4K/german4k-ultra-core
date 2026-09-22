@@ -151,4 +151,5 @@
     <string name="g4k_person_serien">Serien</string>
     <string name="g4k_person_leer">Sonst nichts von dieser Person in deinem Katalog.</string>
     <string name="g4k_person_laedt">Wird geladen…</string>
+    <string name="g4k_mehr_bereich_summary">Bereich öffnen</string>
 </resources>
