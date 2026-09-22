@@ -54,7 +54,9 @@ data class German4kDetails(
                 jahr = datum.take(4).takeIf { it.length == 4 && it.all(Char::isDigit) } ?: "",
                 datum = datum.takeIf { Regex("\\d{4}-\\d{2}-\\d{2}").matches(it) } ?: "",
                 dauerSek = dauer,
-                trailer = info.optString("youtube_trailer").takeIf { Regex("[A-Za-z0-9_-]{6,}").matches(it) },
+                // German4K: getrimmt geprueft — manche Zeilen tragen ein Leerzeichen oder einen
+                // Zeilenumbruch um die Kennung, und dann verwarf die Pruefung einen gueltigen Trailer.
+                trailer = info.optString("youtube_trailer").trim().takeIf { Regex("[A-Za-z0-9_-]{6,}").matches(it) },
                 noten = noten,
                 besetzung = info.optJSONArray("cast_list").objekte().mapNotNull { o ->
                     val id = o.optLong("id"); val name = o.optString("name")

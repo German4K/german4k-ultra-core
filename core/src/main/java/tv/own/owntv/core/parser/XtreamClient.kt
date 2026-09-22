@@ -242,9 +242,54 @@ class XtreamClient(private val http: HttpClient) {
         return tv.own.owntv.core.german4k.German4kDetails.parse(text)
     }
 
-    /** Nur die Noten — fuer die Vorschau rechts im kompakten Modus. */
-    suspend fun getNoten(s: SourceEntity, serie: Boolean, id: String): tv.own.owntv.core.german4k.German4kNoten? =
-        getDetails(s, serie, id)?.noten
+    /**
+     * Nur die Noten — fuer die Vorschau rechts im kompakten Modus.
+     *
+     * German4K: bewusst mit [JsonReader] statt ueber [getDetails]. Die Vorschau haengt am Fokus, laeuft
+     * also bei jedem Kachelwechsel; `get_series_info` traegt aber die komplette Folgenliste, und die
+     * darf nicht bei jedem Fokuswechsel in den Speicher geparst werden. Der Leser nimmt die sieben
+     * Notenfelder aus `info` und ueberspringt alles andere, ohne einen Baum zu bauen.
+     */
+    suspend fun getNoten(s: SourceEntity, serie: Boolean, id: String): tv.own.owntv.core.german4k.German4kNoten? {
+        var noten: tv.own.owntv.core.german4k.German4kNoten? = null
+        val aktion = if (serie) "get_series_info" else "get_vod_info"
+        val feld = if (serie) "series_id" else "vod_id"
+        http.get(api(s, aktion, "&$feld=$id"), s.userAgent) { input ->
+            JsonReader(input.reader(Charsets.UTF_8)).use { reader ->
+                reader.isLenient = true
+                if (reader.peek() != JsonToken.BEGIN_OBJECT) { reader.skipValue(); return@use }
+                reader.beginObject()
+                while (reader.hasNext()) {
+                    if (reader.nextName() == "info" && reader.peek() == JsonToken.BEGIN_OBJECT) {
+                        noten = readNoten(reader)
+                    } else {
+                        reader.skipValue()
+                    }
+                }
+                reader.endObject()
+            }
+        }
+        return noten?.takeUnless { it.leer }
+    }
+
+    private fun readNoten(reader: JsonReader): tv.own.owntv.core.german4k.German4kNoten {
+        var n = tv.own.owntv.core.german4k.German4kNoten()
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (reader.nextName()) {
+                "imdb_rating" -> n = n.copy(imdb = reader.nextDoubleOrNull()?.takeIf { it > 0 })
+                "imdb_votes" -> n = n.copy(imdbStimmen = reader.nextIntOrNull()?.takeIf { it > 0 })
+                "tmdb_rating" -> n = n.copy(tmdb = reader.nextDoubleOrNull()?.takeIf { it > 0 })
+                "rt_rating" -> n = n.copy(rt = reader.nextIntOrNull()?.takeIf { it > 0 })
+                "metacritic" -> n = n.copy(metacritic = reader.nextIntOrNull()?.takeIf { it > 0 })
+                "letterboxd" -> n = n.copy(letterboxd = reader.nextDoubleOrNull()?.takeIf { it > 0 })
+                "trakt" -> n = n.copy(trakt = reader.nextIntOrNull()?.takeIf { it > 0 })
+                else -> reader.skipValue()
+            }
+        }
+        reader.endObject()
+        return n
+    }
 
     /** German4K: Titel einer Person (get_person_titles) — Erweiterung unseres Servers. */
     suspend fun getPersonTitles(s: SourceEntity, personId: Long): tv.own.owntv.core.german4k.German4kPersonAntwort? {
