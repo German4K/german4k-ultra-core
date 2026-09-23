@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import tv.own.owntv.core.CoreBuildInfo
 import tv.own.owntv.core.R
 import tv.own.owntv.core.database.dao.ProfileDao
@@ -85,8 +87,20 @@ class German4kProvisioner(
     private val _answer = MutableStateFlow<German4kPanelAnswer?>(null)
     val answer: StateFlow<German4kPanelAnswer?> = _answer.asStateFlow()
 
+    /**
+     * Die Quellen-IDs, die wir selbst angelegt haben (Spiegel von [Keys.MANAGED_IDS]). Die
+     * Startseite fragt danach, ob ein laufender Import ueberhaupt einer von uns ist — als Flow, weil
+     * ein DataStore-Lesen bei jedem Fortschrittstakt zu teuer waere.
+     */
+    private val _verwaltet = MutableStateFlow<Set<Long>>(emptySet())
+    val verwaltet: StateFlow<Set<Long>> = _verwaltet.asStateFlow()
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var job: Job? = null
+
+    /** Solange das Abmelden aufraeumt, darf kein neuer Lauf starten — sonst legt er alles wieder an. */
+    @Volatile
+    private var abmeldeLaeuft = false
 
     /** Contact the panel and reconcile sources. Safe to call on every app start; overlapping calls coalesce. */
     fun provision() { start(null, null) }
@@ -99,6 +113,9 @@ class German4kProvisioner(
     private var lastRunAt = 0L
 
     private fun start(username: String?, password: String?) {
+        // Waehrend des Abmeldens nichts anfangen: ein Lauf, der jetzt startet, legt die gerade
+        // geloeschten Quellen sofort wieder an.
+        if (abmeldeLaeuft) return
         if (job?.isActive == true && username == null) return
         // Profile switch / gate re-entry fires provision() again right after the first-run import: skip
         // a second panel call when the last one is fresh (a login always goes through).
@@ -291,10 +308,16 @@ class German4kProvisioner(
     private suspend fun cached(): German4kPanelAnswer? =
         context.german4kStore.data.first()[Keys.LAST_ANSWER]?.let { runCatching { German4kPanelAnswer.parse(it) }.getOrNull() }
 
-    private suspend fun managedIds(): Set<String> = context.german4kStore.data.first()[Keys.MANAGED_IDS] ?: emptySet()
+    private suspend fun managedIds(): Set<String> =
+        (context.german4kStore.data.first()[Keys.MANAGED_IDS] ?: emptySet()).also { spiegleVerwaltet(it) }
 
     private suspend fun saveManaged(ids: Set<String>) {
         context.german4kStore.edit { it[Keys.MANAGED_IDS] = ids }
+        spiegleVerwaltet(ids)
+    }
+
+    private fun spiegleVerwaltet(ids: Set<String>) {
+        _verwaltet.value = ids.mapNotNull { it.toLongOrNull() }.toSet()
     }
 
     /** Last panel answer, for screens that only need the hint text / pairing links. */
@@ -312,31 +335,51 @@ class German4kProvisioner(
      * Anmeldebildschirm statt der Hülle zeigt — ohne App-Neustart. Das Profil selbst bleibt stehen,
      * [reconcile] nimmt es beim nächsten Anmelden wieder (Favoriten, Einstellungen bleiben da).
      */
-    suspend fun abmelden(): Boolean = withContext(Dispatchers.IO) {
+    suspend fun abmelden(): Pair<Boolean, String?> = withContext(Dispatchers.IO) {
         // Eigener IO-Faden, nicht der des Aufrufers: das Loeschen eines vollen Katalogs (Kaskade ueber
         // Sender, Filme, Serien) hat am Fernseher anderthalb Minuten gebraucht. Vom ViewModel aus
         // liefe das auf dem Hauptfaden — die Rueckfrage fror ein und sah aus, als haette der Knopf
         // nicht gedrueckt. Gemessen am TV-Emulator (105.513 Eintraege).
         val deviceId = German4kDeviceId.get(context)
-        if (deviceId.isEmpty()) return@withContext false
-        if (!panel.sendAbmelden(deviceId, CoreBuildInfo.versionName)) return@withContext false
+        if (deviceId.isEmpty()) return@withContext Pair(false, null)
+        val (ok, grund) = panel.sendAbmelden(deviceId, CoreBuildInfo.versionName)
+        if (!ok) return@withContext Pair(false, grund)
 
-        val managed = managedIds()
-        if (managed.isNotEmpty()) {
-            for (s in sourceDao.getAllOnce()) {
-                if (s.id.toString() in managed) runCatching { sourceRepository.deleteSource(s) }
+        // Ab hier wird geloescht — kein neuer Lauf darf dazwischen.
+        abmeldeLaeuft = true
+        try {
+            // Einen laufenden [run] zuerst anhalten. Wer das vergisst, verliert gegen das eigene
+            // [reconcile]: es schreibt danach MANAGED_IDS zurueck, setzt die Standardquelle auf eine
+            // geloeschte Zeile und holt mit importer.finish() das Profil wieder — die App stuende
+            // nach dem Entfernen wieder in der Huelle. Mit Frist, damit ein haengender Import das
+            // Abmelden nicht ewig aufhaelt.
+            withTimeoutOrNull(15_000) { runCatching { job?.cancelAndJoin() } }
+            job = null
+
+            // Merkzettel VOR dem Loeschen wegnehmen: was hier dazwischengeht (Absturz, Stromausfall),
+            // findet dann keine verwaltete Quelle mehr vor und legt sie auch nicht wieder an. Welche
+            // Quellen gemeint sind, steht laengst in [managed].
+            val managed = managedIds()
+            context.german4kStore.edit { it.remove(Keys.LAST_ANSWER); it.remove(Keys.MANAGED_IDS) }
+            spiegleVerwaltet(emptySet())
+
+            if (managed.isNotEmpty()) {
+                for (s in sourceDao.getAllOnce()) {
+                    if (s.id.toString() in managed) runCatching { sourceRepository.deleteSource(s) }
+                }
             }
-        }
-        context.german4kStore.edit { it.remove(Keys.LAST_ANSWER); it.remove(Keys.MANAGED_IDS) }
-        settings.setDefaultSource(-1L)
+            settings.setDefaultSource(-1L)
 
-        // Die letzte Antwort bleibt im Speicher, damit der Anmeldebildschirm Gerätecode und
-        // Kopplungswege weiter zeigen kann — nur ohne Quellen, denn gekoppelt ist hier nichts mehr.
-        val leer = _answer.value?.copy(sources = emptyList())
-        _answer.value = leer
-        if (leer != null) _state.value = State.Uncoupled(leer) else _state.value = State.Idle
-        settings.setActiveProfile(-1L)
-        true
+            // Die letzte Antwort bleibt im Speicher, damit der Anmeldebildschirm Gerätecode und
+            // Kopplungswege weiter zeigen kann — nur ohne Quellen, denn gekoppelt ist hier nichts mehr.
+            val leer = _answer.value?.copy(sources = emptyList())
+            _answer.value = leer
+            if (leer != null) _state.value = State.Uncoupled(leer) else _state.value = State.Idle
+            settings.setActiveProfile(-1L)
+        } finally {
+            abmeldeLaeuft = false
+        }
+        Pair(true, null)
     }
 
     /** "Verstanden": hide this hint id for the rest of the day (maintenance hints are never hidden). */

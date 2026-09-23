@@ -11,7 +11,17 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class SyncActivityTracker {
 
-    data class ActiveSync(val sourceId: Long, val sourceName: String, val stage: ImportStage? = null)
+    /**
+     * [erstlauf]: diese Quelle hatte noch nie einen vollstaendigen Durchlauf (`lastSyncAt == null`).
+     * German4K haengt die Fortschrittskarte auf der Startseite daran — ohne das Merkmal wuerde sie
+     * auch beim gewoehnlichen 12-Stunden-Abgleich erscheinen, bei dem der Katalog laengst da ist.
+     */
+    data class ActiveSync(
+        val sourceId: Long,
+        val sourceName: String,
+        val stage: ImportStage? = null,
+        val erstlauf: Boolean = false,
+    )
 
     data class CompletedSync(val sourceId: Long, val sourceName: String, val result: SyncResult, val timestamp: Long)
 
@@ -24,8 +34,8 @@ class SyncActivityTracker {
     /** The last completed sync (success, failure, or cancellation). */
     val lastCompleted: StateFlow<CompletedSync?> = _lastCompleted.asStateFlow()
 
-    fun started(sourceId: Long, sourceName: String) {
-        _active.value = _active.value + (sourceId to ActiveSync(sourceId, sourceName))
+    fun started(sourceId: Long, sourceName: String, erstlauf: Boolean = false) {
+        _active.value = _active.value + (sourceId to ActiveSync(sourceId, sourceName, erstlauf = erstlauf))
     }
 
     fun progress(sourceId: Long, stage: ImportStage) {

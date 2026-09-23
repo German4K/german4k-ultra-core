@@ -100,7 +100,9 @@ class SyncManager(
                 "sync start sourceId=${source.id} name=${source.name} type=${source.type} " +
                     "requestedContentTypes=$contentTypes effective=$effective target=$target forcePrune=$forcePrune",
             )
-            activityTracker.started(source.id, source.name)
+            // erstlauf: derselbe Massstab wie die Verbindungsmessung gleich darunter — nur ein
+            // Katalog, der noch nie fertig wurde, ist ein Erstlauf.
+            activityTracker.started(source.id, source.name, erstlauf = source.lastSyncAt == null)
             val progress = SyncCounters(effective) { stage ->
                 activityTracker.progress(source.id, stage)
                 onProgress(stage)

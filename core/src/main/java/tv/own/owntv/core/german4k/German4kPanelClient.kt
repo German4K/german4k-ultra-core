@@ -253,11 +253,13 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
      * (`app_geraete.line_username = null`). Danach liefert `/api/app/ultra` für dieses Gerät keine
      * Quellen mehr, der nächste Start landet also im Anmeldebildschirm.
      *
-     * Antwort ist wie bei [sendReset] immer HTTP 200 mit `{ok, grund?}`. Nur `ok == true` darf die
-     * App lokal aufräumen lassen: räumt sie bei einem Netzfehler trotzdem auf, legt der nächste
-     * Start dieselbe Quelle wieder an und der Kunde hält das Entfernen für kaputt.
+     * Antwort ist wie bei [sendReset] immer HTTP 200 mit `{ok, grund?}` — `grund` ist bereits
+     * Kundentext (z. B. die Sperrfrist) und gehört deshalb auf den Schirm statt des allgemeinen
+     * Fehlertextes. Nur `ok == true` darf die App lokal aufräumen lassen: räumt sie bei einem
+     * Netzfehler trotzdem auf, legt der nächste Start dieselbe Quelle wieder an und der Kunde hält
+     * das Entfernen für kaputt.
      */
-    suspend fun sendAbmelden(deviceId: String, appVersion: String): Boolean =
+    suspend fun sendAbmelden(deviceId: String, appVersion: String): Pair<Boolean, String?> =
         withContext(Dispatchers.IO) {
             val body = JSONObject().apply { put("app_device_id", deviceId) }.toString()
             val request = Request.Builder()
@@ -267,10 +269,13 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
                 .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
                 .build()
             runCatching {
-                client.newCall(request).execute().use { r -> JSONObject(r.body.string()).optBoolean("ok", false) }
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    Pair(o.optBoolean("ok", false), o.optString("grund").takeIf { it.isNotBlank() })
+                }
             }.getOrElse {
                 Log.w(TAG, "abmelden failed: ${it.message}")
-                false
+                Pair(false, null)
             }
         }
 
