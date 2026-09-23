@@ -1730,6 +1730,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	name
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	photo
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	plot
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	quelle
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	releaseDate
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	release_date
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	releasedate

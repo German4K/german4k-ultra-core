@@ -28,6 +28,13 @@ data class German4kDetails(
     /** YouTube-Kennung des Trailers, null wenn keiner bekannt ist. */
     val trailer: String?,
     val noten: German4kNoten?,
+    /**
+     * German4K: Name des Plattform-Regals, aus dem der Titel stammt („Netflix", „Amazon Prime",
+     * „Disney+", „Apple TV+", „Paramount+") — leer, wenn der Server nichts weiss oder es ein
+     * fremder Xtream-Server ist. Kunden fragen staendig „von wo ist der Film?"; die Detailzeile
+     * beantwortet das, ohne dass jemand die Kategorie suchen muss.
+     */
+    val quelle: String,
     val besetzung: List<German4kDarsteller>,
     val fassungen: List<German4kFassung>,
 ) {
@@ -58,6 +65,7 @@ data class German4kDetails(
                 // Zeilenumbruch um die Kennung, und dann verwarf die Pruefung einen gueltigen Trailer.
                 trailer = info.optString("youtube_trailer").trim().takeIf { Regex("[A-Za-z0-9_-]{6,}").matches(it) },
                 noten = noten,
+                quelle = info.optString("quelle").trim(),
                 besetzung = info.optJSONArray("cast_list").objekte().mapNotNull { o ->
                     val id = o.optLong("id"); val name = o.optString("name")
                     if (id <= 0 || name.isBlank()) null

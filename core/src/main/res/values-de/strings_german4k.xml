@@ -155,4 +155,7 @@
     <!-- Handy-/Tablet-Layout (Task 3): Drill-down Kategorien -> Inhalt. -->
     <string name="g4k_mobil_zurueck">Zurück</string>
     <string name="g4k_mobil_kategorien">Kategorien</string>
+    <!-- Sortier-Menue (Task 3): Titel des Auswahlfensters am Sortier-Chip. -->
+    <string name="g4k_sort_titel">Sortieren nach</string>
+    <string name="g4k_sort_imdb">Bewertung (IMDb)</string>
 </resources>
