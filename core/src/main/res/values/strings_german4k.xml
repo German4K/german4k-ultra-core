@@ -159,4 +159,12 @@
     <!-- Sortier-Menue (Task 3): Titel des Auswahlfensters am Sortier-Chip. -->
     <string name="g4k_sort_titel">Sort by</string>
     <string name="g4k_sort_imdb">Rating (IMDb)</string>
+    <!-- Erstsync (Task 4): Fortschrittskarte auf der Startseite, solange der erste Katalog laedt. -->
+    <string name="g4k_sync_erstlauf_titel">Loading your catalog</string>
+    <string name="g4k_sync_erstlauf_text">%1$s channels · %2$s movies · %3$s series so far. The first start takes a few minutes; the app is usable as soon as this disappears.</string>
+    <!-- Abmelden (Task 4): Geraet vom Zugang trennen, Einstellungen -> eigene Zeile mit Rueckfrage. -->
+    <string name="g4k_abmelden_titel">Remove access from this device</string>
+    <string name="g4k_abmelden_text">Unlinks this device from your access and deletes the downloaded catalog. You can sign in again any time.</string>
+    <string name="g4k_abmelden_bestaetigen">Remove</string>
+    <string name="g4k_abmelden_fehler">Could not reach the server. Try again later.</string>
 </resources>

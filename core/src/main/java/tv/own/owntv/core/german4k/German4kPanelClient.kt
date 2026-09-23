@@ -249,6 +249,32 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
         }
 
     /**
+     * German4K: „Zugang von diesem Gerät entfernen" — löst die Kopplung Gerät ⇄ Line im Panel
+     * (`app_geraete.line_username = null`). Danach liefert `/api/app/ultra` für dieses Gerät keine
+     * Quellen mehr, der nächste Start landet also im Anmeldebildschirm.
+     *
+     * Antwort ist wie bei [sendReset] immer HTTP 200 mit `{ok, grund?}`. Nur `ok == true` darf die
+     * App lokal aufräumen lassen: räumt sie bei einem Netzfehler trotzdem auf, legt der nächste
+     * Start dieselbe Quelle wieder an und der Kunde hält das Entfernen für kaputt.
+     */
+    suspend fun sendAbmelden(deviceId: String, appVersion: String): Boolean =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply { put("app_device_id", deviceId) }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/abmelden")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r -> JSONObject(r.body.string()).optBoolean("ok", false) }
+            }.getOrElse {
+                Log.w(TAG, "abmelden failed: ${it.message}")
+                false
+            }
+        }
+
+    /**
      * Länder und Bereiche lesen (ohne [id]) oder einen schalten. Die Antwort trägt immer den neuen
      * Stand, damit die Oberfläche nie raten muss, was gerade gilt.
      */

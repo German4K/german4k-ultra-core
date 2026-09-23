@@ -158,4 +158,12 @@
     <!-- Sortier-Menue (Task 3): Titel des Auswahlfensters am Sortier-Chip. -->
     <string name="g4k_sort_titel">Sortieren nach</string>
     <string name="g4k_sort_imdb">Bewertung (IMDb)</string>
+    <!-- Erstsync (Task 4): Fortschrittskarte auf der Startseite, solange der erste Katalog laedt. -->
+    <string name="g4k_sync_erstlauf_titel">Dein Katalog wird geladen</string>
+    <string name="g4k_sync_erstlauf_text">Bisher %1$s Sender · %2$s Filme · %3$s Serien. Der erste Start dauert ein paar Minuten; sobald das hier verschwindet, ist alles da.</string>
+    <!-- Abmelden (Task 4): Geraet vom Zugang trennen, Einstellungen -> eigene Zeile mit Rueckfrage. -->
+    <string name="g4k_abmelden_titel">Zugang von diesem Gerät entfernen</string>
+    <string name="g4k_abmelden_text">Trennt dieses Gerät von deinem Zugang und löscht den geladenen Katalog. Anmelden geht jederzeit wieder.</string>
+    <string name="g4k_abmelden_bestaetigen">Entfernen</string>
+    <string name="g4k_abmelden_fehler">Server nicht erreichbar. Bitte später noch einmal.</string>
 </resources>

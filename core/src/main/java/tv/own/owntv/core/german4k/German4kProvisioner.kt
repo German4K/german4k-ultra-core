@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tv.own.owntv.core.CoreBuildInfo
 import tv.own.owntv.core.R
 import tv.own.owntv.core.database.dao.ProfileDao
@@ -298,6 +299,45 @@ class German4kProvisioner(
 
     /** Last panel answer, for screens that only need the hint text / pairing links. */
     suspend fun lastAnswer(): German4kPanelAnswer? = cached()
+
+    /**
+     * German4K: „Zugang von diesem Gerät entfernen". Trennt Gerät und Line im Panel und räumt danach
+     * alles weg, was dieser Zugang auf dem Gerät hinterlassen hat.
+     *
+     * Reihenfolge ist der ganze Trick: **erst** das Panel, dann lokal. Wer bei einem Netzfehler
+     * trotzdem löscht, bekommt beim nächsten Start dieselbe Quelle von [reconcile] wieder angelegt —
+     * für den Kunden sieht das Entfernen dann kaputt aus. Deshalb bei `false` nichts anfassen.
+     *
+     * Am Ende steht das aktive Profil auf -1: das ist der Schalter, an dem MainActivity den
+     * Anmeldebildschirm statt der Hülle zeigt — ohne App-Neustart. Das Profil selbst bleibt stehen,
+     * [reconcile] nimmt es beim nächsten Anmelden wieder (Favoriten, Einstellungen bleiben da).
+     */
+    suspend fun abmelden(): Boolean = withContext(Dispatchers.IO) {
+        // Eigener IO-Faden, nicht der des Aufrufers: das Loeschen eines vollen Katalogs (Kaskade ueber
+        // Sender, Filme, Serien) hat am Fernseher anderthalb Minuten gebraucht. Vom ViewModel aus
+        // liefe das auf dem Hauptfaden — die Rueckfrage fror ein und sah aus, als haette der Knopf
+        // nicht gedrueckt. Gemessen am TV-Emulator (105.513 Eintraege).
+        val deviceId = German4kDeviceId.get(context)
+        if (deviceId.isEmpty()) return@withContext false
+        if (!panel.sendAbmelden(deviceId, CoreBuildInfo.versionName)) return@withContext false
+
+        val managed = managedIds()
+        if (managed.isNotEmpty()) {
+            for (s in sourceDao.getAllOnce()) {
+                if (s.id.toString() in managed) runCatching { sourceRepository.deleteSource(s) }
+            }
+        }
+        context.german4kStore.edit { it.remove(Keys.LAST_ANSWER); it.remove(Keys.MANAGED_IDS) }
+        settings.setDefaultSource(-1L)
+
+        // Die letzte Antwort bleibt im Speicher, damit der Anmeldebildschirm Gerätecode und
+        // Kopplungswege weiter zeigen kann — nur ohne Quellen, denn gekoppelt ist hier nichts mehr.
+        val leer = _answer.value?.copy(sources = emptyList())
+        _answer.value = leer
+        if (leer != null) _state.value = State.Uncoupled(leer) else _state.value = State.Idle
+        settings.setActiveProfile(-1L)
+        true
+    }
 
     /** "Verstanden": hide this hint id for the rest of the day (maintenance hints are never hidden). */
     suspend fun hinweisGesehen(noteId: String) {
