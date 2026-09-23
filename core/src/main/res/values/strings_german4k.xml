@@ -127,12 +127,12 @@
     <string name="g4k_prozent">%1$d%%</string>
     <string name="g4k_detailseite_titel">Details before playing</string>
     <string name="g4k_detailseite_text">Open a page with rating, cast and versions first. Off: play right away, preview on the right.</string>
-    <string name="g4k_darstellung_titel">Layout</string>
+    <string name="g4k_darstellung_titel">Screen mode</string>
     <string name="g4k_darstellung_text">Automatic: TV gets the sidebar, phones and tablets get the bottom bar.</string>
     <string name="g4k_darstellung_auto">Automatic</string>
     <string name="g4k_darstellung_tv">TV</string>
     <string name="g4k_darstellung_mobil">Phone / tablet</string>
-    <string name="g4k_darstellung_dialog">Layout</string>
+    <string name="g4k_darstellung_dialog">Screen mode</string>
     <!-- Detailseite (Build 10): Querbild, Noten, Knoepfe, Besetzung, Fassungen. -->
     <string name="g4k_detail_abspielen">Play</string>
     <string name="g4k_detail_fortsetzen">Resume at %1$s</string>
