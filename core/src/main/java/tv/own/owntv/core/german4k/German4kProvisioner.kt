@@ -102,6 +102,13 @@ class German4kProvisioner(
     @Volatile
     private var abmeldeLaeuft = false
 
+    init {
+        // [_verwaltet] beim Bau einmal aus dem DataStore fuellen. Sonst steht der Spiegel bis zum
+        // ersten [reconcile] auf leer, und die Startseite haelt einen laufenden Import faelschlich
+        // fuer einen fremden (die Fortschrittskarte bliebe beim ersten Katalog-Import aus).
+        scope.launch { runCatching { managedIds() } }
+    }
+
     /** Contact the panel and reconcile sources. Safe to call on every app start; overlapping calls coalesce. */
     fun provision() { start(null, null) }
 
@@ -353,7 +360,9 @@ class German4kProvisioner(
             // geloeschte Zeile und holt mit importer.finish() das Profil wieder — die App stuende
             // nach dem Entfernen wieder in der Huelle. Mit Frist, damit ein haengender Import das
             // Abmelden nicht ewig aufhaelt.
-            withTimeoutOrNull(15_000) { runCatching { job?.cancelAndJoin() } }
+            // Ohne runCatching: das faengt sonst genau die CancellationException, mit der
+            // withTimeoutOrNull seine Frist durchsetzt — die Frist waere wirkungslos.
+            withTimeoutOrNull(15_000) { job?.cancelAndJoin() }
             job = null
 
             // Merkzettel VOR dem Loeschen wegnehmen: was hier dazwischengeht (Absturz, Stromausfall),
