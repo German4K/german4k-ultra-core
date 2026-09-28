@@ -191,7 +191,10 @@ class LiveReconnectLadderTest {
 
     @Test
     fun `mpv live opening loop is bounded`() {
-        assertEquals(10_000L, OwnTVPlayer.LIVE_OPEN_TIMEOUT_MS)
+        // German4K 2.6: 25 s statt 10 s (German Lion, russische Sender brachen in mpv ab). Bleibt
+        // begrenzt und unter MPV_OPEN_TIMEOUT_MS (35 s) der App, damit deren Leiter zuerst greift.
+        assertEquals(25_000L, OwnTVPlayer.LIVE_OPEN_TIMEOUT_MS)
+        assertTrue(OwnTVPlayer.LIVE_OPEN_TIMEOUT_MS < 35_000L)
     }
 
     @Test

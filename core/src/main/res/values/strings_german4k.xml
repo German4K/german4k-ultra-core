@@ -165,6 +165,8 @@
     <!-- Sortier-Menue (Task 3): Titel des Auswahlfensters am Sortier-Chip. -->
     <string name="g4k_sort_titel">Sort by</string>
     <string name="g4k_sort_imdb">Rating (IMDb)</string>
+    <!-- German4K: Sortierung nach Erscheinungsjahr, neueste zuerst (Kundenwunsch Aleks959). -->
+    <string name="g4k_sort_jahr">Release year</string>
     <!-- Erstsync (Task 4): Fortschrittskarte auf der Startseite, solange der erste Katalog laedt. -->
     <string name="g4k_sync_erstlauf_titel">Loading your catalog</string>
     <string name="g4k_sync_erstlauf_text">%1$s channels · %2$s movies · %3$s series so far. The first start takes a few minutes; the app is usable as soon as this disappears.</string>

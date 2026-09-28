@@ -4290,6 +4290,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on ExoPlayer ($exoError) and the engine setting is ExoPlayer-only
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on mpv but audio codec unsafe for ExoPlayer — no fallback
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD failed on mpv but the engine setting is mpv-only — no fallback
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD open watchdog — no progress ${now - windowStart}ms after FILE_LOADED, trying ExoPlayer
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD starting on ExoPlayer (preferred engine setting)
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD terminally failed on mpv ($mpvError) — falling back to ExoPlayer
@@ -4577,6 +4578,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vo-delayed=${getPropertyString("vo-delayed-frame-count")}
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vo=${getPropertyString("vo")}
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vobsub
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vod open timeout
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	volume
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	volume-max
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	vorbis

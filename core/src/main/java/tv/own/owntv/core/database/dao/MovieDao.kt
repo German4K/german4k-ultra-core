@@ -113,6 +113,21 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun searchInCategoryDateAdded(query: String, categoryId: Long): PagingSource<Int, MovieEntity>
 
+    // German4K: Erscheinungsjahr, neueste zuerst (Kundenwunsch Aleks959). year = Anbieterjahr (Filme: sonst
+    // "(YYYY)" im Titel), parsedYear = Rueckfall aus dem Titel. Ohne Jahr ans Ende; "IS NULL" statt
+    // NULLS LAST, weil Android 8/9 SQLite 3.19 hat. Kein Index (Ausdruck) — Sortierung per Temp-B-Tree.
+    @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
+    fun pagingAllYear(sourceIds: List<Long>): PagingSource<Int, MovieEntity>
+
+    @Query("SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
+    fun pagingByCategoryYear(categoryId: Long): PagingSource<Int, MovieEntity>
+
+    @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
+    fun searchAllYear(query: String, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
+
+    @Query("SELECT * FROM movies WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
+    fun searchInCategoryYear(query: String, categoryId: Long): PagingSource<Int, MovieEntity>
+
     // --- Manual order (Move) — see ChannelDao for the join shape. ---
     @Query(
         "SELECT m.* FROM movies m " +

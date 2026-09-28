@@ -37,12 +37,14 @@ fun moviePagingSource(
     val ids = sourceIds.ifEmpty { listOf(-1L) }
     val rating = sort == SettingsRepository.SortMode.RATING
     val dateAdded = sort == SettingsRepository.SortMode.DATE_ADDED
+    val year = sort == SettingsRepository.SortMode.YEAR // German4K: Erscheinungsjahr (Aleks959)
     val playlist = sort == SettingsRepository.SortMode.PLAYLIST
     return if (query.isBlank()) {
         when (key) {
             LiveKey.All, LiveKey.Catchup -> when {
                 rating -> movieDao.pagingAllRating(ids)
                 dateAdded -> movieDao.pagingAllDateAdded(ids)
+                year -> movieDao.pagingAllYear(ids) // German4K: Erscheinungsjahr (Aleks959)
                 playlist -> movieDao.pagingAllOriginal(ids)
                 else -> movieDao.pagingAll(ids)
             }
@@ -56,6 +58,7 @@ fun moviePagingSource(
                 when {
                     rating -> movieDao.pagingByCategoryRating(key.id)
                     dateAdded -> movieDao.pagingByCategoryDateAdded(key.id)
+                    year -> movieDao.pagingByCategoryYear(key.id) // German4K: Erscheinungsjahr (Aleks959)
                     !hasManualOrder(ctxKey) -> if (playlist) movieDao.pagingByCategory(key.id) else movieDao.pagingByCategoryAlpha(key.id)
                     playlist -> movieDao.pagingByCategoryManual(key.id, profileId, ctxKey)
                     else -> movieDao.pagingByCategoryManualAlpha(key.id, profileId, ctxKey)
@@ -65,12 +68,14 @@ fun moviePagingSource(
     } else {
         when (key) {
             LiveKey.All, LiveKey.Catchup ->
-                if (dateAdded) movieDao.searchAllDateAdded(query, ids) else movieDao.searchAll(query, ids)
+                // German4K: Erscheinungsjahr auch in der Suche (Aleks959).
+                if (dateAdded) movieDao.searchAllDateAdded(query, ids) else if (year) movieDao.searchAllYear(query, ids) else movieDao.searchAll(query, ids)
             LiveKey.Favorites -> movieDao.searchFavorites(query, profileId, ids)
             LiveKey.History -> movieDao.searchHistory(query, profileId, ids)
             is LiveKey.Custom -> customCategoryDao.searchMovies(query, profileId, key.id, ids)
             is LiveKey.Folder ->
                 if (dateAdded) movieDao.searchInCategoryDateAdded(query, key.id)
+                else if (year) movieDao.searchInCategoryYear(query, key.id) // German4K: Aleks959
                 else movieDao.searchInCategory(query, key.id)
         }
     }
@@ -91,12 +96,14 @@ fun seriesPagingSource(
     val ids = sourceIds.ifEmpty { listOf(-1L) }
     val rating = sort == SettingsRepository.SortMode.RATING
     val dateAdded = sort == SettingsRepository.SortMode.DATE_ADDED
+    val year = sort == SettingsRepository.SortMode.YEAR // German4K: Erscheinungsjahr (Aleks959)
     val playlist = sort == SettingsRepository.SortMode.PLAYLIST
     return if (query.isBlank()) {
         when (key) {
             LiveKey.All, LiveKey.Catchup -> when {
                 rating -> seriesDao.pagingAllRating(ids)
                 dateAdded -> seriesDao.pagingAllDateAdded(ids)
+                year -> seriesDao.pagingAllYear(ids) // German4K: Erscheinungsjahr (Aleks959)
                 playlist -> seriesDao.pagingAllOriginal(ids)
                 else -> seriesDao.pagingAll(ids)
             }
@@ -110,6 +117,7 @@ fun seriesPagingSource(
                 when {
                     rating -> seriesDao.pagingByCategoryRating(key.id)
                     dateAdded -> seriesDao.pagingByCategoryDateAdded(key.id)
+                    year -> seriesDao.pagingByCategoryYear(key.id) // German4K: Erscheinungsjahr (Aleks959)
                     !hasManualOrder(ctxKey) -> if (playlist) seriesDao.pagingByCategory(key.id) else seriesDao.pagingByCategoryAlpha(key.id)
                     playlist -> seriesDao.pagingByCategoryManual(key.id, profileId, ctxKey)
                     else -> seriesDao.pagingByCategoryManualAlpha(key.id, profileId, ctxKey)
@@ -119,12 +127,14 @@ fun seriesPagingSource(
     } else {
         when (key) {
             LiveKey.All, LiveKey.Catchup ->
-                if (dateAdded) seriesDao.searchAllDateAdded(query, ids) else seriesDao.searchAll(query, ids)
+                // German4K: Erscheinungsjahr auch in der Suche (Aleks959).
+                if (dateAdded) seriesDao.searchAllDateAdded(query, ids) else if (year) seriesDao.searchAllYear(query, ids) else seriesDao.searchAll(query, ids)
             LiveKey.Favorites -> seriesDao.searchFavorites(query, profileId, ids)
             LiveKey.History -> seriesDao.searchHistory(query, profileId, ids)
             is LiveKey.Custom -> customCategoryDao.searchSeries(query, profileId, key.id, ids)
             is LiveKey.Folder ->
                 if (dateAdded) seriesDao.searchInCategoryDateAdded(query, key.id)
+                else if (year) seriesDao.searchInCategoryYear(query, key.id) // German4K: Aleks959
                 else seriesDao.searchInCategory(query, key.id)
         }
     }

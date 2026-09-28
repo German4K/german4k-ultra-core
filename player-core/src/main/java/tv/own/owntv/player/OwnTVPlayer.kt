@@ -1068,6 +1068,8 @@ class OwnTVPlayer(
     // and reconnects when it stops advancing. item.liveStallReconnects is the consecutive-failure budget; it
     // resets to 0 once playback is healthy again (or on a genuinely new item).
     private var liveStallJob: Job? = null
+    // German4K: VOD-Start-Wächter (JJ/Philips) — siehe [VodOpenWatchdog].
+    private var vodOpenJob: Job? = null
 
     /** The live no-progress watchdog's cadence for THIS device — see the companion constants for the
      *  two tiers and the detection time each produces. `lowSpec` is the same test [PlayerBudget] uses. */
@@ -2591,6 +2593,7 @@ class OwnTVPlayer(
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
         liveStallJob?.cancel()
+        vodOpenJob?.cancel()
         _error.value = null
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
         _videoRes.value = null
@@ -2887,6 +2890,53 @@ class OwnTVPlayer(
                         android.util.Log.w(TAG, "watchdog T_DECODE — FILE_LOADED but no frame after ${elapsed}ms, HARD-RESETTING mpv")
                         triggerHardReset()
                         return@launch
+                    }
+                }
+            }
+            // German4K: VOD-Start-Wächter (JJ, Philips, MKV). Der videoCheckJob oben gibt auf, sobald mpv
+            // eine Höhe meldet — bei MKV kommt die schon aus dem Container, obwohl nie ein Bild läuft.
+            // Dann drehte der Spinner endlos. Läuft nach FILE_LOADED 20 s nichts, → Exo, sonst Fehler.
+            // Endet mit der Ladegeneration (stop/nächstes Item/Fallback), Pause und Seek starten das Fenster neu.
+            vodOpenJob = scope.launch {
+                var prevPos = -1L
+                var windowStart = System.currentTimeMillis()
+                while (gen == loadGeneration) {
+                    delay(1000)
+                    if (gen != loadGeneration || isLiveContent) return@launch
+                    val now = System.currentTimeMillis()
+                    val pos = _position.value
+                    val verdict = VodOpenWatchdog.decide(
+                        fileLoaded = load.fileLoaded,
+                        paused = !_isPlaying.value || load.pendingStartPaused,
+                        errorShown = _error.value != null,
+                        exoActive = exoActive || load.pendingExoStart,
+                        prevPosMs = prevPos,
+                        posMs = pos,
+                        windowMs = now - windowStart,
+                    )
+                    prevPos = pos
+                    when (verdict) {
+                        VodOpenWatchdog.Verdict.WAIT -> Unit
+                        VodOpenWatchdog.Verdict.RESTART_WINDOW -> windowStart = now
+                        VodOpenWatchdog.Verdict.STAND_DOWN -> return@launch
+                        VodOpenWatchdog.Verdict.FIRE -> {
+                            android.util.Log.w(TAG, "VOD open watchdog — no progress ${now - windowStart}ms after FILE_LOADED, trying ExoPlayer")
+                            // mpvStuck: mpv kann im HTTP-Read/Decoder hängen — zerstören gibt den Panel-Slot frei.
+                            if (fallbackToExoVod(PlaybackFailure.MpvStreamNeverStarted, mpvStuck = true)) return@launch
+                            // Fallback nicht erlaubt (nur-mpv, DTS/TrueHD, schon versucht): Fehler statt Spinner.
+                            val raw = load.lastMpvError
+                            loadGeneration++
+                            load.expectingPlayback = false
+                            errorCheckJob?.cancel(); videoCheckJob?.cancel()
+                            _isPlaying.value = false
+                            _buffering.value = false
+                            _error.value = vodErrorMessage(
+                                PlayerErrors.visibleFailure(raw, currentUrl, PlaybackFailure.StreamUnavailable(item.triedUaFallback)),
+                            )
+                            _errorInfo.value = ErrorInfo(raw?.let { PlayerErrors.reasonFor(it) }, mediaSpec(), raw)
+                            mpvAsync { stopWithStopClassification("vod open timeout") }
+                            return@launch
+                        }
                     }
                 }
             }
@@ -3334,6 +3384,7 @@ class OwnTVPlayer(
         errorCheckJob?.cancel()
         videoCheckJob?.cancel()
         liveStallJob?.cancel()
+        vodOpenJob?.cancel()
         if (initialized) mpvAsync { stopWithStopClassification("stop") }
         currentUrl = null
         pendingUrl = null

@@ -115,11 +115,14 @@ internal class XtreamSyncer(
                             plot: String?,
                             categoryId: String?,
                             containerExt: String?,
-                            added: Long? ->
+                            added: Long?,
+                            year: Int? ->
                             seenCategory(categoryId)
                             MovieEntity(
                                 sourceId = s.id, categoryId = catMap[categoryId], name = name,
                                 posterUrl = icon, rating = rating, plot = plot,
+                                // German4K: Erscheinungsjahr fuer die Jahr-Sortierung (Kundenwunsch Aleks959).
+                                year = year,
                                 streamUrl = xtream.movieUrl(s, streamId, containerExt),
                                 containerExt = containerExt, remoteId = streamId,
                                 addedAt = added?.takeIf { it > 0L }?.let { if (it < 10_000_000_000L) it * 1000L else it },

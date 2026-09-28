@@ -145,9 +145,17 @@
 1	core/src/main/java/tv/own/owntv/core/database/dao/EpgDao.kt	FROM epg_programmes WHERE epgChannelId IN (:epgKeys)
 1	core/src/main/java/tv/own/owntv/core/database/dao/EpgDao.kt	SELECT * FROM epg_programmes WHERE epgChannelId = :epgKey AND stopMs > :from AND startMs < :to ORDER BY startMs ASC
 1	core/src/main/java/tv/own/owntv/core/database/dao/EpgDao.kt	SELECT id, sourceId, epgChannelId, startMs, stopMs, title, NULL AS description, contentHash FROM epg_programmes WHERE stopMs > :from AND startMs < :to AND id > :afterId ORDER BY id ASC LIMIT :limit
+1	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
 1	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	DELETE FROM playback_prefs WHERE zoomMode IS NULL AND volumeBoost IS NULL AND audioDelayMs IS NULL
 1	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	SELECT COUNT(*) FROM playback_prefs WHERE audioDelayMs IS NOT NULL
 1	core/src/main/java/tv/own/owntv/core/database/dao/PlaybackPrefsDao.kt	UPDATE playback_prefs SET audioDelayMs = NULL
+1	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
 1	core/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET liveEnginePreference = :preference WHERE id = :id
 1	core/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET liveLatencyMode = :mode, liveLatencyCustomSecs = :customSecs WHERE id = :id
 1	core/src/main/java/tv/own/owntv/core/database/dao/SourceDao.kt	UPDATE sources SET preferHls = :preferHls WHERE id = :id
@@ -214,8 +222,12 @@
 1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	allowed_output_formats
 1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	fetchAccountDetails failed for source ${s.id}
 2	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	m3u8
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	releaseDate
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	release_date
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	releasedate
 1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	ts
 1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	user_output_formats
+1	core/src/main/java/tv/own/owntv/core/parser/XtreamClient.kt	year
 1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	auto_frame_rate_reset_416
 1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	dns_doh_url
 1	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	dns_enabled

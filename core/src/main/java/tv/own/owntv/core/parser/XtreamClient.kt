@@ -7,6 +7,7 @@ import android.util.JsonToken
 import android.util.Log
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import tv.own.owntv.core.catalog.ReleaseYear // German4K: Jahr-Sortierung (Aleks959)
 import tv.own.owntv.core.database.entity.SourceEntity
 import tv.own.owntv.core.network.HttpClient
 import java.io.InputStream
@@ -23,6 +24,8 @@ data class XtLiveStream(
 data class XtVod(
     val streamId: String, val name: String, val icon: String?, val rating: Double?, val plot: String?,
     val categoryId: String?, val containerExt: String?, val added: Long?,
+    // German4K: Erscheinungsjahr fuer die Jahr-Sortierung (Kundenwunsch Aleks959).
+    val year: Int? = null,
 )
 data class XtSeries(
     val seriesId: String, val name: String, val cover: String?, val plot: String?,
@@ -138,8 +141,8 @@ class XtreamClient(private val http: HttpClient) {
         streamVod(
             s = s,
             categoryId = categoryId,
-            transform = { streamId, name, icon, rating, plot, itemCategoryId, containerExt, added ->
-                XtVod(streamId, name, icon, rating, plot, itemCategoryId, containerExt, added)
+            transform = { streamId, name, icon, rating, plot, itemCategoryId, containerExt, added, year ->
+                XtVod(streamId, name, icon, rating, plot, itemCategoryId, containerExt, added, year)
             },
             onItem = onItem,
             onProgress = onProgress,
@@ -157,6 +160,8 @@ class XtreamClient(private val http: HttpClient) {
             categoryId: String?,
             containerExt: String?,
             added: Long?,
+            // German4K: Erscheinungsjahr (Anbieter, sonst "(YYYY)" im Titel) — Kundenwunsch Aleks959.
+            year: Int?,
         ) -> T?,
         onItem: suspend (T) -> Unit,
         onProgress: ((Long, Long?) -> Unit)? = null,
@@ -929,6 +934,8 @@ class XtreamClient(private val http: HttpClient) {
             categoryId: String?,
             containerExt: String?,
             added: Long?,
+            // German4K: Erscheinungsjahr (Anbieter, sonst "(YYYY)" im Titel) — Kundenwunsch Aleks959.
+            year: Int?,
         ) -> T?,
     ): T? {
         if (reader.peek() != JsonToken.BEGIN_OBJECT) {
@@ -944,6 +951,9 @@ class XtreamClient(private val http: HttpClient) {
         var categoryId: String? = null
         var containerExt: String? = null
         var added: Long? = null
+        // German4K: Jahr fuer die Sortierung „Erscheinungsjahr" (Kundenwunsch Aleks959).
+        var year: Int? = null
+        var releaseDate: String? = null
 
         reader.beginObject()
         while (reader.hasNext()) {
@@ -957,12 +967,16 @@ class XtreamClient(private val http: HttpClient) {
                 "category_id" -> categoryId = reader.nextScalarStringOrNull()
                 "container_extension" -> containerExt = reader.nextScalarStringOrNull()
                 "added" -> added = reader.nextLongOrNull()
+                "year" -> year = reader.nextIntOrNull() // German4K: Jahr-Sortierung (Aleks959)
+                "release_date", "releaseDate", "releasedate" -> releaseDate = reader.nextScalarStringOrNull() // German4K
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
         val cleanPlot = plot?.takeIf { it.isNotBlank() } ?: description?.takeIf { it.isNotBlank() }
-        return streamId?.let { transform(it, name, icon, rating, cleanPlot, categoryId, containerExt, added) }
+        // German4K: Anbieterjahr, sonst releaseDate, sonst "(YYYY)" im Namen (Kundenwunsch Aleks959).
+        val releaseYear = ReleaseYear.resolve(year, releaseDate, name)
+        return streamId?.let { transform(it, name, icon, rating, cleanPlot, categoryId, containerExt, added, releaseYear) }
     }
 
     private fun <T : Any> readSeriesAs(
