@@ -18,7 +18,9 @@ object German4kUpdateSource {
 /** Feature switches from the panel: aus | entwicklung | beta | an. */
 object German4kFeatures {
     @Volatile private var map: Map<String, String> = emptyMap()
-    fun set(features: Map<String, String>) { map = features }
+    /** Dieselben Schalter als Flow — NavVisibility blendet damit Bereiche wie `sport` ein/aus. */
+    val flow = kotlinx.coroutines.flow.MutableStateFlow<Map<String, String>>(emptyMap())
+    fun set(features: Map<String, String>) { map = features; flow.value = features }
     fun state(name: String): String = map[name] ?: "aus"
     fun visible(name: String): Boolean = state(name) != "aus"
     /** Show the "still in development — view anyway?" hint before opening. */

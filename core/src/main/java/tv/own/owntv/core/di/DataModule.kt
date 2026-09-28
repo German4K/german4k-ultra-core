@@ -187,7 +187,10 @@ val dataModule = module {
     // sourceDao, syncManager, userDataResolver, channelDao, movieDao, seriesDao, categoryDao
     single { SourceRepository(get(), get(), get(), get(), get(), get(), get()) }
     // settings, sourceRepository, channelDao, movieDao, seriesDao
-    single { tv.own.owntv.core.nav.NavVisibility(get(), get(), get(), get(), get()) }
+    single { tv.own.owntv.core.nav.NavVisibility(get(), get(), get(), get(), get(), tv.own.owntv.core.german4k.German4kFeatures.flow) }
+    // German4K Sport-Hub: Spielplan (context, panel) und streamId → Kanal (settings, sourceDao, channelDao).
+    single { tv.own.owntv.core.german4k.German4kSportRepository(androidContext(), get()) }
+    single { tv.own.owntv.core.german4k.SportChannelResolver(get(), get(), get()) }
     single {
         SyncManager(
             context = androidContext(),

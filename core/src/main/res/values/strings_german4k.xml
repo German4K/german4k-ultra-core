@@ -175,4 +175,27 @@
     <string name="g4k_abmelden_text">Unlinks this device from your access and deletes the downloaded catalog. You can sign in again any time.</string>
     <string name="g4k_abmelden_bestaetigen">Remove</string>
     <string name="g4k_abmelden_fehler">Could not reach the server. Try again later.</string>
+    <!-- German4K 3.0: Sport-Hub (Bereich Fussball). -->
+    <string name="g4k_nav_fussball">Football</string>
+    <string name="g4k_sport_regal_live">Live now</string>
+    <string name="g4k_sport_regal_heute">Today</string>
+    <string name="g4k_sport_regal_spaeter">Tomorrow &amp; later</string>
+    <string name="g4k_sport_regal_beendet">Finished</string>
+    <string name="g4k_sport_chip_alle">All</string>
+    <string name="g4k_sport_chip_bundesliga">Bundesliga</string>
+    <string name="g4k_sport_chip_cl">Champions League</string>
+    <string name="g4k_sport_chip_pokal">DFB-Pokal</string>
+    <string name="g4k_sport_chip_international">International</string>
+    <string name="g4k_sport_stand">Updated %1$s</string>
+    <string name="g4k_sport_offline">Offline – updated %1$s</string>
+    <string name="g4k_sport_leer">No matches scheduled today.</string>
+    <string name="g4k_sport_aus">This section is not available right now.</string>
+    <string name="g4k_sport_sender_aus">Off in your package – turn on section %1$s</string>
+    <string name="g4k_sport_bereich">Shown in section %1$s – channel is named shortly before kick-off</string>
+    <string name="g4k_sport_marke">On %1$s – open category</string>
+    <string name="g4k_sport_kein_kanal">Not in your channel list – open Live TV</string>
+    <string name="g4k_sport_live">LIVE</string>
+    <string name="g4k_sport_next">Next</string>
+    <string name="g4k_sport_laden">Loading matches …</string>
+    <string name="g4k_sport_sender_mehr">%1$d channels</string>
 </resources>

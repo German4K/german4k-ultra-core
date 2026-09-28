@@ -363,8 +363,37 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
             }
         }
 
+    /**
+     * Sport-Hub: Spielplan mit den Sendern dieses Kunden. Transportfehler → null (≠ `ok=false`, das
+     * ist eine gültige Antwort mit `grund`). Nie eine streamId daraus zwischenspeichern.
+     */
+    suspend fun sport(deviceId: String, appVersion: String, tage: Int = 3): German4kSportAntwort? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("version", appVersion)
+                put("tage", tage)
+            }.toString()
+            val request = Request.Builder()
+                .url(SPORT_ENDPOINT)
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    if (!r.isSuccessful) throw IOException("HTTP ${r.code}")
+                    German4kSportAntwort.parse(r.body.string())
+                }
+            }.getOrElse {
+                Log.w(TAG, "sport failed: ${it.message}")
+                null
+            }
+        }
+
     companion object {
         const val ENDPOINT = "https://german4k.com/api/app/ultra"
+        const val SPORT_ENDPOINT = "https://german4k.com/api/app/sport"
         private const val TAG = "German4kPanel"
     }
 }

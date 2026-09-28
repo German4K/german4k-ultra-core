@@ -174,4 +174,27 @@
     <string name="g4k_abmelden_text">Trennt dieses Gerät von deinem Zugang und löscht den geladenen Katalog. Anmelden geht jederzeit wieder.</string>
     <string name="g4k_abmelden_bestaetigen">Entfernen</string>
     <string name="g4k_abmelden_fehler">Server nicht erreichbar. Bitte später noch einmal.</string>
+    <!-- German4K 3.0: Sport-Hub (Bereich Fussball). -->
+    <string name="g4k_nav_fussball">Fußball</string>
+    <string name="g4k_sport_regal_live">Jetzt live</string>
+    <string name="g4k_sport_regal_heute">Heute</string>
+    <string name="g4k_sport_regal_spaeter">Morgen &amp; später</string>
+    <string name="g4k_sport_regal_beendet">Beendet</string>
+    <string name="g4k_sport_chip_alle">Alle</string>
+    <string name="g4k_sport_chip_bundesliga">Bundesliga</string>
+    <string name="g4k_sport_chip_cl">Champions League</string>
+    <string name="g4k_sport_chip_pokal">DFB-Pokal</string>
+    <string name="g4k_sport_chip_international">International</string>
+    <string name="g4k_sport_stand">Stand %1$s</string>
+    <string name="g4k_sport_offline">Offline – Stand %1$s</string>
+    <string name="g4k_sport_leer">Heute keine Spiele im Plan.</string>
+    <string name="g4k_sport_aus">Dieser Bereich ist gerade nicht verfügbar.</string>
+    <string name="g4k_sport_sender_aus">In deinem Paket aus – Bereich %1$s einschalten</string>
+    <string name="g4k_sport_bereich">Läuft im Bereich %1$s – Sender wird kurz vor Anpfiff benannt</string>
+    <string name="g4k_sport_marke">Läuft bei %1$s – Kategorie öffnen</string>
+    <string name="g4k_sport_kein_kanal">Nicht in deiner Senderliste – Live TV öffnen</string>
+    <string name="g4k_sport_live">LIVE</string>
+    <string name="g4k_sport_next">Gleich</string>
+    <string name="g4k_sport_laden">Spiele werden geladen …</string>
+    <string name="g4k_sport_sender_mehr">%1$d Sender</string>
 </resources>

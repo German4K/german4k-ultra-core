@@ -1921,21 +1921,22 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/diagnose
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/reset
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/sync
-6	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
-6	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
+7	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
+7	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4kPanel
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	HTTP ${r.code}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	HTTP ${response.code} vom German4K-Panel
-6	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
+7	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	User-Agent
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	abmelden failed: ${it.message}
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	aktion
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	alt_servers
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	an
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	apk_link
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app
-6	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
+7	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_version
-6	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
-6	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
+7	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json
+7	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche failed: ${it.message}
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche_stand
@@ -1949,6 +1950,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	expire_date
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	features
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	grund
+1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/sport
 1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/ultra
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	is_default
@@ -1977,9 +1979,11 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server_time
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sport failed: ${it.message}
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stand
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	standard
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stunden_offen
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	tage
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	tage_offen
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	test
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	text
@@ -1989,7 +1993,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	url
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	username
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	verlaengern_url
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_code
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	version_name
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	werben_url
@@ -2064,6 +2068,45 @@
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	ᴴᴰ
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	ᵁᴴᴰ
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	ᶠᴴᴰ
+1	locale	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	Europe/Berlin
+4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	an
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	art
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	beendet
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	bereich
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	bundesliga
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	champions
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	gast
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	geplant
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	grund
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	gruppe
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	gruppeName
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	heim
+4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	hinweis
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	id
+4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	kategorie
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	laeuft
+4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	name
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	ok
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	platz
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	platzZustand
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	pokal
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	rechte
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	relevanz
+4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	sender
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	senderUnbekannt
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	server_time
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	spiele
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	stand
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	start
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	startDE
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	streamIds
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	titel
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	wettbewerb
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	zustand
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kSportRepository.kt	Cache: ${it.message}
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kSportRepository.kt	German4kSport
+1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kSportRepository.kt	german4k_sport
+1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kSportRepository.kt	sport_last_answer
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	German4kStoerung
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	Störung bei '$sender': $klasse ($grund)
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	keine Einordnung für '$sender': $grund
@@ -2332,6 +2375,8 @@
 2	json	core/src/main/java/tv/own/owntv/core/model/HomeRow.kt	order
 2	preference-key	core/src/main/java/tv/own/owntv/core/model/HomeRow.kt	recentLiveMode
 2	json	core/src/main/java/tv/own/owntv/core/model/HomeRow.kt	trendingStyle
+1	protocol	core/src/main/java/tv/own/owntv/core/nav/NavVisibility.kt	aus
+1	protocol	core/src/main/java/tv/own/owntv/core/nav/NavVisibility.kt	sport
 1	log	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup failed for $hostname, falling back to system DNS
 1	log	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	DoH lookup returned no addresses for $hostname, falling back to system DNS
 1	log	core/src/main/java/tv/own/owntv/core/network/DnsConfig.kt	UDP DNS lookup failed for $hostname via $server:$port, falling back to system DNS

@@ -32,19 +32,30 @@ class NavVisibility(
     private val channelDao: ChannelDao,
     private val movieDao: MovieDao,
     private val seriesDao: SeriesDao,
+    /** German4K: Panel-Feature-Schalter (German4kFeatures.flow). */
+    private val features: Flow<Map<String, String>> = tv.own.owntv.core.german4k.German4kFeatures.flow,
 ) {
+
+    companion object {
+        /** German4K: Sport-Hub sichtbar, solange `features["sport"]` gesetzt und nicht "aus" ist. */
+        fun sportAn(features: Map<String, String>): Boolean = features[SPORT_FEATURE].let { it != null && it != FEATURE_AUS }
+        const val SPORT_FEATURE = "sport"
+        private const val FEATURE_AUS = "aus"
+    }
 
     /** What the nav shows right now, honouring the user's mode and hidden set. */
     fun visibleSections(): Flow<Set<MainSection>> = settings.navMenuMode
         .flatMapLatest { mode ->
-            combine(dynamicCaps(), settings.navMenuHidden) { contentBased, hidden ->
-                when (mode) {
+            combine(dynamicCaps(), settings.navMenuHidden, features) { contentBased, hidden, feat ->
+                val sichtbar = when (mode) {
                     SettingsRepository.NavMenuMode.STATIC ->
                         MainSection.allBrowse - hidden.mapNotNull { name ->
                             runCatching { MainSection.valueOf(name) }.getOrNull()
                         }.toSet()
                     SettingsRepository.NavMenuMode.DYNAMIC -> contentBased
                 }
+                // German4K: das eine Feature-Tor für den Sport-Hub (fehlt oder "aus" → weg).
+                if (sportAn(feat)) sichtbar else sichtbar - MainSection.SPORT
             }
         }
         .distinctUntilChanged()
