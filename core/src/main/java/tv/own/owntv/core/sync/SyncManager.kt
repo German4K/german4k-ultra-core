@@ -4,6 +4,7 @@ import android.os.SystemClock
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import tv.own.owntv.core.database.BulkInsertHelper
 import tv.own.owntv.core.database.dao.CategoryDao
@@ -42,7 +43,7 @@ class SyncManager(
     stalkerAuth: tv.own.owntv.core.stalker.StalkerAuthManager,
     private val activityTracker: SyncActivityTracker,
     customize: CustomizationStore,
-    settings: SettingsRepository,
+    private val settings: SettingsRepository,
     /**
      * Measures how many streams the provider allows, for the providers that never say.
      *
@@ -53,6 +54,7 @@ class SyncManager(
      */
     private val connectionLimits: tv.own.owntv.core.live.ConnectionLimits,
 ) {
+    private val appContext = context.applicationContext // German4K: für German4kDbRettung
     private val support = SyncSupport(categoryDao, channelDao, movieDao, seriesDao, sourceDao, customize, settings)
     private val xtreamSyncer = XtreamSyncer(xtream, bulkInsertHelper, support)
     private val m3uSyncer = M3uSyncer(context, sourceDao, categoryDao, channelDao, movieDao, seriesDao, m3u, http, bulkInsertHelper, support)
@@ -143,8 +145,12 @@ class SyncManager(
                     // live-only passes from never marking synced.
                     if (effective.isCompleteFor(target)) {
                         val markStartedAt = SystemClock.elapsedRealtime()
-                        sourceDao.markSynced(source.id, System.currentTimeMillis())
+                        stampSynced(source.id, hadPhaseErrors = stats.phaseErrors.isNotEmpty())
                         Log.d(TAG, "markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}")
+                    } else if (stats.phaseErrors.isNotEmpty()) {
+                        // German4K: Teillauf (gestaffelter Erstimport) mit Phasenfehler — merken, damit
+                        // der Restlauf, der dann stempelt, ihn nicht als vollständig verbucht.
+                        unstampedPhaseErrors.add(source.id)
                     }
                     progress.completeAll()
                     result = SyncResult.Success(
@@ -158,6 +164,11 @@ class SyncManager(
                 throw c
             } catch (e: Exception) {
                 result = SyncResult.Failed(e.message.orEmpty())
+                // German4K: beschädigte Datenbank sofort verwerfen, sonst scheitert jeder weitere Start
+                // an derselben Datei. Der nächste Start importiert sauber neu (German4kProvisioner).
+                if (tv.own.owntv.core.german4k.German4kDbRettung.istKorrupt(e)) {
+                    tv.own.owntv.core.german4k.German4kDbRettung.verwerfen(appContext, e)
+                }
             } finally {
                 activityTracker.finished(source.id, source.name, result) // also on cancellation — never leave a stuck pill
             }
@@ -167,6 +178,30 @@ class SyncManager(
             logStats(runStats)
             result to runStats
         }
+
+    // German4K: Quellen, deren ungestempelter Teillauf eine Phase verloren hat (nur im Prozess).
+    private val unstampedPhaseErrors: MutableSet<Long> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+
+    /**
+     * German4K: Stempel für einen vollständigen Lauf. Ging eine Phase verloren (Filme/Serien/Live per
+     * guardStep), wurde bisher trotzdem „jetzt" gestempelt — der Kunde sah 12 h lang leere Bereiche.
+     * Jetzt wird zurückdatiert, sodass die Auto-Aktualisierung nach [PHASE_ERROR_RETRY_MS] erneut
+     * zieht. Nicht `null` lassen: ein null-Stempel schickt den nächsten Lauf auf den Erstimport-Pfad
+     * (insertFresh), der leere Tabellen voraussetzt und sonst Zeilen verdoppelt.
+     */
+    private suspend fun stampSynced(sourceId: Long, hadPhaseErrors: Boolean) {
+        val now = System.currentTimeMillis()
+        val failed = unstampedPhaseErrors.remove(sourceId) || hadPhaseErrors
+        val threshold = if (failed) {
+            runCatching { settings.playlistAutoRefresh.first()[sourceId]?.thresholdMs }.getOrNull()
+        } else null
+        val at = syncStampFor(now, failed, threshold)
+        sourceDao.markSynced(sourceId, at)
+        if (failed) Log.w(TAG, "markSynced backdated after phase errors sourceId=$sourceId retryInMs=$PHASE_ERROR_RETRY_MS")
+    }
+
+    /** German4K: Restlauf eines gestaffelten Erstimports ist fertig (CatalogSyncWorker, completesInitialSync). */
+    suspend fun markInitialSyncComplete(sourceId: Long) = stampSynced(sourceId, hadPhaseErrors = false)
 
     private fun logStats(stats: SyncRunStats) {
         val tag = "SyncManager"
@@ -193,5 +228,19 @@ class SyncManager(
 
     companion object {
         private const val TAG = SyncSupport.TAG
+
+        /** German4K: nach einem Lauf mit Phasenfehler frühestens so viel später automatisch erneut. */
+        const val PHASE_ERROR_RETRY_MS = 10 * 60_000L
+
+        /**
+         * German4K: der lastSyncAt-Stempel. Sauberer Lauf → [now]. Mit Phasenfehler und Intervall-
+         * Aktualisierung → so zurückdatiert, dass `now - stamp >= threshold` in [PHASE_ERROR_RETRY_MS]
+         * erreicht ist (auch beim nächsten Kaltstart). Die Frist verhindert eine Dauerschleife beim
+         * Fortsetzen der App. Ohne Intervall (Aus/Beim Start) bleibt es bei [now]: „Beim Start" holt
+         * ohnehin bei jedem Kaltstart neu, „Aus" ist die Wahl des Kunden.
+         */
+        internal fun syncStampFor(now: Long, hadPhaseErrors: Boolean, thresholdMs: Long?): Long =
+            if (!hadPhaseErrors || thresholdMs == null) now
+            else (now - thresholdMs + PHASE_ERROR_RETRY_MS).coerceIn(1L, now)
     }
 }

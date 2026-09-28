@@ -33,7 +33,17 @@ class CatalogSyncWorker(
     private val settings: SettingsRepository,
 ) : CoroutineWorker(context, params) {
 
-    override suspend fun doWork(): Result {
+    // German4K: beschädigte Datenbank nicht als Absturz weiterreichen (Formuler), sondern verwerfen —
+    // der nächste Start importiert sauber neu. Siehe German4kDbRettung.
+    override suspend fun doWork(): Result = try {
+        syncWork()
+    } catch (t: Throwable) {
+        if (!tv.own.owntv.core.german4k.German4kDbRettung.istKorrupt(t)) throw t
+        tv.own.owntv.core.german4k.German4kDbRettung.verwerfen(applicationContext, t)
+        Result.failure()
+    }
+
+    private suspend fun syncWork(): Result {
         val sourceId = inputData.getLong(KEY_SOURCE_ID, -1L)
         val reason = inputData.getString(KEY_REASON) ?: "unknown"
         val baseItemCount = inputData.getInt(KEY_BASE_ITEM_COUNT, 0)
@@ -88,7 +98,9 @@ class CatalogSyncWorker(
                 // Remainder of a staged initial sync: stamp lastSyncAt once priority+remainder together
                 // cover the enabled catalog (SyncManager alone won't — each pass is incomplete).
                 if (completesInitialSync) {
-                    sourceDao.markSynced(source.id, System.currentTimeMillis())
+                    // German4K: über SyncManager, damit ein verlorener Bereich (Phasenfehler) nicht als
+                    // vollständig gilt und nicht erst nach 12 h wiederholt wird.
+                    sourceRepository.markInitialSyncComplete(source.id)
                     Log.i(TAG, "Staged initial sync complete — markSynced sourceId=${source.id}")
                 }
                 val finalizeStartedAt = SystemClock.elapsedRealtime()

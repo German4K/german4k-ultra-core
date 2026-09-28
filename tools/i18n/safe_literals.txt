@@ -189,13 +189,13 @@
 3	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	edesc
 1	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	entries
 6	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	ep
-12	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	fav
+13	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	fav
 12	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	his
-16	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	kind
-12	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	member
-12	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	name
+17	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	kind
+13	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	member
+13	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	name
 5	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	oid
-9	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	order
+10	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	order
 1	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	owntv_pending_userdata
 14	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	p
 6	json	core/src/main/java/tv/own/owntv/core/backup/UserDataResolver.kt	pos
@@ -844,6 +844,7 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT c.* FROM channels c INNER JOIN watch_history h ON h.itemId = c.id AND h.mediaType = 'LIVE'
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT c.*, cat.name AS categoryName FROM channels c
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT c.*, h.watchedAt FROM channels c
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT id, name FROM channels WHERE sourceId = :sourceId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT remoteId FROM channels WHERE sourceId = :sourceId AND categoryId IN (:categoryIds) AND remoteId IS NOT NULL
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/ChannelDao.kt	SELECT remoteId FROM channels WHERE sourceId = :sourceId AND remoteId IS NOT NULL LIMIT 1
@@ -1707,6 +1708,10 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	set|
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	src
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	t
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDbRettung.kt	German4kDbRettung
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDbRettung.kt	close failed: ${it.message}
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDbRettung.kt	database corrupt — deleting it, next start re-imports from the panel
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDbRettung.kt	delete failed: ${it.message}
 3	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	\0
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	[A-Za-z0-9_-]{6,}
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kDetails.kt	\\d{4}-\\d{2}-\\d{2}
@@ -1933,6 +1938,7 @@
 6	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	application/json; charset=utf-8
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche failed: ${it.message}
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche_stand
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	build
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	channel
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	device_key
@@ -2011,6 +2017,9 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	Zugang läuft bald ab
 3	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	abgelaufen
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	background install failed: ${it.message}
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	bereiche_stand
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	bereiche_stand newer than catalog — resync sourceId=${src.id}
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	bereiche_stand: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	fallback host ${src.server} failed: ${st.failure}
 1	file-path	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k-hintergrund.jpg
 1	file-path	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	german4k/hintergrund.jpg
@@ -2027,6 +2036,34 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	test:debug-$stunden
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	verlaengern
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	wartung
+3	empty	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	\0
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	1080
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	1080P
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	2160P
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	4K
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	50FPS
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	60FPS
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	720
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	720P
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	8K
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	ALT
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	BACKUP
+2	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	FHD
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	H264
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	H265
+2	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	HD
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	HEVC
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	HQ
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	LQ
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	RAW
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	SD
+2	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	UHD
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	[\\[(][^\\])]*[\\])]
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	[^A-Z0-9ÄÖÜ]+
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	^\\s*[|\\[(]?\\s*[A-Z]{2}\\s*[|\\]):]+\\s*
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	ᴴᴰ
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	ᵁᴴᴰ
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSenderName.kt	ᶠᴴᴰ
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	German4kStoerung
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	Störung bei '$sender': $klasse ($grund)
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kStoerung.kt	keine Einordnung für '$sender': $grund
@@ -3308,6 +3345,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/sync/SyncManager.kt	Success with ${stats.result.warnings.size} warning(s)
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncManager.kt	SyncManager
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncManager.kt	connection measurement failed for sourceId=${source.id}: ${it.message}
+1	log	core/src/main/java/tv/own/owntv/core/sync/SyncManager.kt	markSynced backdated after phase errors sourceId=$sourceId retryInMs=$PHASE_ERROR_RETRY_MS
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncManager.kt	markSynced sourceId=${source.id} ms=${SystemClock.elapsedRealtime() - markStartedAt}
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncManager.kt	requestedContentTypes=$contentTypes effective=$effective target=$target forcePrune=$forcePrune
 1	log	core/src/main/java/tv/own/owntv/core/sync/SyncManager.kt	sync end sourceId=${source.id} totalElapsedMs=${SystemClock.elapsedRealtime() - syncStartedAt}
@@ -3849,8 +3887,10 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	${f.channelCount}ch
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	${f.sampleRate / 1000}kHz
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	?
+1	protocol	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	Amazon
 7	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	AudioOutputPolicy
 1	compiler	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	DEPRECATION
+1	protocol	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	amazon.hardware.fire_tv
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio
 1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio decoder: $decoderName (init ${initializationDurationMs}ms, passthrough=$passthrough)
 1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	audio format -> ${format.sampleMimeType} ${format.channelCount}ch ${format.sampleRate}Hz
@@ -4266,6 +4306,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	android-display=${androidDisplayHz()}
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	android-surface-size
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ao
+1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ao-reload
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	archive didn't start on hardware
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	attachSurface
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio

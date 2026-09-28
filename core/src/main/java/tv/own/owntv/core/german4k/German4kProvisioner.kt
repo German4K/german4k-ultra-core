@@ -62,6 +62,10 @@ class German4kProvisioner(
     /** Abgleich von Favoriten und Einstellungen je Zugang. Als Lambda, weil er den Provisioner nicht
      *  braucht, aber erst nach ihm gebaut wird — so bleibt die Reihenfolge in der DI-Karte frei. */
     private val abgleich: () -> German4kAbgleich = { error("kein Abgleich") },
+    /** German4K: für den Neuabgleich nach geänderten Ländern/Bereichen ([syncWennBereicheNeuer]).
+     *  Als Lambda wie [abgleich], damit die DI-Reihenfolge frei bleibt; null = Funktion aus. */
+    private val katalogSync: () -> tv.own.owntv.core.sync.work.CatalogSyncScheduler? = { null },
+    private val inhaltZahl: suspend (Long) -> Int = { 0 },
 ) {
     sealed interface State {
         data object Idle : State
@@ -112,6 +116,13 @@ class German4kProvisioner(
     /** Contact the panel and reconcile sources. Safe to call on every app start; overlapping calls coalesce. */
     fun provision() { start(null, null) }
 
+    /**
+     * German4K: wie [provision], aber [force] = true übergeht die 30-s-Sperre. Für den Bildschirm
+     * „Länder & Bereiche": nach dem Umschalten fragt die App sofort das Panel, und ein neuerer
+     * `bereiche_stand` stößt den Katalog-Abgleich an. Läuft gerade ein Lauf, folgt einer danach.
+     */
+    fun provision(force: Boolean) { start(null, null, force) }
+
     /** Way 1: the customer typed username + password on the TV. The panel checks them and pairs the device. */
     fun login(username: String, password: String) { start(username, password) }
 
@@ -119,18 +130,30 @@ class German4kProvisioner(
 
     private var lastRunAt = 0L
 
-    private fun start(username: String?, password: String?) {
+    // German4K: ein erzwungener Lauf kam, während einer lief — nach dessen Ende noch einmal.
+    @Volatile
+    private var nachlauf = false
+
+    private fun start(username: String?, password: String?, force: Boolean = false) {
         // Waehrend des Abmeldens nichts anfangen: ein Lauf, der jetzt startet, legt die gerade
         // geloeschten Quellen sofort wieder an.
         if (abmeldeLaeuft) return
-        if (job?.isActive == true && username == null) return
+        // German4K: einen laufenden Import nie abbrechen — der erzwungene Lauf folgt danach.
+        if (job?.isActive == true && username == null) { if (force) nachlauf = true; return }
         // Profile switch / gate re-entry fires provision() again right after the first-run import: skip
         // a second panel call when the last one is fresh (a login always goes through).
         val now = android.os.SystemClock.elapsedRealtime()
-        if (username == null && now - lastRunAt < 30_000L && _state.value !is State.Idle) return
+        if (!force && username == null && now - lastRunAt < 30_000L && _state.value !is State.Idle) return
         lastRunAt = now
         job?.cancel()
-        job = scope.launch { run(username, password) }
+        job = scope.launch {
+            run(username, password)
+            while (nachlauf && !abmeldeLaeuft) {
+                nachlauf = false
+                lastRunAt = android.os.SystemClock.elapsedRealtime()
+                run(null, null)
+            }
+        }
     }
 
     private suspend fun run(username: String?, password: String?) {
@@ -178,6 +201,9 @@ class German4kProvisioner(
             // Favoriten und Einstellungen je Zugang, nachdem die Quellen stimmen. Still und ohne Folgen
             // bei Fehlschlag: ein misslungener Abgleich darf niemandem die Favoriten wegnehmen.
             runCatching { abgleich().abgleichen() }.onFailure { Log.w(TAG, "Abgleich: ${it.message}") }
+            // German4K: Länder/Bereiche im Panel geändert → betroffene Kataloge neu holen. Nur mit
+            // frischer Antwort; ein Stand aus dem Cache ist schon einmal geprüft worden.
+            if (!fromCache) runCatching { syncWennBereicheNeuer(answer, fresh?.id) }.onFailure { Log.w(TAG, "bereiche_stand: ${it.message}") }
             // Guide for the default host, once — like OwnTV's semi-auto EPG after the wizard, but without
             // asking. Runs after Ready so the customer is already in the shell while it downloads.
             fresh?.let { syncGuide(it) }
@@ -251,6 +277,40 @@ class German4kProvisioner(
             importer.finish()
         }
         return freshDefault
+    }
+
+    // German4K: je Quelle der zuletzt angestoßene Stand — höchstens ein Abgleich pro Stand und Prozess.
+    private val bereicheAngestossen = java.util.concurrent.ConcurrentHashMap<Long, java.time.Instant>()
+
+    /**
+     * German4K: Das Panel meldet mit `bereiche_stand`, wann der Kunde zuletzt Länder/Bereiche geändert
+     * hat. Ist der Katalog einer unserer Quellen älter, wird er neu geholt (KEEP: ein laufender Abgleich
+     * bleibt stehen). Quellen ohne `lastSyncAt` bleiben aus: dort läuft noch der Erstimport, und ein
+     * zweiter Lauf auf dem Erstimport-Pfad würde Zeilen verdoppeln. Die Gerätezeit wird über
+     * `server_time` auf die Panel-Uhr umgerechnet, sonst holte ein nachgehendes Gerät bei jedem Start neu.
+     */
+    private suspend fun syncWennBereicheNeuer(answer: German4kPanelAnswer, geradeImportiert: Long?) {
+        val stand = answer.bereicheStand?.let { runCatching { java.time.Instant.parse(it) }.getOrNull() } ?: return
+        val scheduler = katalogSync() ?: return
+        val versatzMs = answer.serverTime.takeIf { it.isNotBlank() }
+            ?.let { runCatching { java.time.Instant.parse(it).toEpochMilli() - System.currentTimeMillis() }.getOrNull() }
+            ?: 0L
+        val managed = managedIds()
+        for (src in sourceDao.getAllOnce()) {
+            if (src.id.toString() !in managed || src.id == geradeImportiert) continue
+            val zuletzt = src.lastSyncAt ?: continue
+            if (zuletzt + versatzMs >= stand.toEpochMilli()) continue
+            if (bereicheAngestossen[src.id] == stand) continue
+            bereicheAngestossen[src.id] = stand
+            Log.i(TAG, "bereiche_stand newer than catalog — resync sourceId=${src.id}")
+            scheduler.enqueueSync(
+                src.id,
+                reason = "bereiche_stand",
+                contentTypes = tv.own.owntv.core.sync.SyncContentTypes.enabledOf(src),
+                baseItemCount = runCatching { inhaltZahl(src.id) }.getOrDefault(0),
+                policy = androidx.work.ExistingWorkPolicy.KEEP,
+            )
+        }
     }
 
     /** German4K home background from the app's assets — only if the customer has not chosen one. */

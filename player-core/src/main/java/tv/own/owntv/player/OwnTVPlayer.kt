@@ -249,7 +249,9 @@ class OwnTVPlayer(
         // flaky network. Halfway through the budget: late enough that a transient blip has had its chances,
         // early enough that the tolerant reopen still gets several attempts before the error UI.
         const val TOLERANT_DEMUX_AFTER_RECONNECTS = 3
-        const val LIVE_OPEN_TIMEOUT_MS = 10_000L // bound FFmpeg/network loops that never emit FILE_LOADED/END_FILE
+        // German4K: 10 s → 25 s. Manche Sender (z. B. russische) brauchen länger bis FILE_LOADED und
+        // wurden mit unserem eigenen "No playable data…" abgebrochen. Muss unter LiveViewModel.MPV_OPEN_TIMEOUT_MS (35 s) bleiben.
+        const val LIVE_OPEN_TIMEOUT_MS = 25_000L // bound FFmpeg/network loops that never emit FILE_LOADED/END_FILE
 
         /** How long a statistics read may wait for [mpvExecutor] before it is abandoned as unknown. The
          *  executor can be busy with a real command (a load, a decoder switch) and no readout is worth
@@ -930,6 +932,8 @@ class OwnTVPlayer(
     private fun consumePendingStopEndFile(): Boolean = pendingStopEndFiles.consume()
 
     init {
+        // German4K: Fire-TV-Erkennung für „Surround Auto → Stereo" (AudioOutputPolicy) vor dem ersten Load.
+        AudioOutputPolicy.noteDevice(context)
         // Track the HDR setting; apply it live and re-apply on each load via ensureInit.
         settings.hdrEnabled.onEach { enabled ->
             hdrHint = enabled
@@ -2079,6 +2083,10 @@ class OwnTVPlayer(
             playlistIndex < playlist.size - 1 -> ({ next() })
             else -> ({ _queueEnded.tryEmit(Unit) })
         }
+        // German4K: Audioausgabe zwischen den Folgen frisch aufbauen. mpv behält sonst denselben
+        // AudioTrack über Dateien hinweg (gapless-audio=weak); auf Fire TV war nach ~2 Folgen 5.1 der
+        // Ton systemweit weg. Läuft über denselben mpvExecutor wie das folgende loadfile, also davor.
+        if (initialized && !exoActive) mpvAsync { command(arrayOf("ao-reload")) }
         val gen = loadGeneration
         scope.launch { delay(DECODER_RELEASE_MS); if (gen == loadGeneration) advance() }
     }

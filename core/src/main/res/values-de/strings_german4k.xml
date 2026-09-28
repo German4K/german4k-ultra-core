@@ -34,7 +34,10 @@
     <string name="g4k_hint_later">Später</string>
     <string name="g4k_hint_qr_renew">Scannen und am Handy verlängern – oder german4k.com/verlaengern öffnen</string>
     <string name="g4k_hint_qr_setup">Scannen und am Handy einrichten</string>
-    <string name="g4k_expires_chip">Läuft in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tagen ab</string>
+    <plurals name="g4k_expires_chip_tage">
+        <item quantity="one">Läuft in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tag ab</item>
+        <item quantity="other">Läuft in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tagen ab</item>
+    </plurals>
     <string name="g4k_expires_today">Läuft heute ab</string>
     <string name="g4k_locked_title">Zugang nicht aktiv</string>
     <string name="g4k_retry_button_short">Erneut prüfen</string>
@@ -100,7 +103,10 @@
     <string name="g4k_dolby_body">Das ist unsere beste Fassung, sie ist in Dolby Vision kodiert. Dein Fernseher kann das nicht darstellen, deshalb wirkt das Bild grün-lila und zu dunkel — an der Datei liegt es nicht. Such denselben Titel in einem anderen Bereich, oder schau ihn trotzdem an.</string>
     <string name="g4k_dolby_ok">Trotzdem ansehen</string>
     <string name="g4k_kunde_titel">Dein Zugang</string>
-    <string name="g4k_kunde_tage">Läuft noch <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tage</string>
+    <plurals name="g4k_kunde_tage_plural">
+        <item quantity="one">Läuft noch <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tag</item>
+        <item quantity="other">Läuft noch <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tage</item>
+    </plurals>
     <string name="g4k_kunde_verlaengern">Verlängern</string>
     <string name="g4k_kunde_verlaengern_text">Scannen und am Handy verlängern — dauert eine Minute, deine Zugangsdaten bleiben gleich.</string>
     <string name="g4k_kunde_zweitgeraet">Zweites Gerät</string>
@@ -115,7 +121,7 @@
     <string name="g4k_bereiche_sender"><xliff:g id="count" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Sender</string>
     <string name="g4k_bereiche_laedt">Wird geladen…</string>
     <string name="g4k_bereiche_leer">Keine Bereiche — dieses Gerät ist noch nicht mit einem Zugang verbunden.</string>
-    <string name="g4k_bereiche_neu">Deine Liste ist beim nächsten Start aktuell.</string>
+    <string name="g4k_bereiche_neu">Gespeichert – deine Liste wird gleich aktualisiert.</string>
     <string name="g4k_test_chip">Test · noch <xliff:g id="hours" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> h</string>
     <string name="g4k_test_chip_bald">Test · endet gleich</string>
     <string name="g4k_hint_qr_kaufen">Scannen und am Handy holen – oder german4k.com/kaufen öffnen</string>

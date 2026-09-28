@@ -63,6 +63,11 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE sourceId = :sourceId AND name = :name LIMIT 1")
     suspend fun findByName(sourceId: Long, name: String): ChannelEntity?
 
+    // German4K: id + Name aller Sender einer Quelle — für die unscharfe Favoriten-Heilung im
+    // UserDataResolver (German4kSenderName), nur wenn id UND exakter Name nicht mehr passen.
+    @Query("SELECT id, name FROM channels WHERE sourceId = :sourceId")
+    suspend fun idNamesForSource(sourceId: Long): List<ChannelIdName>
+
     /** Channels that carry an EPG id (so the guide grid only lists channels that can have a schedule). */
     @Query(
         "SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND epgChannelId IS NOT NULL AND epgChannelId != '' " +
@@ -412,3 +417,6 @@ interface ChannelDao {
         limit: Int,
     ): Flow<List<ChannelWithWatchedAt>>
 }
+
+/** German4K: schmale Zeile für [ChannelDao.idNamesForSource]. */
+data class ChannelIdName(val id: Long, val name: String)

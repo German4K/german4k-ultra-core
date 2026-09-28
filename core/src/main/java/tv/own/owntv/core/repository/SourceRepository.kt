@@ -150,6 +150,9 @@ class SourceRepository(
     fun getLastSyncStats(sourceId: Long): tv.own.owntv.core.sync.SyncRunStats? =
         syncManager.getLastSyncStats(sourceId)
 
+    /** German4K: Stempel nach dem Restlauf eines gestaffelten Erstimports — siehe SyncManager.stampSynced. */
+    suspend fun markInitialSyncComplete(sourceId: Long) = syncManager.markInitialSyncComplete(sourceId)
+
     /** Per-mediaType row counts of a snapshot, e.g. "types={LIVE=8, MOVIE=6}" — upgrade-path diagnostics. */
     private fun org.json.JSONArray.typeCounts(): String {
         val counts = LinkedHashMap<String, Int>()

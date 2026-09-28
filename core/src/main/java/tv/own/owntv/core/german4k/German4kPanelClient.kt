@@ -85,6 +85,9 @@ data class German4kPanelAnswer(
     val diagnoseRequested: Boolean = false,
     /** Server clock (UTC, ISO). A device clock far off this makes the guide look shifted. */
     val serverTime: String = "",
+    /** German4K: letzte Änderung der Länder/Bereiche dieses Kunden (UTC, ISO) oder null. Ist ein
+     *  Katalog älter, holt der Provisioner ihn neu — siehe German4kProvisioner.syncWennBereicheNeuer. */
+    val bereicheStand: String? = null,
 ) {
     companion object {
         fun parse(json: String): German4kPanelAnswer {
@@ -139,6 +142,7 @@ data class German4kPanelAnswer(
                 erwachsen = o.optJSONArray("erwachsen")?.let { a -> List(a.length()) { a.optString(it) }.filter { it.isNotBlank() } } ?: emptyList(),
                 diagnoseRequested = o.optBoolean("diagnose_requested", false),
                 serverTime = o.optString("server_time"),
+                bereicheStand = if (o.isNull("bereiche_stand")) null else o.optString("bereiche_stand").takeIf { it.isNotBlank() },
             )
         }
     }
@@ -151,6 +155,7 @@ data class German4kPanelAnswer(
         update?.let { u -> put("update", JSONObject().apply { put("channel", u.channel); put("version_name", u.versionName); put("version_code", u.versionCode); put("url", u.url); put("notes", u.notes); put("required", u.required) }) }
         put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
         put("diagnose_requested", diagnoseRequested); put("server_time", serverTime)
+        put("bereiche_stand", bereicheStand ?: JSONObject.NULL) // German4K: Cache-Rundreise
         test?.let { t -> put("test", JSONObject().apply { put("stunden_offen", t.stundenOffen); put("kaufen_url", t.kaufenUrl) }) }
         put("erwachsen", org.json.JSONArray(erwachsen))
         put("kunde", JSONObject().apply {

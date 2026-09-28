@@ -35,7 +35,10 @@
     <string name="g4k_hint_later">Later</string>
     <string name="g4k_hint_qr_renew">Scan to renew on your phone – or open german4k.com/verlaengern</string>
     <string name="g4k_hint_qr_setup">Scan to set up on your phone</string>
-    <string name="g4k_expires_chip">Expires in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> days</string>
+    <plurals name="g4k_expires_chip_tage">
+        <item quantity="one">Expires in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> day</item>
+        <item quantity="other">Expires in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> days</item>
+    </plurals>
     <string name="g4k_expires_today">Expires today</string>
     <string name="g4k_locked_title">Access not active</string>
     <string name="g4k_retry_button_short">Check again</string>
@@ -101,7 +104,10 @@
     <string name="g4k_dolby_body">This is our best version, encoded in Dolby Vision. Your TV cannot decode it, so the picture looks green-purple and too dark — the file is fine. Look for the same title in another section, or watch it anyway.</string>
     <string name="g4k_dolby_ok">Watch anyway</string>
     <string name="g4k_kunde_titel">Your access</string>
-    <string name="g4k_kunde_tage">Valid for another <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> days</string>
+    <plurals name="g4k_kunde_tage_plural">
+        <item quantity="one">Valid for another <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> day</item>
+        <item quantity="other">Valid for another <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> days</item>
+    </plurals>
     <string name="g4k_kunde_verlaengern">Renew</string>
     <string name="g4k_kunde_verlaengern_text">Scan and renew on your phone — takes a minute, your login stays the same.</string>
     <string name="g4k_kunde_zweitgeraet">Second device</string>
@@ -116,7 +122,7 @@
     <string name="g4k_bereiche_sender"><xliff:g id="count" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> channels</string>
     <string name="g4k_bereiche_laedt">Loading…</string>
     <string name="g4k_bereiche_leer">No sections to show — this device is not connected to an access yet.</string>
-    <string name="g4k_bereiche_neu">Your list updates on the next start.</string>
+    <string name="g4k_bereiche_neu">Saved – your list is being updated.</string>
     <string name="g4k_test_chip">Trial · <xliff:g id="hours" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> h left</string>
     <string name="g4k_test_chip_bald">Trial · ending soon</string>
     <string name="g4k_hint_qr_kaufen">Scan to get it on your phone – or open german4k.com/kaufen</string>

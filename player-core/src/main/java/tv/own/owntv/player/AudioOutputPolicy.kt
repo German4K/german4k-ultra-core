@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.media3.common.C
 import androidx.media3.common.Format
 import androidx.media3.common.MimeTypes
+import androidx.media3.common.audio.ChannelMixingAudioProcessor
+import androidx.media3.common.audio.ChannelMixingMatrix
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.analytics.AnalyticsListener
@@ -46,7 +48,30 @@ object AudioOutputPolicy {
      * True when this mode + the current latch permit anything other than plain stereo PCM.
      * [SurroundMode.STEREO] and a tripped latch are the same answer for different reasons.
      */
-    fun allowsMultichannel(mode: SurroundMode): Boolean = mode != SurroundMode.STEREO && !latched
+    fun allowsMultichannel(mode: SurroundMode): Boolean = when (mode) {
+        SurroundMode.STEREO -> false
+        // German4K: Auto auf Fire TV = Stereo. Nach ~2 Folgen 5.1-AAC verlor der Fire TV den Ton
+        // systemweit (HAL/Mehrkanal-PCM); Auto verspricht „geht immer", also Downmix. Wer echten
+        // Mehrkanal will, stellt ausdrücklich Surround ein — das bleibt unverändert.
+        SurroundMode.AUTO -> !isFireTv()
+        SurroundMode.SURROUND -> true
+    } && !latched
+
+    // German4K: Geräteerkennung wie German4kDeviceCaps (Feature `amazon.hardware.fire_tv`). Ohne
+    // Context (Engine vor [noteDevice] gebaut) greift der Build-Fallback: Hersteller Amazon.
+    @Volatile private var fireTv: Boolean? = null
+
+    /** German4K: einmal mit einem Context aufrufen, damit die Fire-TV-Erkennung das System-Feature nutzt. */
+    fun noteDevice(context: Context) {
+        if (fireTv != null) return
+        fireTv = runCatching {
+            context.packageManager.hasSystemFeature("amazon.hardware.fire_tv") || amazonBuild()
+        }.getOrDefault(amazonBuild())
+    }
+
+    private fun isFireTv(): Boolean = fireTv ?: amazonBuild()
+
+    private fun amazonBuild(): Boolean = android.os.Build.MANUFACTURER.equals("Amazon", ignoreCase = true)
 
     /** Trip the latch. Idempotent — the first reason is the interesting one. */
     fun latchStereo(reason: String) {
@@ -94,7 +119,13 @@ class OwnTVRenderersFactory(
             @Suppress("DEPRECATION")
             DefaultAudioSink.Builder()
                 .setAudioCapabilities(AudioCapabilities.DEFAULT_AUDIO_CAPABILITIES)
-                .setEnableFloatOutput(enableFloatOutput)
+                // German4K: Die Stereo-Kappung oben nimmt nur den Passthrough weg — ein dekodiertes
+                // 5.1-AAC ging trotzdem als 6-Kanal-PCM an den AudioTrack (Fire TV: Ton weg). Erst
+                // dieser Prozessor mischt wirklich auf 2 Kanäle herunter.
+                .setAudioProcessors(arrayOf(stereoDownmixProcessor()))
+                // German4K: Float-Ausgabe umgeht in Media3 die eigenen AudioProcessors — dann gäbe es
+                // keinen Downmix. Stereo-Pinning heißt ohnehin 16-bit-PCM.
+                .setEnableFloatOutput(false)
                 .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
                 .build()
         }.getOrElse {
@@ -102,6 +133,30 @@ class OwnTVRenderersFactory(
             super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)
         }
     }
+}
+
+/**
+ * German4K: echter Stereo-Downmix für den gepinnten Sink. Media3 liefert Standardmatrizen nur bis
+ * 6 Kanäle (5.1); 6.1/7.1 werden hier von Hand gemischt (AudioTrack-Reihenfolge: FL FR FC LFE BL BR
+ * [BC | SL SR]). Mono/Stereo laufen als Identität durch — ohne Matrix für eine Kanalzahl würde der
+ * Prozessor das Format ablehnen und der Sink gar nicht starten.
+ */
+@UnstableApi
+internal fun stereoDownmixProcessor(): ChannelMixingAudioProcessor {
+    val p = ChannelMixingAudioProcessor()
+    p.putChannelMixingMatrix(ChannelMixingMatrix(1, 1, floatArrayOf(1f)))
+    p.putChannelMixingMatrix(ChannelMixingMatrix(2, 2, floatArrayOf(1f, 0f, 0f, 1f)))
+    for (n in 3..6) {
+        runCatching { ChannelMixingMatrix.createForConstantPower(n, 2) }
+            .onSuccess { p.putChannelMixingMatrix(it) }
+    }
+    // Koeffizienten zeilenweise je Eingangskanal: (links, rechts). LFE fällt weg wie bei Media3s 5.1.
+    val c = 0.7071f
+    val s7 = floatArrayOf(1f, 0f, 0f, 1f, c, c, 0f, 0f, c, 0f, 0f, c, 0.5f, 0.5f)
+    val s8 = floatArrayOf(1f, 0f, 0f, 1f, c, c, 0f, 0f, 0.5f, 0f, 0f, 0.5f, 0.5f, 0f, 0f, 0.5f)
+    runCatching { p.putChannelMixingMatrix(ChannelMixingMatrix(7, 2, s7)) }
+    runCatching { p.putChannelMixingMatrix(ChannelMixingMatrix(8, 2, s8)) }
+    return p
 }
 
 /**

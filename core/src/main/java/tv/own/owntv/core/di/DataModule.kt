@@ -88,6 +88,9 @@ val dataModule = module {
             androidContext(), get(), get(), get(), get(), get(), get(), get(), get(),
             newImporter = { get<tv.own.owntv.core.setup.SourceImporter>() },
             abgleich = { get<tv.own.owntv.core.german4k.German4kAbgleich>() },
+            // German4K: Neuabgleich bei neuerem bereiche_stand. Lazy, damit keine DI-Schleife entsteht.
+            katalogSync = { get<CatalogSyncScheduler>() },
+            inhaltZahl = { id -> get<tv.own.owntv.core.sync.ImportFinalizer>().contentCounts(id).let { it.channels + it.movies + it.series } },
         )
     }
     single { ConnectivityObserver(androidContext()) }

@@ -377,6 +377,7 @@ class UserDataResolver(
      */
     private suspend fun resolveAllChunked(entries: JSONArray): JSONArray {
         val unresolved = JSONArray()
+        senderSchluessel.clear() // German4K: nach jedem Sync ist die Senderliste eine andere
         // Asked once, not once per record: on a device that has never synced — and after every
         // ordinary playlist refresh, which relinks thousands of rows through here — the table is
         // empty, and an extra indexed lookup per record is a cost paid for nothing.
@@ -461,11 +462,13 @@ class UserDataResolver(
     }
 
     /** The current local id of the content a record points at, or null while it is not (yet) here. */
-    private suspend fun locate(type: MediaType, e: JSONObject): Long? {
+    private suspend fun locate(type: MediaType, e: JSONObject, unscharf: Boolean = false): Long? {
         val src = e.getLong("src")
         val rid = e.optStringOrNull("rid")
         return when (type) {
             MediaType.LIVE -> (rid?.let { channelDao.findByRemote(src, it) } ?: channelDao.findByName(src, e.getString("name")))?.id
+                // German4K: dritte Stufe nach einem Sendertausch (neue id, Name mit anderem Zusatz).
+                ?: if (unscharf) senderUnscharf(src, e.getString("name")) else null
             MediaType.MOVIE -> (rid?.let { movieDao.findByRemote(src, it) } ?: movieDao.findByName(src, e.getString("name")))?.id
             MediaType.SERIES -> (rid?.let { seriesDao.findSeriesByRemote(src, it) } ?: seriesDao.findSeriesByName(src, e.getString("name")))?.id
             MediaType.EPISODE -> {
@@ -480,7 +483,9 @@ class UserDataResolver(
 
     private suspend fun resolveAndInsert(e: JSONObject, tombstonesPresent: Boolean): Boolean {
         val type = runCatching { MediaType.valueOf(e.getString("t")) }.getOrNull() ?: return true // drop garbage
-        val itemId: Long = locate(type, e) ?: return false
+        // German4K: nur beim Einhängen unscharf suchen, nie beim Löschen (applyTombstone/wouldRemove) —
+        // ein Löschbefehl darf nie einen „ähnlichen" Sender treffen.
+        val itemId: Long = locate(type, e, unscharf = e.optString("kind") in UNSCHARF_KINDS) ?: return false
 
         // The record's own profile or nothing. This used to fall back to whichever profile happened to
         // be first, which is right for "the active profile was deleted, show me something" but wrong
@@ -537,6 +542,25 @@ class UserDataResolver(
         }.getOrDefault(false)
     }
 
+    /** German4K: Schlüssel → id je Quelle, einmal je Auflösungslauf gebaut; mehrdeutige Schlüssel fehlen. */
+    private val senderSchluessel = java.util.concurrent.ConcurrentHashMap<Long, Map<String, Long>>()
+
+    /**
+     * German4K: Sender, dessen [German4kSenderName.schluessel] gleich ist — aber nur, wenn es genau
+     * EINEN solchen gibt. Ein falscher Favorit ist schlimmer als ein wartender.
+     */
+    private suspend fun senderUnscharf(src: Long, name: String): Long? {
+        val k = tv.own.owntv.core.german4k.German4kSenderName.schluessel(name)
+        if (k.isEmpty()) return null
+        val karte = senderSchluessel.getOrPut(src) {
+            val gruppen = channelDao.idNamesForSource(src).groupBy(
+                { tv.own.owntv.core.german4k.German4kSenderName.schluessel(it.name) }, { it.id },
+            )
+            gruppen.filter { (key, ids) -> key.isNotEmpty() && ids.size == 1 }.mapValues { it.value.first() }
+        }
+        return karte[k]
+    }
+
     private fun JSONObject.optStringOrNull(key: String): String? =
         if (isNull(key)) null else optString(key).takeIf { it.isNotEmpty() }
 
@@ -547,6 +571,9 @@ class UserDataResolver(
         /** Deletions that travel in a sync payload. Reorder positions are not among them: a position
          *  is overwritten by the newer one, never "missing", so it needs no marker. */
         val TOMBSTONE_KINDS = setOf("fav", "his", "prog", "member")
+
+        /** German4K: Arten, die nach einem Sendertausch unscharf (über den Namen) heilen dürfen. */
+        private val UNSCHARF_KINDS = setOf("fav", "order", "member")
 
         /** Newest deletions kept. "Clear watch history" writes one per row, and a deletion is only
          *  useful until every device has seen it. */

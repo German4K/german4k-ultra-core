@@ -350,6 +350,8 @@ internal class XtreamSyncer(
         } catch (c: CancellationException) {
             throw c
         } catch (e: Exception) {
+            // German4K: eine beschädigte Datenbank ist kein Phasenfehler — nach oben, SyncManager verwirft sie.
+            if (tv.own.owntv.core.german4k.German4kDbRettung.istKorrupt(e)) throw e
             android.util.Log.w("SyncManager", "$phase import failed — keeping the rest of the import", e)
             stats.phaseErrors[phase] = e.message ?: "unknown"
         } finally {

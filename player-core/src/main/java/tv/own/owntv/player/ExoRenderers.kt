@@ -24,7 +24,7 @@ fun ownTVRenderers(
     /** Software decoders first — "Hardware decoding = Off", or a rescue retry after a blank picture. */
     softwareFirst: Boolean = false,
 ): DefaultRenderersFactory =
-    OwnTVRenderersFactory(context, forceStereo = forceStereo)
+    OwnTVRenderersFactory(context.also { AudioOutputPolicy.noteDevice(it) }, forceStereo = forceStereo) // German4K: Fire-TV-Erkennung auch ohne OwnTVPlayer
         // Media3 runs MediaCodec asynchronously by default on API 31+, and on every Fire TV device
         // (`com.amazon.hardware.tv_screen`) from API 28 up. That async path corrupts (macroblocks)
         // some UHD-HEVC content on Realtek/Amlogic VPUs — the synchronous path is what players like
