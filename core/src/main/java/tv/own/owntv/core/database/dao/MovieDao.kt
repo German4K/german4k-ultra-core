@@ -107,6 +107,11 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun pagingByCategoryDateAdded(categoryId: Long): PagingSource<Int, MovieEntity>
 
+    // German4K 3.0/32 (D2): Startseiten-Reihe „Neu bei Filme" — nur Einträge mit bekanntem Datum,
+    // sonst wäre „neu" bloß die umgekehrte Listenreihenfolge.
+    @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND addedAt IS NOT NULL ORDER BY addedAt DESC, sortOrder DESC, id DESC LIMIT :limit")
+    suspend fun newestAdded(sourceIds: List<Long>, limit: Int): List<MovieEntity>
+
     @Query("SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun searchAllDateAdded(query: String, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 

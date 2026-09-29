@@ -52,7 +52,7 @@
     <!-- Translators: Label above the player clock showing the date and time the programme being replayed originally aired, as opposed to the real time now. Keep it short: it sits above a large clock. -->
     <string name="content_clock_programme">Sendezeit</string>
     <!-- Translators: Label above the player clock showing the real time and date now. Keep it short: it sits above a large clock. -->
-    <string name="content_clock_current">Aktuelle Zeit</string>
+    <!-- German4K 3.0 (32): kurz, wie auf jeder deutschen Uhr --><string name="content_clock_current">Uhrzeit</string>
     <string name="content_media_overview">Übersicht</string>
     <string name="content_media_cast">Besetzung</string>
     <string name="content_media_press_back">Zum Schließen Zurück drücken</string>

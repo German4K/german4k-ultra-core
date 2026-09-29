@@ -229,4 +229,19 @@
     <string name="g4k_handy_zuletzt">Zuletzt gesehen</string>
     <string name="g4k_epg_jetzt">Jetzt</string>
     <string name="g4k_profil_kind">Kinderprofil</string>
+    <!-- German4K 3.0 (32) Paket 3 -->
+    <string name="g4k_home_fussball">Jetzt im Fußball</string>
+    <string name="g4k_home_neu_filme">Neu bei Filme</string>
+    <string name="g4k_live_kurz">LIVE</string>
+    <string name="g4k_zeitspanne"><xliff:g id="start" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> – <xliff:g id="ende" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <plurals name="g4k_fassungen">
+        <item quantity="one"><xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Fassung</item>
+        <item quantity="other"><xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Fassungen</item>
+    </plurals>
+    <string name="g4k_mehr_zugang">Mein Zugang</string>
+    <plurals name="g4k_mehr_zugang_tage">
+        <item quantity="one">noch <xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Tag</item>
+        <item quantity="other">noch <xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Tage</item>
+    </plurals>
+    <string name="g4k_mehr_zugang_abgelaufen">Abgelaufen</string>
 </resources>

@@ -153,6 +153,8 @@ data class HomeFeed(
     val config: HomeConfig = HomeConfig(),
     val recentGuide: GuideSliceState = GuideSliceState(),
     val favoriteGuide: GuideSliceState = GuideSliceState(),
+    /** German4K 3.0/32 (D2): „Neu bei Filme" — neueste Filme, je Titel eine Fassung. */
+    val newMovies: List<MovieEntity> = emptyList(),
 )
 
 /**
@@ -252,6 +254,20 @@ class HomeFeedReader(
                     GuideSliceState()
                 }
             }
+            // German4K 3.0/32 (D2): neueste Filme — ausgeblendete Titel/Kategorien (und für ein
+            // Kinderprofil die gesperrten) fallen raus, je Titel bleibt eine Fassung.
+            val newMoviesAsync = async {
+                if (movieIds.isEmpty()) emptyList() else runCatching {
+                    val gruppen = tv.own.owntv.core.german4k.German4kFassungsGruppen()
+                    val rows = movieDao.newestAdded(movieIds.toList(), NEW_MOVIES_FETCH)
+                        .filterNot { CustomizeKeys.movie(it) in hidden.movie.hiddenItems || (it.categoryId != null && it.categoryId in hidden.movieCats) }
+                    val byId = rows.associateBy { it.id }
+                    // Erst alle einsortieren, dann je Titel die bevorzugte Fassung (deutsch, 4K, erste).
+                    rows.filter { gruppen.annehmen(it.id, it.name, it.year ?: it.parsedYear) }
+                        .take(NEW_MOVIES_LIMIT)
+                        .map { byId[gruppen.bevorzugt(it.id)] ?: it }
+                }.getOrDefault(emptyList())
+            }
 
             HomeFeed(
                 trendingItems = trending,
@@ -265,6 +281,7 @@ class HomeFeedReader(
                 config = config,
                 recentGuide = recentGuideAsync.await(),
                 favoriteGuide = favoriteGuideAsync.await(),
+                newMovies = newMoviesAsync.await(),
             )
         }
     }
@@ -485,3 +502,6 @@ private const val MAX_HERO_ITEMS = 10
 private const val SLICE_WINDOW_MS = 360 * 60_000L
 private const val HALF_HOUR_MS = 30 * 60_000L
 private const val RECENT_LIVE_ROW_LIMIT = 20
+// German4K 3.0/32 (D2): Reihe „Neu bei Filme" — mehr holen, als gezeigt wird, weil Dubletten wegfallen.
+private const val NEW_MOVIES_LIMIT = 20
+private const val NEW_MOVIES_FETCH = 80
