@@ -280,7 +280,7 @@
         <item quantity="one"><xliff:g id="applied">%1$d</xliff:g> Sender wurde automatisch zugeordnet.</item>
         <item quantity="other"><xliff:g id="applied">%1$d</xliff:g> Sender wurden automatisch zugeordnet.</item>
     </plurals>
-    <string name="content_epg_title">Programmübersicht</string>
+    <string name="content_epg_title">TV-Guide</string>
     <string name="content_epg_matching">Wird zugeordnet…</string>
     <string name="content_epg_empty">Kein EPG hinzugefügt.</string>
     <string name="content_epg_no_guide">Keine EPG-Daten.</string>

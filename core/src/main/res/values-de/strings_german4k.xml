@@ -197,4 +197,16 @@
     <string name="g4k_sport_next">Gleich</string>
     <string name="g4k_sport_laden">Spiele werden geladen …</string>
     <string name="g4k_sport_sender_mehr">%1$d Sender</string>
+    <!-- German4K 3.0 (32) Paket 1 -->
+    <string name="g4k_live_vorschau_titel">Sender auswählen</string>
+    <string name="g4k_live_vorschau_text">Die Vorschau startet, sobald ein Sender markiert ist.</string>
+    <string name="g4k_sort_nummer">Nummer</string>
+    <string name="g4k_live_suche">In „%1$s“ suchen</string>
+    <plurals name="g4k_live_sender_anzahl">
+        <item quantity="one">%1$s Sender</item>
+        <item quantity="other">%1$s Sender</item>
+    </plurals>
+    <string name="g4k_handy_zuletzt">Zuletzt gesehen</string>
+    <string name="g4k_epg_jetzt">Jetzt</string>
+    <string name="g4k_profil_kind">Kinderprofil</string>
 </resources>

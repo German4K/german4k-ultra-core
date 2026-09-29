@@ -198,4 +198,16 @@
     <string name="g4k_sport_next">Next</string>
     <string name="g4k_sport_laden">Loading matches …</string>
     <string name="g4k_sport_sender_mehr">%1$d channels</string>
+    <!-- German4K 3.0 (32) Paket 1 -->
+    <string name="g4k_live_vorschau_titel">Select a channel</string>
+    <string name="g4k_live_vorschau_text">The preview starts as soon as a channel is highlighted.</string>
+    <string name="g4k_sort_nummer">Number</string>
+    <string name="g4k_live_suche">Search in “%1$s”</string>
+    <plurals name="g4k_live_sender_anzahl">
+        <item quantity="one">%1$s channel</item>
+        <item quantity="other">%1$s channels</item>
+    </plurals>
+    <string name="g4k_handy_zuletzt">Recently watched</string>
+    <string name="g4k_epg_jetzt">Now</string>
+    <string name="g4k_profil_kind">Kids profile</string>
 </resources>
