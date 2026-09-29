@@ -197,6 +197,26 @@
     <string name="g4k_sport_next">Gleich</string>
     <string name="g4k_sport_laden">Spiele werden geladen …</string>
     <string name="g4k_sport_sender_mehr">%1$d Sender</string>
+    <!-- German4K 3.0/32: Karten-Fußzeile, LIVE-Minute, Tage, Senderzeilen -->
+    <string name="g4k_sport_sprache_de">Deutsch</string>
+    <string name="g4k_sport_sprache_en">Englisch</string>
+    <string name="g4k_sport_sprache_es">Spanisch</string>
+    <string name="g4k_sport_sprache_fr">Französisch</string>
+    <string name="g4k_sport_sprache_it">Italienisch</string>
+    <string name="g4k_sport_sprache_tr">Türkisch</string>
+    <string name="g4k_sport_fuss_sprache_marke">%1$s auf %2$s</string>
+    <string name="g4k_sport_fuss_weitere">%1$d weitere</string>
+    <string name="g4k_sport_fuss_rechte">Bei %1$s</string>
+    <string name="g4k_sport_fuss_bereich">Im Bereich %1$s</string>
+    <string name="g4k_sport_live_minute">LIVE %1$s</string>
+    <string name="g4k_sport_minute">%1$d′</string>
+    <string name="g4k_sport_nachspielzeit">90+′</string>
+    <string name="g4k_sport_halbzeit">Halbzeit</string>
+    <string name="g4k_sport_tag_morgen">Morgen · %1$s</string>
+    <plurals name="g4k_sport_aus_laender">
+        <item quantity="one">%1$d weiteres Land · nicht in deinem Paket</item>
+        <item quantity="other">%1$d weitere Länder · nicht in deinem Paket</item>
+    </plurals>
     <!-- German4K 3.0 (32) Paket 1 -->
     <string name="g4k_live_vorschau_titel">Sender auswählen</string>
     <string name="g4k_live_vorschau_text">Die Vorschau startet, sobald ein Sender markiert ist.</string>

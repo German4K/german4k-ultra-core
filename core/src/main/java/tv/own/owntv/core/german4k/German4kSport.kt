@@ -222,3 +222,155 @@ fun regale(spiele: List<German4kSpiel>, heute: LocalDate, zone: ZoneId = SPORT_Z
         beendet = beendet,
     )
 }
+
+// ---------------------------------------------------------------------------------------------
+// German4K 3.0/32: Karten-Fußzeile, Senderzeilen, Spielminute, Tagesgruppen (reine Helfer).
+// ---------------------------------------------------------------------------------------------
+
+/** Sprache, die eine Senderflagge verspricht. Unbekannte Flaggen → keine Sprache (nur Flagge). */
+enum class SportSprache { DEUTSCH, ENGLISCH, SPANISCH, FRANZOESISCH, ITALIENISCH, TUERKISCH }
+
+private const val REGIONAL_A = 0x1F1E6
+private const val REGIONAL_Z = 0x1F1FF
+
+private fun istRegional(cp: Int) = cp in REGIONAL_A..REGIONAL_Z
+
+/** Führendes Flaggen-Emoji (Paar Regional-Indicator) von [text] oder null. */
+fun fuehrendeFlagge(text: String?): String? {
+    val t = text?.trimStart() ?: return null
+    if (t.isEmpty()) return null
+    val a = t.codePointAt(0)
+    if (!istRegional(a)) return null
+    val i = Character.charCount(a)
+    if (i >= t.length) return null
+    val b = t.codePointAt(i)
+    if (!istRegional(b)) return null
+    return t.substring(0, i + Character.charCount(b))
+}
+
+/** Ländercode einer Flagge ("🇩🇪" → "DE") oder null. */
+fun flaggenLand(flagge: String?): String? {
+    val f = fuehrendeFlagge(flagge) ?: return null
+    val a = f.codePointAt(0)
+    val b = f.codePointAt(Character.charCount(a))
+    return buildString {
+        append('A' + (a - REGIONAL_A))
+        append('A' + (b - REGIONAL_A))
+    }
+}
+
+private val SPRACHE_JE_LAND: Map<String, SportSprache> = buildMap {
+    listOf("DE", "AT", "CH").forEach { put(it, SportSprache.DEUTSCH) }
+    listOf("GB", "US", "CA", "IE").forEach { put(it, SportSprache.ENGLISCH) }
+    put("ES", SportSprache.SPANISCH)
+    put("FR", SportSprache.FRANZOESISCH)
+    put("IT", SportSprache.ITALIENISCH)
+    put("TR", SportSprache.TUERKISCH)
+}
+
+/** Sprache aus der Flagge: DE/AT/CH Deutsch, GB/US/CA/IE Englisch, ES, FR, IT, TR; sonst null. */
+fun spracheVonFlagge(flagge: String?): SportSprache? = flaggenLand(flagge)?.let { SPRACHE_JE_LAND[it] }
+
+/** [text] ohne führende Flagge, getrimmt. */
+fun ohneFlagge(text: String): String {
+    val f = fuehrendeFlagge(text) ?: return text.trim()
+    return text.trimStart().substring(f.length).trim()
+}
+
+private val ENDE_NUMMER = Regex("\\s+\\d+$")
+private val ENDE_PPV = Regex("\\s+PPV$", RegexOption.IGNORE_CASE)
+
+/**
+ * Marke eines Senders: Kategorie ohne Flagge und ohne „ PPV" am Ende ("🇩🇪 Soccer PPV" → "Soccer").
+ * Ohne Kategorie: Name ohne Flagge, ohne Nummer und ohne „ PPV" am Ende ("🇩🇪 DAZN PPV 12" → "DAZN").
+ */
+fun senderMarke(sender: German4kSportSender): String {
+    val aus = sender.kategorie?.let { ENDE_PPV.replace(ohneFlagge(it), "").trim() }?.takeIf { it.isNotEmpty() }
+    if (aus != null) return aus
+    val name = ohneFlagge(sender.name)
+    val ohneNr = ENDE_NUMMER.replace(name, "").trim()
+    return ENDE_PPV.replace(ohneNr, "").trim().ifEmpty { ohneNr.ifEmpty { name } }
+}
+
+/** Was eine Senderzeile zeigt: große Flagge, Titel (Name ohne Flagge), Sprache, Marke. */
+data class SportSenderAnzeige(
+    val flagge: String?,
+    val titel: String,
+    val sprache: SportSprache?,
+    val marke: String,
+)
+
+fun senderAnzeige(sender: German4kSportSender): SportSenderAnzeige {
+    val flagge = fuehrendeFlagge(sender.name) ?: fuehrendeFlagge(sender.kategorie)
+    return SportSenderAnzeige(
+        flagge = flagge,
+        titel = ohneFlagge(sender.name).ifEmpty { sender.name },
+        sprache = spracheVonFlagge(flagge),
+        marke = senderMarke(sender),
+    )
+}
+
+/** Fußzeile einer Spielkarte nach der Kaskade Sender → Rechte → Bereich. */
+sealed interface SportFusszeile {
+    /** „🇩🇪 Deutsch auf DAZN · 10 weitere" — [weitere] = Sender minus eins. */
+    data class Sender(val flagge: String?, val sprache: SportSprache?, val marke: String, val weitere: Int) : SportFusszeile
+    data class Rechte(val sender: String) : SportFusszeile
+    data class Bereich(val name: String) : SportFusszeile
+    data object Keine : SportFusszeile
+}
+
+fun sportFusszeile(spiel: German4kSpiel): SportFusszeile {
+    val erster = spiel.sender.firstOrNull()
+    return when {
+        erster != null -> senderAnzeige(erster).let { SportFusszeile.Sender(it.flagge, it.sprache, it.marke, spiel.sender.size - 1) }
+        spiel.rechte != null -> SportFusszeile.Rechte(spiel.rechte.sender)
+        spiel.bereich != null -> SportFusszeile.Bereich(spiel.bereich.name)
+        else -> SportFusszeile.Keine
+    }
+}
+
+/** Anzeige der Spielminute im LIVE-Chip. */
+sealed interface SportMinute {
+    data class Minute(val n: Int) : SportMinute
+    data object Halbzeit : SportMinute
+    data object Nachspielzeit : SportMinute
+}
+
+/**
+ * Grobe Spielminute aus der Zeit seit Anstoß (kein Live-Ticker): 1–45 → n′, 46–60 → Halbzeit,
+ * danach n−15, ab 90 → „90+′". Vor dem Anstoß → 1′.
+ */
+fun sportMinute(start: Instant, jetzt: Instant): SportMinute {
+    val n = maxOf(1L, java.time.Duration.between(start, jetzt).toMinutes()).toInt()
+    return when {
+        n <= 45 -> SportMinute.Minute(n)
+        n <= 60 -> SportMinute.Halbzeit
+        n - 15 <= 90 -> SportMinute.Minute(n - 15)
+        else -> SportMinute.Nachspielzeit
+    }
+}
+
+/** „Morgen & später" nach Kalendertag in [zone] gruppiert, Tage aufsteigend, Reihenfolge je Tag bleibt. */
+fun nachTagen(spiele: List<German4kSpiel>, zone: ZoneId = SPORT_ZONE): List<Pair<LocalDate, List<German4kSpiel>>> =
+    spiele.groupBy { it.start.atZone(zone).toLocalDate() }.toList().sortedBy { it.first }
+
+/** „Morgen & später" ist offen, wenn heute höchstens so viele Spiele laufen. */
+const val SPAETER_OFFEN_BIS = 8
+
+fun spaeterStandardOffen(heuteAnzahl: Int): Boolean = heuteAnzahl <= SPAETER_OFFEN_BIS
+
+/** Sender der Spielseite: eingeschaltete/unbekannte oben, ausgeschaltete ([an] == false) für den Aufklapper. */
+data class SportSenderTeilung(
+    val an: List<German4kSportSender>,
+    val aus: List<German4kSportSender>,
+) {
+    /** Anzahl Länder unter [aus] — nach Flagge, ersatzweise Gruppe/Kategorie/Name. */
+    val ausLaender: Int
+        get() = aus.map { flaggenLand(fuehrendeFlagge(it.name) ?: fuehrendeFlagge(it.kategorie)) ?: it.gruppe ?: it.gruppeName ?: it.kategorie ?: it.name }
+            .distinct().size
+}
+
+fun senderTeilen(sender: List<German4kSportSender>): SportSenderTeilung {
+    val (aus, an) = sender.partition { it.an == false }
+    return SportSenderTeilung(an = an, aus = aus)
+}
