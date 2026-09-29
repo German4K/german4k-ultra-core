@@ -227,6 +227,15 @@
         <item quantity="one">%1$s channel</item>
         <item quantity="other">%1$s channels</item>
     </plurals>
+    <!-- German4K 3.0/32: einzeiliger Kopf Filme/Serien auf dem Handy -->
+    <plurals name="g4k_filme_anzahl">
+        <item quantity="one">%1$s movie</item>
+        <item quantity="other">%1$s movies</item>
+    </plurals>
+    <plurals name="g4k_serien_anzahl">
+        <item quantity="one">%1$s series</item>
+        <item quantity="other">%1$s series</item>
+    </plurals>
     <string name="g4k_handy_zuletzt">Recently watched</string>
     <string name="g4k_epg_jetzt">Now</string>
     <string name="g4k_profil_kind">Kids profile</string>
