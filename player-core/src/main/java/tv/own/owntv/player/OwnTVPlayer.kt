@@ -955,10 +955,10 @@ class OwnTVPlayer(
             // A reload re-inits the audio chain so the new channel layout takes effect on the playing stream.
             if (initialized) {
                 mpvAsync {
-                    val sur = multichannelAllowed()
                     setPropertyString("audio-channels", audioChannelsValue())
-                    setPropertyString("audio-format", if (sur) "s16" else "")
-                    setPropertyString("audio-samplerate", if (sur) "48000" else "0")
+                    // German4K: immer 16 bit / 48 kHz, auch in Stereo (Fire TV stumm bei Float/44,1 kHz).
+                    setPropertyString("audio-format", "s16")
+                    setPropertyString("audio-samplerate", "48000")
                 }
                 reloadCurrentInPlace()
             }
@@ -2251,9 +2251,11 @@ class OwnTVPlayer(
             setOptionString("audio-channels", audioChannelsValue())
             // Compatibility for multichannel: some HALs choke on Float / 44.1 kHz 5.1 PCM (mis-sized buffer
             // → 2× drain, #25). Pin the universally-safe 16-bit/48 kHz output when surround is on.
-            val sur = multichannelAllowed()
-            setOptionString("audio-format", if (sur) "s16" else "")
-            setOptionString("audio-samplerate", if (sur) "48000" else "0")
+            // German4K: … und auch in Stereo. Seit 2.6 ist „Auto“ auf Fire TV Stereo, und ohne Pinning gab
+            // mpv dort Float-PCM in Quellrate an den AudioTrack — Serien stumm (Kim349, Rashondo, 30.09.).
+            setOptionString("audio-format", "s16")
+            setOptionString("audio-samplerate", "48000")
+            setOptionString("audiotrack-pcm-float", "no")
             setOptionString("force-window", "no")
             setOptionString("idle", "yes")
             setOptionString("ytdl", "no") // IPTV URLs are direct; skip the youtube-dl hook
@@ -4229,7 +4231,8 @@ class OwnTVPlayer(
                     val sgen = loadGeneration
                     scope.launch {
                         delay(SURROUND_CHECK_MS)
-                        if (sgen != loadGeneration || !multichannelAllowed()) return@launch
+                        // German4K: auch im Stereo-Modus prüfen — dort nur auf Stille (siehe unten).
+                        if (sgen != loadGeneration) return@launch
                         // Two independent tells, because the two ways an output fails look nothing alike:
                         //
                         //  1. RUNAWAY — the sink drains multichannel PCM ~2× fast, so mpv's audio-master
@@ -4253,7 +4256,8 @@ class OwnTVPlayer(
                         val (startAudioPts, startTimePos) =
                             kotlinx.coroutines.withTimeoutOrNull(1_000) { baseline.await() } ?: (null to null)
                         delay(SURROUND_SILENCE_CHECK_MS)
-                        if (sgen != loadGeneration || !multichannelAllowed()) return@launch
+                        if (sgen != loadGeneration) return@launch
+                        val multi = multichannelAllowed()
                         mpvAsync {
                             if (getPropertyString("seeking") == "yes") return@mpvAsync // catching up — not a real runaway
                             if (getPropertyString("pause") == "yes") return@mpvAsync    // paused audio is not stalled audio
@@ -4270,6 +4274,18 @@ class OwnTVPlayer(
                             val audioFrozen = hasAudio && videoMoved && startAudioPts != null &&
                                 nowAudioPts != null && kotlin.math.abs(nowAudioPts - startAudioPts) < 0.25
 
+                            // German4K: Stereo-Ausgabe stumm — kein Latch (es gibt nichts Kleineres als
+                            // Stereo), sondern Film/Folge an ExoPlayer übergeben und protokollieren.
+                            if (!multi) {
+                                if (!audioFrozen) return@mpvAsync
+                                val why = "stereo output produced no sound"
+                                android.util.Log.w(TAG, "silence failsafe (stereo): $why — handing over to ExoPlayer")
+                                PlaybackErrorLog.event(context, "mpv", isLiveContent, PlayerFailureReason.STEREO_FALLBACK, why)
+                                if (!isLiveContent && sgen == loadGeneration) {
+                                    scope.launch { fallbackToExoVod(PlaybackFailure.MpvOpenDecode, mpvStuck = false) }
+                                }
+                                return@mpvAsync
+                            }
                             val reason = when {
                                 runaway -> "audio drained ${"%.1f".format(vfps / cfps)}× too fast"
                                 audioFrozen -> "audio output produced no sound"
@@ -4279,8 +4295,8 @@ class OwnTVPlayer(
                             AudioOutputPolicy.latchStereo("mpv: $reason")
                             PlaybackErrorLog.event(context, "mpv", isLiveContent, PlayerFailureReason.STEREO_FALLBACK, reason)
                             setPropertyString("audio-channels", "stereo")
-                            setPropertyString("audio-format", "")
-                            setPropertyString("audio-samplerate", "0")
+                            setPropertyString("audio-format", "s16") // German4K: Stereo bleibt 16 bit / 48 kHz
+                            setPropertyString("audio-samplerate", "48000")
                             toast(toastRenderer.render(PlaybackFailure.Surround))
                             val stereoUrl = currentUrl
                             if (sgen == loadGeneration && stereoUrl != null) {

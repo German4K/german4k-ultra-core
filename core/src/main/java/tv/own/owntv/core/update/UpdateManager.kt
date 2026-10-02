@@ -36,7 +36,8 @@ class UpdateManager(
     private val context: Context,
     private val client: OkHttpClient,
 ) {
-    data class UpdateInfo(val version: String, val notes: String, val apkUrl: String)
+    // German4K: `required` kommt nur vom Panel (`update.required`) — Pflicht-Update, Dialog ohne „Später".
+    data class UpdateInfo(val version: String, val notes: String, val apkUrl: String, val required: Boolean = false)
 
     sealed interface Failure {
         data class CheckHttp(val code: Int) : Failure
@@ -95,6 +96,11 @@ class UpdateManager(
 
     val currentVersion: String = CoreBuildInfo.versionName
 
+    // German4K: true, solange das Panel eine neuere Version als Pflicht-Update meldet. Für die Zustände
+    // ohne UpdateInfo (Checking/Downloading), damit der Dialog auch dort nicht wegklickbar wird.
+    fun isPflichtUpdate(): Boolean =
+        tv.own.owntv.core.german4k.German4kUpdateSource.newerThan(CoreBuildInfo.versionCode)?.required == true
+
     /** Queries GitHub's latest release; moves to Available / UpToDate / a semantic failure. */
     fun check() {
         if (_state.value is State.Checking || _state.value is State.Downloading) return
@@ -104,7 +110,7 @@ class UpdateManager(
             // when the panel has said nothing yet (first start offline).
             tv.own.owntv.core.german4k.German4kUpdateSource.current?.let { u ->
                 val newer = tv.own.owntv.core.german4k.German4kUpdateSource.newerThan(CoreBuildInfo.versionCode)
-                _state.value = if (newer != null) State.Available(UpdateInfo(newer.versionName, newer.notes, newer.url)) else State.UpToDate
+                _state.value = if (newer != null) State.Available(UpdateInfo(newer.versionName, newer.notes, newer.url, newer.required)) else State.UpToDate
                 return@launch
             }
             runCatching {

@@ -4294,7 +4294,7 @@
 2	protocol	player-core/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.m3u8
 1	protocol	player-core/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	.ts
 1	protocol	player-core/src/main/java/tv/own/owntv/player/LiveStreamQuirks.kt	://
-12	empty	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	\0
+9	empty	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	\0
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	$STREAM_RECONNECT_OPTIONS,reconnect_at_eof=1
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	$reason — archive rescue: reopening mid-GOP catch-up in software decode
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	$reason — rescue rung 1: hwdec=mediacodec-copy (GL compositing)
@@ -4318,7 +4318,7 @@
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	.ts
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	/sdk_
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	/timeshift/
-4	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	0
+1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	0
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	1
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	1.0
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	10
@@ -4329,7 +4329,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	16:9
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	21:9
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	30
-2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	48000
+3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	48000
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	4:3
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	5.1
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	5000000
@@ -4405,6 +4405,7 @@
 1	mime	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio/true-hd
 1	mime	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio/vnd.dts
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audiotrack
+1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audiotrack-pcm-float
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	auto
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	auto-safe
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	av1
@@ -4532,7 +4533,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mp3
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpeg2
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpeg4
-6	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv
+7	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv $why — reopening with tolerant demuxing (discardcorrupt/genpts/ignore_err)
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv level=$level $safe
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mpv live mid-play reconnects exhausted ($MAX_LIVE_RECONNECTS) — surfacing error
@@ -4547,7 +4548,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	msg-level
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	mute
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	network-timeout
-25	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	no
+26	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	no
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	no-video (mpv, Live) — audio progressing but no video frame after ~${elapsedMs}ms
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	no-video (mpv, Live) — reconnect attempt ${item.liveStallReconnects}/$MAX_LIVE_RECONNECTS
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	no-video (mpv, Live) — reconnect budget exhausted, surfacing error
@@ -4581,7 +4582,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	relative
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	replacement loadfile
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	rgba8
-2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	s16
+3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	s16
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sans-serif
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sdk
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seek
@@ -4591,10 +4592,12 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	setSurfaceSize
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	setZoomMode: mode=$mode direct=${_directRender.value} aspect=${_videoAspect.value} live=$isLiveContent
 9	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sid
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	silence failsafe (stereo): $why — handing over to ExoPlayer
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	simulator
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	slang
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	speed
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stereo
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stereo output produced no sound
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stop
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stream-lavf-o
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	streamLavfO="${streamLavfOptionsFor(url, isLiveContent, effectiveHls)}"

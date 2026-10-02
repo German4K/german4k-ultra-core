@@ -122,7 +122,9 @@ class OwnTVRenderersFactory(
                 // German4K: Die Stereo-Kappung oben nimmt nur den Passthrough weg — ein dekodiertes
                 // 5.1-AAC ging trotzdem als 6-Kanal-PCM an den AudioTrack (Fire TV: Ton weg). Erst
                 // dieser Prozessor mischt wirklich auf 2 Kanäle herunter.
-                .setAudioProcessors(arrayOf(stereoDownmixProcessor()))
+                // German4K: danach auf 48 kHz umrechnen — Fire TV blieb bei AAC 44,1 kHz Live stumm
+                // (Ozi277, 02.10.), 48 kHz desselben Senders hatte Ton.
+                .setAudioProcessors(arrayOf(stereoDownmixProcessor(), resample48kProcessor()))
                 // German4K: Float-Ausgabe umgeht in Media3 die eigenen AudioProcessors — dann gäbe es
                 // keinen Downmix. Stereo-Pinning heißt ohnehin 16-bit-PCM.
                 .setEnableFloatOutput(false)
@@ -142,6 +144,40 @@ class OwnTVRenderersFactory(
  * Prozessor das Format ablehnen und der Sink gar nicht starten.
  */
 @UnstableApi
+/** German4K: rechnet 16-bit-PCM jeder Quellrate auf 48 kHz um. */
+internal fun resample48kProcessor(): androidx.media3.common.audio.AudioProcessor = Resample48kProcessor()
+
+/**
+ * German4K: Sonic auf 48 kHz, aber nur für 16-bit-PCM mit anderer Rate. Sonic selbst wirft bei jedem
+ * anderen Format (Float, 24 bit) — das hieße Abbruch statt Ton. Dann bleibt dieser Schritt einfach aus.
+ */
+@UnstableApi
+private class Resample48kProcessor : androidx.media3.common.audio.AudioProcessor {
+    private val sonic = androidx.media3.common.audio.SonicAudioProcessor().apply { setOutputSampleRateHz(48_000) }
+    private var aktiv = false
+
+    override fun configure(
+        inputAudioFormat: androidx.media3.common.audio.AudioProcessor.AudioFormat,
+    ): androidx.media3.common.audio.AudioProcessor.AudioFormat {
+        aktiv = inputAudioFormat.encoding == androidx.media3.common.C.ENCODING_PCM_16BIT &&
+            inputAudioFormat.sampleRate > 0 && inputAudioFormat.sampleRate != 48_000
+        if (!aktiv) return androidx.media3.common.audio.AudioProcessor.AudioFormat.NOT_SET
+        return sonic.configure(inputAudioFormat)
+    }
+
+    override fun isActive(): Boolean = aktiv && sonic.isActive
+    override fun queueInput(inputBuffer: java.nio.ByteBuffer) = sonic.queueInput(inputBuffer)
+    override fun queueEndOfStream() = sonic.queueEndOfStream()
+    override fun getOutput(): java.nio.ByteBuffer = sonic.output
+    override fun isEnded(): Boolean = sonic.isEnded
+    override fun getDurationAfterProcessorApplied(durationUs: Long): Long =
+        if (aktiv) sonic.getDurationAfterProcessorApplied(durationUs) else durationUs
+    // German4K: beide flush-Varianten — media3 verlangt mindestens eine, ruft je nach Pfad aber beide.
+    override fun flush() = sonic.flush(androidx.media3.common.audio.AudioProcessor.StreamMetadata.DEFAULT)
+    override fun flush(streamMetadata: androidx.media3.common.audio.AudioProcessor.StreamMetadata) = sonic.flush(streamMetadata)
+    override fun reset() { sonic.reset(); aktiv = false }
+}
+
 internal fun stereoDownmixProcessor(): ChannelMixingAudioProcessor {
     val p = ChannelMixingAudioProcessor()
     p.putChannelMixingMatrix(ChannelMixingMatrix(1, 1, floatArrayOf(1f)))

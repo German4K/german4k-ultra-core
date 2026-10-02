@@ -253,4 +253,6 @@
         <item quantity="other">noch <xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Tage</item>
     </plurals>
     <string name="g4k_mehr_zugang_abgelaufen">Abgelaufen</string>
+    <!-- German4K: Hinweis im Profil-Editor, wenn der Name wie ein Zugangs-Benutzername aussieht (Marcel197). -->
+    <string name="g4k_profil_name_wie_zugang">Willst du einen zweiten Zugang hinzufügen? Das geht unter Einstellungen → Quellen und Programm → Wiedergabelisten → Quelle hinzufügen. Ein Profil ist nur eine eigene Favoritenliste.</string>
 </resources>
