@@ -88,8 +88,26 @@ data class German4kPanelAnswer(
     /** German4K: letzte Änderung der Länder/Bereiche dieses Kunden (UTC, ISO) oder null. Ist ein
      *  Katalog älter, holt der Provisioner ihn neu — siehe German4kProvisioner.syncWennBereicheNeuer. */
     val bereicheStand: String? = null,
+    /** German4K 3.1: letzte Konfig- ODER Laufzeitänderung der Line (UTC, ISO) oder null, solange der Server es
+     *  noch nicht liefert. Neuer als der Katalog → sofort neu holen (auch nach einer Verlängerung). */
+    val stand: String? = null,
 ) {
+    /** German4K 3.1: `stand`, ersatzweise `bereiche_stand` (ältere Server). */
+    val standEffektiv: String? get() = stand ?: bereicheStand
+
     companion object {
+        /**
+         * German4K 3.1: Hat sich die Laufzeit geändert, seit wir zuletzt gefragt haben? Neues Ablaufdatum oder
+         * neues Passwort einer Quelle heißt: Verlängerung oder Rotation — dann sind alle gespeicherten
+         * Stream-Adressen und ein stehender „Zugang abgelaufen"-Hinweis veraltet. Ohne alte Antwort: nein.
+         */
+        fun laufzeitGeaendert(alt: German4kPanelAnswer?, neu: German4kPanelAnswer): Boolean {
+            if (alt == null) return false
+            if (alt.expireDate != neu.expireDate) return true
+            val altPw = alt.sources.associate { it.username to it.password }
+            return neu.sources.any { s -> altPw[s.username]?.let { it != s.password } == true }
+        }
+
         fun parse(json: String): German4kPanelAnswer {
             val o = JSONObject(json)
             val arr = o.optJSONArray("sources")
@@ -143,6 +161,7 @@ data class German4kPanelAnswer(
                 diagnoseRequested = o.optBoolean("diagnose_requested", false),
                 serverTime = o.optString("server_time"),
                 bereicheStand = if (o.isNull("bereiche_stand")) null else o.optString("bereiche_stand").takeIf { it.isNotBlank() },
+                stand = if (o.isNull("stand")) null else o.optString("stand").takeIf { it.isNotBlank() },
             )
         }
     }
@@ -156,6 +175,7 @@ data class German4kPanelAnswer(
         put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
         put("diagnose_requested", diagnoseRequested); put("server_time", serverTime)
         put("bereiche_stand", bereicheStand ?: JSONObject.NULL) // German4K: Cache-Rundreise
+        put("stand", stand ?: JSONObject.NULL) // German4K 3.1
         test?.let { t -> put("test", JSONObject().apply { put("stunden_offen", t.stundenOffen); put("kaufen_url", t.kaufenUrl) }) }
         put("erwachsen", org.json.JSONArray(erwachsen))
         put("kunde", JSONObject().apply {

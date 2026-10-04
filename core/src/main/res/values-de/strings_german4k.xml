@@ -261,4 +261,5 @@
     <string name="g4k_virtuell_untertitel_kurz">%1$s · noch %2$d Min</string>
     <string name="g4k_jetzt_im_tv">Jetzt im TV</string>
     <string name="g4k_virtuell_normal">Sender läuft gerade im normalen Modus</string>
+    <string name="g4k_stoerung_erneut">Erneut prüfen</string>
 </resources>

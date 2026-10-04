@@ -164,7 +164,8 @@ class German4kProvisioner(
 
         // Hosts from the last answer are valid before the network is: a start without connectivity to the
         // primary host must already know the alternative.
-        cached()?.let { registerHosts(it); German4kFeatures.set(it.features); if (_answer.value == null) _answer.value = it }
+        val vorher = cached()
+        vorher?.let { registerHosts(it); German4kFeatures.set(it.features); if (_answer.value == null) _answer.value = it }
         var fromCache = false
         val answer: German4kPanelAnswer = try {
             panel.fetch(deviceId, version, username, password).also {
@@ -204,6 +205,14 @@ class German4kProvisioner(
             // German4K: Länder/Bereiche im Panel geändert → betroffene Kataloge neu holen. Nur mit
             // frischer Antwort; ein Stand aus dem Cache ist schon einmal geprüft worden.
             if (!fromCache) runCatching { syncWennBereicheNeuer(answer, fresh?.id) }.onFailure { Log.w(TAG, "bereiche_stand: ${it.message}") }
+            // German4K 3.1: Verlängerung/Rotation erkannt (neues Ablaufdatum oder Passwort) → jede gespeicherte
+            // Stream-Adresse trägt den alten Stand. Sofort alle Kataloge neu holen und einen stehenden
+            // „Zugang abgelaufen"-Hinweis zurücknehmen (Fauli 02.10.: blieb über den Renew hinweg stehen).
+            if (!fromCache && German4kPanelAnswer.laufzeitGeaendert(vorher, answer)) {
+                Log.i(TAG, "laufzeit changed (expire ${vorher?.expireDate} → ${answer.expireDate}) — resync all")
+                German4kStoerung.schliessenWenn(German4kHealth.Klasse.ABGELAUFEN)
+                runCatching { resyncManaged("laufzeit", geradeImportiert = fresh?.id) }.onFailure { Log.w(TAG, "laufzeit resync: ${it.message}") }
+            }
             // Guide for the default host, once — like OwnTV's semi-auto EPG after the wizard, but without
             // asking. Runs after Ready so the customer is already in the shell while it downloads.
             fresh?.let { syncGuide(it) }
@@ -290,7 +299,8 @@ class German4kProvisioner(
      * `server_time` auf die Panel-Uhr umgerechnet, sonst holte ein nachgehendes Gerät bei jedem Start neu.
      */
     private suspend fun syncWennBereicheNeuer(answer: German4kPanelAnswer, geradeImportiert: Long?) {
-        val stand = answer.bereicheStand?.let { runCatching { java.time.Instant.parse(it) }.getOrNull() } ?: return
+        // German4K 3.1: `stand` (Konfig + Laufzeit) vor `bereiche_stand`.
+        val stand = answer.standEffektiv?.let { runCatching { java.time.Instant.parse(it) }.getOrNull() } ?: return
         val scheduler = katalogSync() ?: return
         val versatzMs = answer.serverTime.takeIf { it.isNotBlank() }
             ?.let { runCatching { java.time.Instant.parse(it).toEpochMilli() - System.currentTimeMillis() }.getOrNull() }
@@ -306,6 +316,26 @@ class German4kProvisioner(
             scheduler.enqueueSync(
                 src.id,
                 reason = "bereiche_stand",
+                contentTypes = tv.own.owntv.core.sync.SyncContentTypes.enabledOf(src),
+                baseItemCount = runCatching { inhaltZahl(src.id) }.getOrDefault(0),
+                policy = androidx.work.ExistingWorkPolicy.KEEP,
+            )
+        }
+    }
+
+    /**
+     * German4K 3.1: alle verwalteten Quellen neu synchronisieren (nach Verlängerung oder auf „Erneut prüfen").
+     * Quellen ohne `lastSyncAt` bleiben aus — dort läuft noch der Erstimport.
+     */
+    suspend fun resyncManaged(grund: String, geradeImportiert: Long? = null) {
+        val scheduler = katalogSync() ?: return
+        val managed = managedIds()
+        for (src in sourceDao.getAllOnce()) {
+            if (src.id.toString() !in managed || src.id == geradeImportiert || src.lastSyncAt == null) continue
+            Log.i(TAG, "resync sourceId=${src.id} ($grund)")
+            scheduler.enqueueSync(
+                src.id,
+                reason = grund,
                 contentTypes = tv.own.owntv.core.sync.SyncContentTypes.enabledOf(src),
                 baseItemCount = runCatching { inhaltZahl(src.id) }.getOrDefault(0),
                 policy = androidx.work.ExistingWorkPolicy.KEEP,

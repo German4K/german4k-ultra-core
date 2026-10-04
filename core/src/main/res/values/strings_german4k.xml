@@ -262,4 +262,5 @@
     <string name="g4k_virtuell_untertitel_kurz">%1$s · %2$d min left</string>
     <string name="g4k_jetzt_im_tv">On TV now</string>
     <string name="g4k_virtuell_normal">This channel is playing in normal mode right now</string>
+    <string name="g4k_stoerung_erneut">Check again</string>
 </resources>

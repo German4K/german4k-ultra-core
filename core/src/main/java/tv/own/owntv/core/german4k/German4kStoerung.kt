@@ -40,5 +40,11 @@ object German4kStoerung {
 
     fun schliessen() { _lage.value = null }
 
+    /** German4K 3.1: nur zurücknehmen, wenn die stehende Störung eine dieser Klassen ist (z. B. nach einem
+     *  gelungenen Tune oder einer erkannten Verlängerung). */
+    fun schliessenWenn(vararg klassen: German4kHealth.Klasse) {
+        if (_lage.value?.klasse in klassen) _lage.value = null
+    }
+
     private const val TAG = "German4kStoerung"
 }

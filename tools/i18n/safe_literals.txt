@@ -1998,7 +1998,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	server_time
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sources
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	sport failed: ${it.message}
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stand
+5	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stand
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	standard
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stream_id
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	stunden_offen
@@ -2054,8 +2054,12 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	https://german4k.com/kaufen
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	kein Abgleich
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	last_answer
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	laufzeit
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	laufzeit changed (expire ${vorher?.expireDate} → ${answer.expireDate}) — resync all
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	laufzeit resync: ${it.message}
 1	preference-key	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	managed_source_ids
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	panel unreachable: ${e.message}
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	resync sourceId=${src.id} ($grund)
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	test
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	test:debug-$stunden
 2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kProvisioner.kt	verlaengern
