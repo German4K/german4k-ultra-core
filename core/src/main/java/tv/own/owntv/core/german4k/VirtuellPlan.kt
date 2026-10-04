@@ -109,3 +109,27 @@ class VirtuellFehlerZaehler(private val grenze: Int = 3) {
     fun fehler(): Boolean = ++n >= grenze
     fun erfolg() { n = 0 }
 }
+
+/** Weg A oder B? Reine Entscheidung, damit der Live-View-Model nur noch ausführt. */
+object VirtuellWeg {
+    sealed interface Ausgang {
+        data class Spielen(val stand: VirtuellStand) : Ausgang
+        /** Server hat abgelehnt und einen Satz für den Kunden mitgegeben; gespielt wird normal. */
+        data class Hinweis(val grund: String) : Ausgang
+        data object WegA : Ausgang
+    }
+
+    fun darf(istVirtuell: Boolean, featureSichtbar: Boolean, gesperrtBis: Long, jetzt: Long): Boolean =
+        istVirtuell && featureSichtbar && gesperrtBis <= jetzt
+
+    fun ausgang(ergebnis: German4kVirtuellRepository.Ergebnis?, streamId: Long, deviceNow: Long): Ausgang = when (ergebnis) {
+        null, German4kVirtuellRepository.Ergebnis.Transport -> Ausgang.WegA
+        is German4kVirtuellRepository.Ergebnis.Abgelehnt ->
+            if (ergebnis.grund.isBlank()) Ausgang.WegA else Ausgang.Hinweis(ergebnis.grund)
+        is German4kVirtuellRepository.Ergebnis.Ok -> {
+            val s = ergebnis.antwort.sender.firstOrNull { it.streamId == streamId }
+            val stand = s?.let { VirtuellPlan.stand(it, ergebnis.uhr, deviceNow) }
+            if (stand == null) Ausgang.WegA else Ausgang.Spielen(stand)
+        }
+    }
+}
