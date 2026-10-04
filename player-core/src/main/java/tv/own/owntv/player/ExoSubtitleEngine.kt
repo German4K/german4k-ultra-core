@@ -248,7 +248,9 @@ class ExoSubtitleEngine(
         }
 
         override fun onTracksChanged(tracks: Tracks) {
-            val ton = tracks.groups.filter { it.type == C.TRACK_TYPE_AUDIO }.map { it.isSupported }
+            // isSupported(true): eine Spur, die die Fähigkeiten nur überschreitet (7.1 auf 2-Kanal-Decoder), spielt
+            // Exo trotzdem (exceedRendererCapabilitiesIfNecessary) — die geht nicht an mpv.
+            val ton = tracks.groups.filter { it.type == C.TRACK_TYPE_AUDIO }.map { it.isSupported(true) }
             if (ExoTonPruefung.unspielbar(ton)) callbacks.onAudioUnplayable()
             updateVideoTrackPresence(tracks)
             rebuildAudioTracks(tracks)

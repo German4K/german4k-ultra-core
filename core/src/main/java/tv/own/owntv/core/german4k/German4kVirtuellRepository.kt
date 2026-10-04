@@ -60,7 +60,14 @@ class German4kVirtuellRepository(
             synchronized(cache) { cache[key]?.takeIf { it.bis > uhrJetzt() }?.let { return it.ok } }
             laufend[key] ?: scope.async { abfragen(key) }.also { laufend[key] = it }
         }
-        return try { d.await() } finally { mutex.withLock { if (laufend[key] === d) laufend.remove(key) } }
+        return try {
+            d.await()
+        } finally {
+            // Auch nach Abbruch (Zeitlimit beim Umschalten) aufräumen, sonst bliebe eine fertige Abfrage hängen.
+            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                mutex.withLock { if (laufend[key] === d) laufend.remove(key) }
+            }
+        }
     }
 
     private suspend fun abfragen(key: Pair<Long, Int>): Ergebnis {
@@ -70,7 +77,16 @@ class German4kVirtuellRepository(
         val ok = Ergebnis.Ok(a, VirtuellUhr.aus(a.serverTime, t))
         synchronized(cache) { cache[key] = Eintrag(ok, t + TTL_MS) }
         if (a.sender.isNotEmpty()) {
-            _plaene.value = _plaene.value + a.sender.associate { it.epgId.lowercase() to it.plan }
+            // Ein kürzeres Fenster (Startseite: 1 h) darf einen längeren Plan (TV-Guide: 6 h) nicht ersetzen —
+            // sonst zeigt das Raster nach einem Blick auf die Startseite nur noch eine Stunde.
+            val alt = _plaene.value
+            _plaene.value = alt + a.sender.mapNotNull { s ->
+                val key = s.epgId.lowercase()
+                val bisher = alt[key]
+                val neuEnde = s.plan.lastOrNull()?.ende
+                val altEnde = bisher?.lastOrNull()?.ende
+                if (bisher != null && altEnde != null && (neuEnde == null || neuEnde.isBefore(altEnde))) null else key to s.plan
+            }
         }
         return ok
     }

@@ -70,6 +70,18 @@ class German4kVirtuellRepositoryTest {
     }
 
     @Test
+    fun `a shorter window never replaces a longer plan`() = runBlocking {
+        val voll = German4kVirtuellAntwort.parse(VirtuellTestDaten.VERTRAG)!!
+        val kurz = voll.copy(sender = voll.sender.map { it.copy(plan = it.plan.take(1)) })
+        var naechste = voll
+        val r = German4kVirtuellRepository(holen = { _, _ -> naechste }, uhrJetzt = { jetzt })
+        r.alle(6)
+        naechste = kurz
+        r.alle(1)
+        assertEquals(3, r.plaene.value["g4k.v.himym"]!!.size)
+    }
+
+    @Test
     fun `plans are published per epg id`() = runBlocking {
         val r = repo()
         r.alle(1)
