@@ -191,6 +191,17 @@ val dataModule = module {
     // German4K Sport-Hub: Spielplan (context, panel) und streamId → Kanal (settings, sourceDao, channelDao).
     single { tv.own.owntv.core.german4k.German4kSportRepository(androidContext(), get()) }
     single { tv.own.owntv.core.german4k.SportChannelResolver(get(), get(), get()) }
+    // German4K virtuelle 24/7-Sender (Weg B): Sendepläne über /api/app/virtuell.
+    single {
+        val panel = get<tv.own.owntv.core.german4k.German4kPanelClient>()
+        val ctx = androidContext()
+        tv.own.owntv.core.german4k.German4kVirtuellRepository(holen = { id, h ->
+            panel.virtuell(
+                tv.own.owntv.core.german4k.German4kDeviceId.get(ctx),
+                tv.own.owntv.core.CoreBuildInfo.versionName, tv.own.owntv.core.CoreBuildInfo.versionCode, id, h,
+            )
+        })
+    }
     single {
         SyncManager(
             context = androidContext(),

@@ -391,9 +391,54 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
             }
         }
 
+    /**
+     * Virtuelle 24/7-Sender (Weg B): Sendeplan. Transportfehler → null; dann spielt der Sender normal.
+     * Eigenes Zeitlimit 3,5 s — der Kunde hat gerade umgeschaltet und wartet.
+     */
+    suspend fun virtuell(deviceId: String, appVersion: String, build: Int, streamId: Long?, fensterH: Int): German4kVirtuellAntwort? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("version", appVersion)
+                put("build", build)
+                if (streamId != null) put("stream_id", streamId)
+                put("fenster_h", fensterH.coerceIn(1, 24))
+            }.toString()
+            val request = Request.Builder()
+                .url(virtuellEndpoint())
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newBuilder().callTimeout(3_500, java.util.concurrent.TimeUnit.MILLISECONDS).build()
+                    .newCall(request).execute().use { r ->
+                        if (!r.isSuccessful) throw IOException("HTTP ${r.code}")
+                        German4kVirtuellAntwort.parse(r.body.string())
+                    }
+            }.getOrElse {
+                Log.w(TAG, "virtuell failed: ${it.message}")
+                null
+            }
+        }
+
     companion object {
         const val ENDPOINT = "https://german4k.com/api/app/ultra"
         const val SPORT_ENDPOINT = "https://german4k.com/api/app/sport"
+
+        /**
+         * Nur Debug-Builds: `adb shell setprop debug.g4k.panel http://10.0.2.2:3000` lenkt /api/app/virtuell
+         * auf einen lokalen Server um. Android-Systemeigenschaft, nicht Java-System-Property.
+         */
+        fun virtuellEndpoint(): String {
+            val basis = if (tv.own.owntv.core.CoreBuildInfo.debug) {
+                runCatching {
+                    Class.forName("android.os.SystemProperties").getMethod("get", String::class.java)
+                        .invoke(null, "debug.g4k.panel") as String
+                }.getOrNull()?.trim()?.trimEnd('/')?.takeIf { it.startsWith("http") }
+            } else null
+            return (basis ?: "https://german4k.com") + "/api/app/virtuell"
+        }
         private const val TAG = "German4kPanel"
     }
 }
