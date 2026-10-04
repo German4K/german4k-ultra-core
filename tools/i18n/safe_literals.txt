@@ -3060,6 +3060,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	untertitel_sprache
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	update_check_on_start
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_engine
+1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_engine_migrated_31
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_grid_columns
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_prefer_exo
 1	preference-key	core/src/main/java/tv/own/owntv/core/settings/SettingsRepository.kt	vod_view_mode
@@ -4392,6 +4393,8 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	END_FILE before FILE_LOADED — demuxer rejected file, hard-resetting
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	EXO
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Emulator
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Exo VOD start watchdog — no progress ${now - windowStart}ms, handing to mpv
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Exo cannot play any audio track of this file — handing to mpv
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Exo codec gate: audio codec='$codec' mime=$mime deviceDecoder=$ok
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Exo codec gate: audio codec='$codec' → safe (allowlist)
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	FILE_LOADED with pendingStopEndFiles=$pendingStops generation=$loadGeneration
@@ -4448,6 +4451,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-params/samplerate
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-pts
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-samplerate
+1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-unsupported
 1	mime	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio/ac3
 1	mime	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio/eac3
 1	mime	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio/true-hd
@@ -4644,6 +4648,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	simulator
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	slang
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	speed
+1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	start-timeout
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stereo
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stereo output produced no sound
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	stop

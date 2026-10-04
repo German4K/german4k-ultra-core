@@ -40,6 +40,16 @@ enum class EnginePreference {
     val allowsHandover: Boolean get() = this == EXO_FIRST || this == MPV_FIRST
 
     companion object {
+        /**
+         * German4K 3.1: Filme & Serien starten auf ExoPlayer. Nie gewählt, alter Standard „mpv zuerst" oder
+         * Unlesbares → [EXO_FIRST]; eine bewusste „nur"-Wahl und [EXO_FIRST] bleiben.
+         */
+        fun vodNach31(alt: String?): EnginePreference = when (alt?.let { runCatching { valueOf(it) }.getOrNull() }) {
+            MPV_ONLY -> MPV_ONLY
+            EXO_ONLY -> EXO_ONLY
+            else -> EXO_FIRST
+        }
+
         /** The preference that starts on [onMpv] and keeps the automatic handover. */
         fun firstOn(onMpv: Boolean): EnginePreference = if (onMpv) MPV_FIRST else EXO_FIRST
 

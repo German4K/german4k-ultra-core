@@ -1070,6 +1070,8 @@ class OwnTVPlayer(
     private var liveStallJob: Job? = null
     // German4K: VOD-Start-Wächter (JJ/Philips) — siehe [VodOpenWatchdog].
     private var vodOpenJob: Job? = null
+    /** German4K 3.1: Start-Wächter für ExoPlayer als ersten Film-Player — siehe [ExoVodStartWatchdog]. */
+    private var exoStartJob: Job? = null
 
     /** The live no-progress watchdog's cadence for THIS device — see the companion constants for the
      *  two tiers and the detection time each produces. `lowSpec` is the same test [PlayerBudget] uses. */
@@ -1474,6 +1476,13 @@ class OwnTVPlayer(
             }
         }
         override fun onEnded() { scope.launch { onExoEnded() } }
+        // German4K 3.1: Exo als erster Film-Player, aber kein spielbarer Ton (DTS/TrueHD) → mpv, statt stumm.
+        override fun onAudioUnplayable() {
+            if (item.exoPrimaryThisItem && item.exoVodFallback && itemEngine.allowsHandover) {
+                android.util.Log.w(TAG, "Exo cannot play any audio track of this file — handing to mpv")
+                scope.launch { fallbackToMpvVod(PlaybackFailure.ExoPlay("audio-unsupported")) }
+            }
+        }
     }
 
     /** ExoPlayer can decode this VOD's active audio? Always-safe codecs (AAC/AC3/…) pass immediately;
@@ -1914,6 +1923,46 @@ class OwnTVPlayer(
     /** ExoPlayer-preferred mode: the item started on Exo and Exo failed — retry it on mpv (the reverse
      *  of [fallbackToExoVod]). mpv gets its full retry ladder; a terminal mpv failure after this shows
      *  the combined both-engines error via [vodErrorMessage]. */
+    /**
+     * German4K 3.1: Exo als erster Film-Player hängt ohne Fehler → nach 20 s mpv (bzw. bei „nur ExoPlayer"
+     * der Exo-Fehler statt Endlos-Spinner). Endet mit der Ladegeneration, bei Fortschritt oder Fehler.
+     */
+    private fun startExoVodWatchdog() {
+        exoStartJob?.cancel()
+        val gen = loadGeneration
+        exoStartJob = scope.launch {
+            var prevPos = -1L
+            var windowStart = System.currentTimeMillis()
+            while (gen == loadGeneration) {
+                delay(1000)
+                if (gen != loadGeneration || isLiveContent) return@launch
+                val now = System.currentTimeMillis()
+                val pos = _position.value
+                val verdict = ExoVodStartWatchdog.decide(
+                    exoPrimary = item.exoPrimaryThisItem,
+                    exoActive = exoActive && !load.pendingExoStart,
+                    paused = load.pendingStartPaused || (!_isPlaying.value && !_buffering.value),
+                    errorShown = _error.value != null,
+                    prevPosMs = prevPos,
+                    posMs = pos,
+                    windowMs = now - windowStart,
+                )
+                prevPos = pos
+                when (verdict) {
+                    ExoVodStartWatchdog.Verdict.WAIT -> Unit
+                    ExoVodStartWatchdog.Verdict.RESTART_WINDOW -> windowStart = now
+                    ExoVodStartWatchdog.Verdict.STAND_DOWN -> return@launch
+                    ExoVodStartWatchdog.Verdict.FIRE -> {
+                        android.util.Log.w(TAG, "Exo VOD start watchdog — no progress ${now - windowStart}ms, handing to mpv")
+                        val f = PlaybackFailure.ExoPlay("start-timeout")
+                        if (itemEngine.allowsHandover) fallbackToMpvVod(f) else failExoOnly(f)
+                        return@launch
+                    }
+                }
+            }
+        }
+    }
+
     private fun fallbackToMpvVod(exoError: PlaybackFailure) {
         if (!exoActive) return
         val url = currentUrl ?: return
@@ -2608,6 +2657,7 @@ class OwnTVPlayer(
         videoCheckJob?.cancel()
         liveStallJob?.cancel()
         vodOpenJob?.cancel()
+        exoStartJob?.cancel()
         _error.value = null
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
         _videoRes.value = null
@@ -2714,6 +2764,7 @@ class OwnTVPlayer(
             item.exoPrimaryThisItem = true
             item.exoVodFallback = true // Exo owns VOD playback as an ENGINE — same HUD interception as fallback
             android.util.Log.i(TAG, "VOD starting on ExoPlayer (preferred engine setting)")
+            startExoVodWatchdog()
             _buffering.value = true
             val surface = attachedSurface
             if (surface == null) {
@@ -3414,6 +3465,7 @@ class OwnTVPlayer(
         videoCheckJob?.cancel()
         liveStallJob?.cancel()
         vodOpenJob?.cancel()
+        exoStartJob?.cancel()
         if (initialized) mpvAsync { stopWithStopClassification("stop") }
         currentUrl = null
         pendingUrl = null

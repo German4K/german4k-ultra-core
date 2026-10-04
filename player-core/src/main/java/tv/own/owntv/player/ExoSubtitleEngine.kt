@@ -66,6 +66,8 @@ class ExoSubtitleEngine(
         /** This file declares no video track at all (music-only VOD). The HUD says so on screen — sound
          *  over black is otherwise indistinguishable from a broken player. */
         fun onAudioOnlyMedia(audioOnly: Boolean) {}
+        /** German4K 3.1: die Datei hat Ton, aber keine Spur, die ExoPlayer spielen kann (DTS/TrueHD). */
+        fun onAudioUnplayable() {}
         fun onError(failure: PlaybackFailure)
         /** Playback reached the end of the file (drives VOD auto-play-next while this engine is active). */
         fun onEnded()
@@ -246,6 +248,8 @@ class ExoSubtitleEngine(
         }
 
         override fun onTracksChanged(tracks: Tracks) {
+            val ton = tracks.groups.filter { it.type == C.TRACK_TYPE_AUDIO }.map { it.isSupported }
+            if (ExoTonPruefung.unspielbar(ton)) callbacks.onAudioUnplayable()
             updateVideoTrackPresence(tracks)
             rebuildAudioTracks(tracks)
             rebuildTextTracks(tracks)

@@ -305,6 +305,8 @@ class SettingsRepository(private val context: Context, private val localeStore: 
         val VOD_PREFER_EXO = booleanPreferencesKey("vod_prefer_exo") // legacy; read for migration only
         val LIVE_ENGINE = stringPreferencesKey("live_engine")
         val VOD_ENGINE = stringPreferencesKey("vod_engine")
+        /** German4K 3.1: einmalige Umstellung Filme & Serien auf „ExoPlayer, dann mpv". */
+        val VOD_ENGINE_MIGRATED_31 = booleanPreferencesKey("vod_engine_migrated_31")
         val MEASURED_STREAM_STATS = booleanPreferencesKey("measured_stream_stats")
         val DETAILED_DIAGNOSTICS = booleanPreferencesKey("detailed_diagnostics")
         val DIRECT_TUNE = booleanPreferencesKey("direct_tune")
@@ -1194,9 +1196,27 @@ class SettingsRepository(private val context: Context, private val localeStore: 
      * Nobody's playback changes on upgrade.
      */
     val vodEnginePreference: Flow<tv.own.owntv.core.player.EnginePreference> = prefsFlow { prefs ->
+        // German4K 3.1: Standard ExoPlayer zuerst (vorher mpv) — mpv bleibt die automatische Rückfallstufe und
+        // übernimmt Bild-Untertitel (PGS), die ExoPlayer nicht zeichnet.
         prefs[Keys.VOD_ENGINE]?.let { runCatching { tv.own.owntv.core.player.EnginePreference.valueOf(it) }.getOrNull() }
-            ?: if (prefs[Keys.VOD_PREFER_EXO] == true) tv.own.owntv.core.player.EnginePreference.EXO_FIRST
-            else tv.own.owntv.core.player.EnginePreference.MPV_FIRST
+            ?: tv.own.owntv.core.player.EnginePreference.EXO_FIRST
+    }
+
+    /**
+     * German4K 3.1: einmalig gespeicherte Film-/Serien-Wahl umstellen ([EnginePreference.vodNach31]).
+     * true = es wurde umgestellt; der Aufrufer verwirft dann die gemerkten Wahlen je Film, sonst hielten
+     * die alten mpv-Merker den neuen Standard auf (Hicham069, 30.09.).
+     */
+    suspend fun migrateVodEngine31(): Boolean {
+        var umgestellt = false
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.VOD_ENGINE_MIGRATED_31] == true) return@edit
+            val alt = prefs[Keys.VOD_ENGINE]
+            val neu = tv.own.owntv.core.player.EnginePreference.vodNach31(alt).name
+            if (alt != neu) { prefs[Keys.VOD_ENGINE] = neu; umgestellt = true }
+            prefs[Keys.VOD_ENGINE_MIGRATED_31] = true
+        }
+        return umgestellt
     }
 
     suspend fun setVodEnginePreference(preference: tv.own.owntv.core.player.EnginePreference) {
