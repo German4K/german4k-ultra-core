@@ -41,6 +41,16 @@ class VirtuellFensterTest {
     }
 
     @Test
+    fun `minutes left round down like the guide card but never zero`() {
+        val uhr = VirtuellUhr(0)
+        val fmt = { k: String, r: Int, _: String? -> "$k $r" }
+        val s1 = VirtuellPlan.stand(VirtuellTestDaten.sender(), uhr, ms("2026-10-04T18:03:42Z"))!! // 6:30 Rest
+        assertEquals("x 6", VirtuellPlan.untertitel(s1, ms("2026-10-04T18:03:42Z"), { "x" }, fmt))
+        val s2 = VirtuellPlan.stand(VirtuellTestDaten.sender(), uhr, ms("2026-10-04T18:09:52Z"))!! // 20 s Rest
+        assertEquals("x 1", VirtuellPlan.untertitel(s2, ms("2026-10-04T18:09:52Z"), { "x" }, fmt))
+    }
+
+    @Test
     fun `now next is in device time`() {
         val uhr = VirtuellUhr(60_000) // Server 1 min voraus
         val geraet = ms("2026-10-04T17:59:00Z")

@@ -74,14 +74,15 @@ object VirtuellPlan {
         return tag(serverMs) != tag(geholtServerMs)
     }
 
-    /** „S3 E4 · noch 12 Min · danach: …" — Texte liefert der Aufrufer (Ressourcen). Rest aufgerundet. */
+    /** „S3 E4 · noch 12 Min · danach: …" — Texte liefert der Aufrufer (Ressourcen). Rest abgerundet wie die
+     *  EPG-Karte darunter (sonst zeigen beide verschiedene Minuten), aber nie „noch 0 Min". */
     fun untertitel(
         stand: VirtuellStand,
         serverMs: Long,
         kopf: (VirtuellEintrag) -> String,
         fmt: (kopf: String, restMin: Int, danach: String?) -> String,
     ): String {
-        val rest = ((stand.eintrag.ende.toEpochMilli() - serverMs).coerceAtLeast(0) + 59_999) / 60_000
+        val rest = ((stand.eintrag.ende.toEpochMilli() - serverMs).coerceAtLeast(0) / 60_000).coerceAtLeast(1)
         return fmt(kopf(stand.eintrag), rest.toInt(), stand.naechster?.titel)
     }
 

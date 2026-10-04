@@ -2635,6 +2635,7 @@ class OwnTVPlayer(
             pendingStartPaused = startPaused,
             expectingPlayback = true,
             pendingSeekMs = startPositionMs,
+            startPosMs = startPositionMs,
         )
         if (resetRetries) deactivateExo() // a brand-new item always plays on mpv (drops any Exo handoff)
         currentTitle = meta.title
@@ -2863,9 +2864,8 @@ class OwnTVPlayer(
                     // so this is the same test the live no-video watchdog uses one branch down, with
                     // Audio Mode exempt for the same reason: `vid=no` is the app turning the picture off
                     // on purpose. Only stand down once audio is demonstrably progressing.
-                    if (load.fileLoaded && elapsed > 5_000 && _position.value > 0 &&
-                        (_audioOnly.value || load.currentVideoCodec == null)
-                    ) {
+                    // German4K 3.1: Fortschritt erst hinter dem Startpunkt zählt (Einstieg mittendrin) — AudioOnlyDetect.
+                    if (AudioOnlyDetect.isAudioOnly(load.fileLoaded, elapsed, _position.value, load.startPosMs, _audioOnly.value, load.currentVideoCodec)) {
                         android.util.Log.d(TAG, "watchdog — item has no video track and audio is playing; standing down")
                         // Tell the UI, so the black screen carries an explanation instead of looking broken.
                         // Audio Mode is the user's own doing and already has its own presentation.
@@ -4825,6 +4825,8 @@ internal data class LoadState(
     @field:Volatile var brokenPtsHandled: Boolean = false,
     var expectingPlayback: Boolean = false,
     var pendingSeekMs: Long = 0L,
+    /** German4K 3.1: Startpunkt dieses Ladevorgangs (bleibt, wenn [pendingSeekMs] verbraucht ist). */
+    var startPosMs: Long = 0L,
     /** Decode watchdog: if a >1080p video ends up on the software decoder, playback is aborted with a
      *  friendly error - CPU-decoding 4K on a TV chip stutters, overheats and OOM-kills the app (observed
      *  on a TCL G10). These arrive on mpv's event thread per loaded file. */

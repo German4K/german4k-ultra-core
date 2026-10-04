@@ -432,7 +432,9 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
                 .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
                 .build()
             runCatching {
-                client.newBuilder().callTimeout(3_500, java.util.concurrent.TimeUnit.MILLISECONDS).build()
+                // Ein Wiederholversuch auf frischer Verbindung: eine verwaiste Keep-alive-Verbindung („unexpected
+                // end of stream") soll den Kunden nicht auf Weg A schicken. Das Zeitlimit gilt für beides zusammen.
+                client.newBuilder().callTimeout(3_500, java.util.concurrent.TimeUnit.MILLISECONDS).retryOnConnectionFailure(true).build()
                     .newCall(request).execute().use { r ->
                         if (!r.isSuccessful) throw IOException("HTTP ${r.code}")
                         German4kVirtuellAntwort.parse(r.body.string())
