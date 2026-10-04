@@ -85,6 +85,23 @@ object VirtuellPlan {
         return fmt(kopf(stand.eintrag), rest.toInt(), stand.naechster?.titel)
     }
 
+    /**
+     * Plan als TV-Guide-Zeilen in Gerätezeit, auf das Fenster [vonMs, bisMs) beschnitten. Die Kennungen sind
+     * negativ, damit sie nie mit gespeicherten Zeilen zusammenfallen (Detaildialog liest dann nichts nach).
+     */
+    fun alsProgramme(
+        plan: List<VirtuellEintrag>, epgId: String, sourceId: Long, uhr: VirtuellUhr, vonMs: Long, bisMs: Long,
+    ): List<tv.own.owntv.core.database.entity.EpgProgrammeEntity> = plan.mapNotNull { e ->
+        val start = uhr.geraetMs(e.start.toEpochMilli())
+        val stop = uhr.geraetMs(e.ende.toEpochMilli())
+        if (stop <= vonMs || start >= bisMs) return@mapNotNull null
+        tv.own.owntv.core.database.entity.EpgProgrammeEntity(
+            id = -((e.zielId xor e.start.toEpochMilli()) and Long.MAX_VALUE).coerceAtLeast(1),
+            sourceId = sourceId, epgChannelId = epgId, startMs = start, stopMs = stop,
+            title = e.titel, description = e.folgentitel,
+        )
+    }
+
     /** Plan als Jetzt/Danach für EPG-Karte und Senderliste, in Gerätezeit. */
     fun nowNext(stand: VirtuellStand): EpgNowNext {
         val plan = stand.sender.plan

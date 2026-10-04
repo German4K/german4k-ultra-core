@@ -156,3 +156,6 @@ const val VIRTUELL_EPG_PRAEFIX = "g4k.v."
 val ChannelEntity.istVirtuell: Boolean get() = epgChannelId?.startsWith(VIRTUELL_EPG_PRAEFIX) == true
 
 fun ChannelEntity.virtuellStreamId(): Long? = remoteId?.toLongOrNull()
+
+/** Name des Feature-Schalters in `/api/app/ultra` → `features` (lib/app-panel/ultra.ts `ULTRA_FEATURES`). */
+const val VIRTUELL_FEATURE = "virtuell"
