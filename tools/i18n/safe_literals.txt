@@ -1932,6 +1932,7 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/diagnose
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/reset
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$endpoint/sync
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	$it/api/app/ultra
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	/api/app/virtuell
 8	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	Accept
 8	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	German4K-Ultra/$appVersion

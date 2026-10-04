@@ -211,7 +211,8 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
                 if (!username.isNullOrBlank()) { put("username", username.trim()); put("password", password.orEmpty()) }
             }.toString()
             val request = Request.Builder()
-                .url(endpoint)
+                // German4K 3.1: Debug-Builds können das ganze Panel auf einen lokalen Server lenken (Test Weg B).
+                .url(debugBasis()?.let { "$it/api/app/ultra" } ?: endpoint)
                 .header("User-Agent", "German4K-Ultra/$appVersion")
                 .header("Accept", "application/json")
                 .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
@@ -450,14 +451,20 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
          * Nur Debug-Builds: `adb shell setprop debug.g4k.panel http://10.0.2.2:3000` lenkt /api/app/virtuell
          * auf einen lokalen Server um. Android-Systemeigenschaft, nicht Java-System-Property.
          */
-        fun virtuellEndpoint(): String {
-            val basis = if (tv.own.owntv.core.CoreBuildInfo.debug) {
-                runCatching {
-                    Class.forName("android.os.SystemProperties").getMethod("get", String::class.java)
-                        .invoke(null, "debug.g4k.panel") as String
-                }.getOrNull()?.trim()?.trimEnd('/')?.takeIf { it.startsWith("http") }
-            } else null
-            return (basis ?: "https://german4k.com") + "/api/app/virtuell"
+        fun virtuellEndpoint(): String = (debugBasis() ?: "https://german4k.com") + "/api/app/virtuell"
+
+        /** Regel für den Debug-Umweg; null = Produktion. */
+        fun debugBasis(prop: String?, debug: Boolean): String? =
+            if (!debug) null else prop?.trim()?.trimEnd('/')?.takeIf { it.startsWith("http") }
+
+        /** Debug-Umweg aus der Android-Systemeigenschaft `debug.g4k.panel`; in Release immer null. */
+        fun debugBasis(): String? {
+            if (!tv.own.owntv.core.CoreBuildInfo.debug) return null
+            val prop = runCatching {
+                Class.forName("android.os.SystemProperties").getMethod("get", String::class.java)
+                    .invoke(null, "debug.g4k.panel") as String
+            }.getOrNull()
+            return debugBasis(prop, debug = true)
         }
         private const val TAG = "German4kPanel"
     }
