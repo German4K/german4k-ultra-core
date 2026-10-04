@@ -4416,7 +4416,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD terminally failed on ExoPlayer ($exoError) — falling back to mpv
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	VOD terminally failed on mpv ($mpvError) — falling back to ExoPlayer
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	aac
-1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	absolute
+2	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	absolute
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ac-3
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ac3
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	aid
@@ -4629,7 +4629,7 @@
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	s16
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sans-serif
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	sdk
-2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seek
+3	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seek
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seekable=1
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	seeking
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	select

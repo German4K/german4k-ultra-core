@@ -256,4 +256,10 @@
     <string name="g4k_mehr_zugang_abgelaufen">Expired</string>
     <!-- German4K: Hinweis im Profil-Editor, wenn der Name wie ein Zugangs-Benutzername aussieht (Marcel197). -->
     <string name="g4k_profil_name_wie_zugang">Want to add a second login? Go to Settings → Sources &amp; guide → Playlists → Add a source. A profile is only your own favourites list.</string>
+    <!-- German4K 3.1: virtuelle 24/7-Sender -->
+    <string name="g4k_virtuell_von_vorn">Episode from the start</string>
+    <string name="g4k_virtuell_untertitel">%1$s · %2$d min left · next: %3$s</string>
+    <string name="g4k_virtuell_untertitel_kurz">%1$s · %2$d min left</string>
+    <string name="g4k_jetzt_im_tv">On TV now</string>
+    <string name="g4k_virtuell_normal">This channel is playing in normal mode right now</string>
 </resources>

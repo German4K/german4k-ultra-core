@@ -74,6 +74,9 @@ enum class PlayerControl(
     /** Jump back into this channel's archive. Live catch-up channels only. */
     CATCH_UP(ControlCluster.MEDIA, ControlHost.BOTH, R.string.player_tool_catchup),
 
+    /** German4K 3.1: virtueller 24/7-Sender — laufende Folge von vorn. Nur wenn ein Plan-Titel läuft. */
+    FROM_START(ControlCluster.MEDIA, ControlHost.BOTH, R.string.g4k_virtuell_von_vorn),
+
     // --- The tools cluster: things about how it is being played and shown ---
 
     /** Which engine owns playback. A text pill naming it on the television; H3 matches that. */

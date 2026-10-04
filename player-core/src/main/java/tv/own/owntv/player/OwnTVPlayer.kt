@@ -1113,6 +1113,10 @@ class OwnTVPlayer(
     private val _archiveEnded = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val archiveEnded: kotlinx.coroutines.flow.SharedFlow<Unit> = _archiveEnded
 
+    /** German4K 3.1: ein mit `chained = true` gestartetes Item ist zu Ende (virtueller 24/7-Sender). */
+    private val _chainedEnded = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val chainedEnded: kotlinx.coroutines.flow.SharedFlow<Unit> = _chainedEnded
+
     var currentTitle: String? = null
         private set
     var currentSubtitle: String? = null
@@ -2079,11 +2083,15 @@ class OwnTVPlayer(
      * loadUrl is what actually prevents the back-to-back >1080p 0x80001000.
      */
     private fun advanceAfterNaturalEnd() {
-        if (!autoPlayNext || item.autoNextCancelled) return
-        val advance: () -> Unit = when {
-            playlist.isEmpty() -> if (item.archiveThisItem) ({ _archiveEnded.tryEmit(Unit) }) else return
-            playlistIndex < playlist.size - 1 -> ({ next() })
-            else -> ({ _queueEnded.tryEmit(Unit) })
+        val advance: () -> Unit = when (
+            NaturalEnd.decide(autoPlayNext, item.autoNextCancelled, playlist.size, playlistIndex, item.archiveThisItem, item.chainedThisItem)
+        ) {
+            NaturalEnd.Action.STOP -> return
+            NaturalEnd.Action.ARCHIVE_ENDED -> ({ _archiveEnded.tryEmit(Unit) })
+            // German4K 3.1: virtueller Sender — der Live-View-Model startet den nächsten Plan-Eintrag.
+            NaturalEnd.Action.CHAINED_ENDED -> ({ _chainedEnded.tryEmit(Unit) })
+            NaturalEnd.Action.NEXT -> ({ next() })
+            NaturalEnd.Action.QUEUE_ENDED -> ({ _queueEnded.tryEmit(Unit) })
         }
         // German4K: Audioausgabe zwischen den Folgen frisch aufbauen. mpv behält sonst denselben
         // AudioTrack über Dateien hinweg (gapless-audio=weak); auf Fire TV war nach ~2 Folgen 5.1 der
@@ -2395,6 +2403,8 @@ class OwnTVPlayer(
         liveBufferOverride: LiveBuffer.Override? = null,
         /** Expiring-URL provider for THIS item (Stalker VOD). See [reconnectUrlProvider]. */
         reconnectProvider: tv.own.owntv.core.stalker.ReconnectUrlProvider? = null,
+        /** German4K 3.1: Titel eines virtuellen 24/7-Senders — sein Ende meldet [chainedEnded]. */
+        chained: Boolean = false,
     ) {
         // F12 — the provider belongs to the load. A VOD load with none clears whatever the previous
         // item left behind; live keeps the field as-is when none is passed, because LiveViewModel
@@ -2422,6 +2432,7 @@ class OwnTVPlayer(
             muted,
             isArchive = isArchive,
             startPaused = startPaused,
+            chained = chained,
         )
     }
 
@@ -2560,6 +2571,7 @@ class OwnTVPlayer(
         resetRetries: Boolean = true,
         isArchive: Boolean = false,
         startPaused: Boolean = false,
+        chained: Boolean = false,
     ) {
         // German4K Multi-DNS: play on the host currently preferred for this line (unchanged for foreign URLs).
         val url = tv.own.owntv.core.german4k.German4kHostFailover.rewrite(urlIn)
@@ -2636,6 +2648,7 @@ class OwnTVPlayer(
                 altFormatBaseUrl = url,
                 archiveThisItem = isArchive,
                 forceSoftwareThisLoad = wantSoftware,
+                chainedThisItem = chained,
             )
             sessionExternalSubs.clear() // genuinely new item → its own external-sub session
             applySubtitleDelay(0) // timing never carries onto another item/subtitle (§8.4)
@@ -3121,6 +3134,20 @@ class OwnTVPlayer(
     fun togglePlayPause() {
         if (exoActive) { exoEngine?.togglePlayPause(); return }
         if (initialized) mpvAsync { command(arrayOf("cycle", "pause")) }
+    }
+
+    /** German4K 3.1: an eine absolute Stelle springen („Folge von vorn" = 0). */
+    fun seekTo(positionMs: Long) {
+        val ms = positionMs.coerceAtLeast(0)
+        if (exoActive) { exoEngine?.seekTo(ms); return }
+        if (initialized) mpvAsync { command(arrayOf("seek", (ms / 1000.0).toString(), "absolute")) }
+        _position.value = ms
+    }
+
+    /** German4K 3.1: Untertitelzeile des laufenden Items ersetzen (Restzeit des virtuellen Senders, minütlich). */
+    fun updateSubtitle(text: String?) {
+        currentSubtitle = text
+        _currentMeta.value = _currentMeta.value.copy(subtitle = text)
     }
 
     fun seekBy(deltaMs: Long) {
@@ -4797,6 +4824,8 @@ internal data class ItemState(
      *  never start on the Exo-primary route, they resume from 0 across an engine switch, and a decode
      *  failure gets the software rescue. */
     @field:Volatile var archiveThisItem: Boolean = false,
+    /** German4K 3.1: Titel eines virtuellen 24/7-Senders; sein natürliches Ende meldet `chainedEnded`. */
+    @field:Volatile var chainedThisItem: Boolean = false,
     /** A stream the hardware decoder cannot start (weak TV decoders reject some otherwise-fine files) is
      *  retried ONCE in pure software, per item, before the error shows. Never changes the user setting. */
     @field:Volatile var forceSoftwareThisLoad: Boolean = false,

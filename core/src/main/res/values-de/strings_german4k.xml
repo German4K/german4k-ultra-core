@@ -255,4 +255,10 @@
     <string name="g4k_mehr_zugang_abgelaufen">Abgelaufen</string>
     <!-- German4K: Hinweis im Profil-Editor, wenn der Name wie ein Zugangs-Benutzername aussieht (Marcel197). -->
     <string name="g4k_profil_name_wie_zugang">Willst du einen zweiten Zugang hinzufügen? Das geht unter Einstellungen → Quellen und Programm → Wiedergabelisten → Quelle hinzufügen. Ein Profil ist nur eine eigene Favoritenliste.</string>
+    <!-- German4K 3.1: virtuelle 24/7-Sender -->
+    <string name="g4k_virtuell_von_vorn">Folge von vorn</string>
+    <string name="g4k_virtuell_untertitel">%1$s · noch %2$d Min · danach: %3$s</string>
+    <string name="g4k_virtuell_untertitel_kurz">%1$s · noch %2$d Min</string>
+    <string name="g4k_jetzt_im_tv">Jetzt im TV</string>
+    <string name="g4k_virtuell_normal">Sender läuft gerade im normalen Modus</string>
 </resources>
