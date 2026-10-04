@@ -4440,15 +4440,19 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	attachSurface
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio drained ${"%.1f".format(vfps / cfps)}× too fast
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio in=${getPropertyString("audio-params/format")} ${getPropertyString("audio-params/samplerate")}Hz
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio output produced no sound
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-bitrate
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-channels
 2	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-codec-name
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-delay
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-format
-1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-out-params/channel-count
+2	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-out-params/channel-count
+1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-out-params/format
+1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-out-params/samplerate
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-params/channel-count
-1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-params/samplerate
+1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-params/format
+2	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-params/samplerate
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-pts
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-samplerate
 1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-unsupported
@@ -4469,6 +4473,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	cache-secs
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	cache=${getPropertyString("demuxer-cache-duration")}s
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	catch-up path URL rejected — trying timeshift.php fallback
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ch=${getPropertyString("audio-out-params/channel-count")} live=$isLiveContent
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	clip
 7	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	container-fps
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	correct-pts
@@ -4608,6 +4613,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	off
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	on
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	opus
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	out=${getPropertyString("audio-out-params/format")} ${getPropertyString("audio-out-params/samplerate")}Hz
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	owntv-mpv-destroy
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	panel answered HTTP 458; this panel is now opened one stream at a time
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	panscan

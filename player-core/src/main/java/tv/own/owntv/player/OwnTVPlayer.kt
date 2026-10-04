@@ -3187,6 +3187,26 @@ class OwnTVPlayer(
         if (initialized) mpvAsync { command(arrayOf("cycle", "pause")) }
     }
 
+    /**
+     * German4K 3.1: Beleg für den Ton-Fix 3.0/33 (Fire TV, 44,1-kHz-Quellen): 3 s nach FILE_LOADED einmal
+     * Quelle und tatsächliche Ausgabe loggen. Erwartet: `out=s16 48000Hz`. Mit `adb logcat -s OwnTVPlayer`.
+     */
+    private fun logAudioOut() {
+        val gen = loadGeneration
+        scope.launch {
+            delay(3_000)
+            if (gen != loadGeneration || exoActive || !initialized) return@launch
+            mpvAsync {
+                android.util.Log.i(
+                    TAG,
+                    "audio in=${getPropertyString("audio-params/format")} ${getPropertyString("audio-params/samplerate")}Hz " +
+                        "out=${getPropertyString("audio-out-params/format")} ${getPropertyString("audio-out-params/samplerate")}Hz " +
+                        "ch=${getPropertyString("audio-out-params/channel-count")} live=$isLiveContent",
+                )
+            }
+        }
+    }
+
     /** German4K 3.1: an eine absolute Stelle springen („Folge von vorn" = 0). */
     fun seekTo(positionMs: Long) {
         val ms = positionMs.coerceAtLeast(0)
@@ -4216,6 +4236,7 @@ class OwnTVPlayer(
                 // Stale FILE_LOADED from mpv's own stop() during a handoff to Exo, not a real load.
                 if (exoActive) return
                 load.fileLoaded = true
+                logAudioOut()
                 // Observation only — do NOT clear the counter here. Each app-issued loadfile/stop credits
                 // exactly one cleanup END_FILE, and that END_FILE can legitimately arrive *after* the new
                 // file's FILE_LOADED. The old `getAndSet(0)` threw those credits away, so the late END_FILE
