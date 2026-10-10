@@ -457,6 +457,15 @@ class ExoSubtitleEngine(
         }
     }
 
+    /** German4K 3.1.1: dieselbe Adresse an der aktuellen Stelle neu öffnen (Verbindung nach langer Pause
+     *  vom Panel geschlossen). false, wenn nichts geladen ist. */
+    fun reloadKeepingPosition(): Boolean {
+        val p = player ?: return false
+        val url = currentUrl ?: return false
+        reprepareKeepingPosition(p, url)
+        return true
+    }
+
     private fun reprepareKeepingPosition(p: ExoPlayer, url: String) {
         val pos = p.currentPosition.coerceAtLeast(0)
         val wasPlaying = p.playWhenReady

@@ -11,8 +11,9 @@ package tv.own.owntv.core.player
  *    lowest latency, and the only mode that is correct on 2.0/2.1 speakers (which is most TVs).
  *  - [SURROUND] — the sink's advertised capabilities are used as-is: Dolby/DTS may be passed through
  *    for the TV/receiver to decode, or decoded to multichannel PCM. Right for a real 5.1/7.1 receiver.
- *  - [AUTO] — starts like [SURROUND] but demotes itself to [STEREO] the moment the audio output is
- *    caught misbehaving. The default.
+ *  - [AUTO] — German4K 3.1.1: „Automatisch" = Stereo auf allen Geräten (vorher: wie [SURROUND] mit
+ *    Rückfall auf [STEREO]). Mehrkanal gibt es nur noch, wenn der Nutzer ausdrücklich [SURROUND] wählt —
+ *    zu viele Fernseher/Soundbars/Boxen verloren mit Mehrkanal-PCM den Ton. The default.
  *
  * The demotion is **not** the mode's job — see [AudioOutputPolicy]. The watchdog runs in all three
  * modes and cannot be switched off, because "no sound at all" is never what the user asked for.

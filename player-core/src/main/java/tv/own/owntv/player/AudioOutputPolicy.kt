@@ -50,10 +50,11 @@ object AudioOutputPolicy {
      */
     fun allowsMultichannel(mode: SurroundMode): Boolean = when (mode) {
         SurroundMode.STEREO -> false
-        // German4K: Auto auf Fire TV = Stereo. Nach ~2 Folgen 5.1-AAC verlor der Fire TV den Ton
-        // systemweit (HAL/Mehrkanal-PCM); Auto verspricht „geht immer", also Downmix. Wer echten
-        // Mehrkanal will, stellt ausdrücklich Surround ein — das bleibt unverändert.
-        SurroundMode.AUTO -> !isFireTv()
+        // German4K 3.1.1: Auto = Stereo auf ALLEN Geräten. Seit 2.6 galt das nur für Fire TV (dort verlor
+        // der Ton nach ~2 Folgen 5.1-AAC systemweit); dieselben Ausfälle kamen danach von Android-TV-Boxen
+        // und Fernsehern mit Soundbar. Auto verspricht „geht immer", also Downmix. Wer echten Mehrkanal
+        // will, stellt ausdrücklich Surround ein — das bleibt unverändert.
+        SurroundMode.AUTO -> false
         SurroundMode.SURROUND -> true
     } && !latched
 
@@ -69,6 +70,8 @@ object AudioOutputPolicy {
         }.getOrDefault(amazonBuild())
     }
 
+    // Seit 3.1.1 nicht mehr für [allowsMultichannel] nötig; bleibt, damit ein Rückweg eine Zeile ist.
+    @Suppress("unused")
     private fun isFireTv(): Boolean = fireTv ?: amazonBuild()
 
     private fun amazonBuild(): Boolean = android.os.Build.MANUFACTURER.equals("Amazon", ignoreCase = true)

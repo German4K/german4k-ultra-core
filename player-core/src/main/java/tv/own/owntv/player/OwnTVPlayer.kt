@@ -2306,6 +2306,9 @@ class OwnTVPlayer(
             // (We never bitstream/spdif: on Realtek the passthrough AudioTrack reports no clock, which
             // stalls the direct VO into a ~2fps slideshow on Dolby/DTS content.)
             setOptionString("audio-channels", audioChannelsValue())
+            // German4K 3.1.1 (D): beim Heruntermischen von 5.1 auf Stereo normalisieren — sonst addiert mpv
+            // die Kanäle ungewichtet, Dialog (Center) wird leise und Spitzen übersteuern.
+            setOptionString("audio-normalize-downmix", "yes")
             // Compatibility for multichannel: some HALs choke on Float / 44.1 kHz 5.1 PCM (mis-sized buffer
             // → 2× drain, #25). Pin the universally-safe 16-bit/48 kHz output when surround is on.
             // German4K: … und auch in Stereo. Seit 2.6 ist „Auto“ auf Fire TV Stereo, und ohne Pinning gab
@@ -2659,6 +2662,7 @@ class OwnTVPlayer(
         liveStallJob?.cancel()
         vodOpenJob?.cancel()
         exoStartJob?.cancel()
+        pausedAtMs = 0L; resumeWatchJob?.cancel() // German4K 3.1.1 (B): Pause gilt nur fürs geladene Item
         _error.value = null
         diagnostics.markLoad() // scope captured codec/audio errors to this stream
         _videoRes.value = null
@@ -3183,8 +3187,75 @@ class OwnTVPlayer(
     }
 
     fun togglePlayPause() {
-        if (exoActive) { exoEngine?.togglePlayPause(); return }
-        if (initialized) mpvAsync { command(arrayOf("cycle", "pause")) }
+        // German4K 3.1.1 (B): vorher merken, ob hier pausiert oder fortgesetzt wird — beide Engines
+        // melden ihren Zustand über _isPlaying.
+        val pausing = _isPlaying.value
+        if (exoActive) {
+            exoEngine?.togglePlayPause() ?: return
+        } else {
+            if (!initialized) return
+            mpvAsync { command(arrayOf("cycle", "pause")) }
+        }
+        if (pausing) {
+            pausedAtMs = android.os.SystemClock.elapsedRealtime()
+            resumeWatchJob?.cancel()
+        } else {
+            onResumedAfterPause()
+        }
+    }
+
+    /** German4K 3.1.1 (B): Zeitpunkt der letzten Pause (elapsedRealtime), 0 = keine. */
+    private var pausedAtMs = 0L
+    private var resumeWatchJob: Job? = null
+
+    /**
+     * German4K 3.1.1 (B): Film hängt nach längerer Pause — das Panel hat die ruhende Verbindung geschlossen.
+     * Nach mehr als [PauseResume.LONG_PAUSE_MS] sofort an der aktuellen Stelle neu öffnen; sonst ein Wächter,
+     * der bei [PauseResume.STALL_MS] Puffern ohne Fortschritt einmal neu lädt. Höchstens ein Neuladen je
+     * Fortsetzen; nie Live, nie Archiv (siehe [rescueResumePosition]).
+     */
+    private fun onResumedAfterPause() {
+        val pausedFor = if (pausedAtMs > 0L) android.os.SystemClock.elapsedRealtime() - pausedAtMs else 0L
+        pausedAtMs = 0L
+        resumeWatchJob?.cancel()
+        val pos = _position.value
+        if (!PauseResume.eligible(isLiveContent, item.archiveThisItem, pos)) return
+        if (PauseResume.reloadOnResume(pausedFor, isLiveContent, item.archiveThisItem, pos)) {
+            reloadAfterPause("pause ${pausedFor / 1000}s")
+            return
+        }
+        val gen = loadGeneration
+        resumeWatchJob = scope.launch {
+            val start = android.os.SystemClock.elapsedRealtime()
+            var stallSince = 0L
+            var stallPos = -1L
+            while (android.os.SystemClock.elapsedRealtime() - start < PauseResume.WATCH_WINDOW_MS) {
+                delay(1_000)
+                if (gen != loadGeneration || currentUrl == null) return@launch
+                val now = android.os.SystemClock.elapsedRealtime()
+                val p = _position.value
+                if (!_buffering.value || p != stallPos) {
+                    // Neuer Messbeginn: entweder läuft es, oder die Position hat sich bewegt.
+                    stallSince = if (_buffering.value) now else 0L
+                    stallPos = p
+                    continue
+                }
+                if (PauseResume.stalled(now, stallSince, stallPos, p)) {
+                    reloadAfterPause("buffering ${(now - stallSince) / 1000}s at ${p}ms after resume")
+                    return@launch
+                }
+            }
+        }
+    }
+
+    private fun reloadAfterPause(reason: String) {
+        val url = currentUrl ?: return
+        android.util.Log.i(TAG, "German4K resume reload: $reason, pos=${_position.value}ms exo=$exoActive")
+        if (exoActive) {
+            exoEngine?.reloadKeepingPosition()
+            return
+        }
+        reload(url, isLive = false, resetRetries = false)
     }
 
     /**
@@ -3486,6 +3557,7 @@ class OwnTVPlayer(
         liveStallJob?.cancel()
         vodOpenJob?.cancel()
         exoStartJob?.cancel()
+        pausedAtMs = 0L; resumeWatchJob?.cancel()
         if (initialized) mpvAsync { stopWithStopClassification("stop") }
         currentUrl = null
         pendingUrl = null

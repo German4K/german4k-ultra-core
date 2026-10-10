@@ -2111,7 +2111,7 @@ Resync and remove missing titles also allows removing titles the provider no lon
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> set</item>
     </plurals>
     <string name="settings_surround_stereo">Stereo only</string>
-    <string name="settings_surround_auto_description">Auto — try Dolby/DTS surround, and switch back to stereo automatically if the TV or soundbar does not play it. Recommended.</string>
+    <string name="settings_surround_auto_description">Automatic — plain stereo on every device, the safe choice for TV speakers and soundbars. For a real 5.1/7.1 receiver choose Surround. Recommended.</string>
     <string name="settings_surround_stereo_description">Stereo only — always decode in the app and send plain 2.0 sound. Use this on TV speakers or a stereo soundbar, or if audio lags behind the picture.</string>
     <string name="settings_surround_forced_description">Surround — send Dolby/DTS to a real 5.1/7.1 receiver. If it goes silent or stutters, German4K Ultra still falls back to stereo and tells you.</string>
     <string name="settings_panel_width">Panel Width Adjustment</string>
