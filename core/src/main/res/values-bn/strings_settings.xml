@@ -1081,7 +1081,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> সেট</item>
     </plurals>
     <string name="settings_surround_stereo">শুধুমাত্র স্টেরিও</string>
-    <string name="settings_surround_auto_description">অটো — Dolby/DTS সারাউন্ড ব্যবহার করার চেষ্টা করে, আর টিভি বা সাউন্ডবার তা চালাতে না পারলে স্বয়ংক্রিয়ভাবে স্টেরিওতে ফিরে যায়। প্রস্তাবিত।</string>
+    <string name="settings_surround_auto_description">অটো — প্রতিটি ডিভাইসে সাধারণ স্টেরিও, টিভি স্পিকার ও সাউন্ডবারের জন্য নিরাপদ পছন্দ। সত্যিকারের 5.1/7.1 রিসিভারের জন্য „সারাউন্ড“ বেছে নিন। প্রস্তাবিত।</string>
     <string name="settings_surround_stereo_description">শুধুমাত্র স্টেরিও — সবসময় অ্যাপের ভেতরেই ডিকোড করে সাধারণ 2.0 সাউন্ড পাঠায়। টিভির স্পিকার বা স্টেরিও সাউন্ডবারে এটি ব্যবহার করুন, অথবা অডিও ছবির পেছনে পড়ে গেলে।</string>
     <string name="settings_surround_forced_description">সারাউন্ড — Dolby/DTS একটি সত্যিকারের 5.1/7.1 রিসিভারে পাঠায়। যদি শব্দ নিঃশব্দ হয়ে যায় বা ঝিমিয়ে পড়ে, OwnTV তবুও স্টেরিওতে ফিরে আসে এবং আপনাকে জানায়।</string>
     <string name="settings_panel_width">প্যানেল প্রস্থ সামঞ্জস্য</string>

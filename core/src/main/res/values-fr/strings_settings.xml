@@ -1100,7 +1100,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> réglages personnalisés</item>
     </plurals>
     <string name="settings_surround_stereo">Stéréo uniquement</string>
-    <string name="settings_surround_auto_description">Auto — essayez le son surround Dolby/DTS et revenez automatiquement à la stéréo si le téléviseur ou la barre de son ne le restitue pas. Recommandé.</string>
+    <string name="settings_surround_auto_description">Auto — stéréo simple sur tous les appareils, le choix sûr pour les haut-parleurs du téléviseur et les barres de son. Pour un vrai ampli 5.1/7.1, choisissez « Surround ». Recommandé.</string>
     <string name="settings_surround_stereo_description">Stéréo uniquement — toujours décoder dans l\'application et envoyer un simple son 2.0. Utilisez ceci avec les haut-parleurs du téléviseur ou une barre de son stéréo, ou si l\'audio est en retard sur l\'image.</string>
     <string name="settings_surround_forced_description">Surround — envoyer le Dolby/DTS vers un véritable récepteur 5.1/7.1. Si le son coupe ou saccade, OwnTV revient quand même à la stéréo et vous le signale.</string>
     <string name="settings_panel_width">Ajustement de la largeur des panneaux</string>

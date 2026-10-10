@@ -1081,7 +1081,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> ayar</item>
     </plurals>
     <string name="settings_surround_stereo">Yalnızca stereo</string>
-    <string name="settings_surround_auto_description">Otomatik — Dolby/DTS surround\'u dener; TV ya da soundbar çalamazsa otomatik olarak stereoya geri döner. Önerilir.</string>
+    <string name="settings_surround_auto_description">Otomatik — her cihazda düz stereo; TV hoparlörleri ve soundbar\'lar için güvenli seçim. Gerçek bir 5.1/7.1 alıcı için „Surround“u seçin. Önerilir.</string>
     <string name="settings_surround_stereo_description">Yalnızca stereo — her zaman uygulamada kod çözün ve düz 2.0 ses gönderin. Bunu TV hoparlörlerinde veya stereo soundbar\'da, ya da ses görüntünün gerisinde kalıyorsa kullanın.</string>
     <string name="settings_surround_forced_description">Surround — Dolby/DTS\'yi gerçek bir 5.1/7.1 alıcıya gönderin. Ses kesilirse veya takılırsa OwnTV yine de stereoya geri döner ve size bildirir.</string>
     <string name="settings_panel_width">Panel genişliği ayarı</string>

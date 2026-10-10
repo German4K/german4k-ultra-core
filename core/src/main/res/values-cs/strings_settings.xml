@@ -1119,7 +1119,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> nastavení</item>
     </plurals>
     <string name="settings_surround_stereo">Pouze stereo</string>
-    <string name="settings_surround_auto_description">Auto – zkusí prostorový zvuk Dolby/DTS a automaticky přepne zpět na stereo, pokud ho televize nebo soundbar nepřehraje. Doporučeno.</string>
+    <string name="settings_surround_auto_description">Auto – obyčejné stereo na každém zařízení, bezpečná volba pro reproduktory televize a soundbary. Pro skutečný receiver 5.1/7.1 zvolte „Prostorový zvuk“. Doporučeno.</string>
     <string name="settings_surround_stereo_description">Pouze stereo – vždy dekódujte v aplikaci a posílejte čistý zvuk 2.0. Použijte to u reproduktorů televize nebo stereo soundbaru, případně pokud zvuk zaostává za obrazem.</string>
     <string name="settings_surround_forced_description">Prostorový zvuk – posílejte Dolby/DTS do skutečného přijímače 5.1/7.1. Pokud ztichne nebo se zadrhává, OwnTV se i tak vrátí ke stereu a dá vám vědět.</string>
     <string name="settings_panel_width">Úprava šířky panelů</string>

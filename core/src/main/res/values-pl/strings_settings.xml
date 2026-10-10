@@ -1119,7 +1119,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> nadpisanego ustawienia</item>
     </plurals>
     <string name="settings_surround_stereo">Tylko stereo</string>
-    <string name="settings_surround_auto_description">Auto — próbuj dźwięku przestrzennego Dolby/DTS i automatycznie wracaj do stereo, jeśli telewizor lub soundbar go nie obsługuje. Zalecane.</string>
+    <string name="settings_surround_auto_description">Auto — zwykłe stereo na każdym urządzeniu, bezpieczny wybór dla głośników telewizora i soundbarów. Do prawdziwego amplitunera 5.1/7.1 wybierz „Dźwięk przestrzenny”. Zalecane.</string>
     <string name="settings_surround_stereo_description">Tylko stereo — zawsze dekoduj w aplikacji i wysyłaj zwykły dźwięk 2.0. Używaj tego w głośnikach telewizora lub soundbarze stereo albo gdy dźwięk opóźnia się względem obrazu.</string>
     <string name="settings_surround_forced_description">Dźwięk przestrzenny — wysyłaj Dolby/DTS do prawdziwego amplitunera 5.1/7.1. Jeśli zrobi się cicho albo zacznie się zacinać, OwnTV i tak wróci do stereo i poinformuje o tym.</string>
     <string name="settings_panel_width">Regulacja szerokości paneli</string>

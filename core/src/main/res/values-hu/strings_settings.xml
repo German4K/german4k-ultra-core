@@ -1115,7 +1115,7 @@ Az Újraszinkronizálás és a hiányzó címek eltávolítása azt is lehetőv�
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> beállítva</item>
     </plurals>
     <string name="settings_surround_stereo">Csak sztereó</string>
-    <string name="settings_surround_auto_description">Automatikus — próbálja meg a Dolby/DTS térhangzást, és váltson vissza automatikusan sztereóra, ha a TV vagy a hangprojektor nem játssza le. Ajánlott.</string>
+    <string name="settings_surround_auto_description">Automatikus — egyszerű sztereó minden eszközön, a biztonságos választás TV-hangszórókhoz és hangprojektorokhoz. Valódi 5.1/7.1-es erősítőhöz válaszd a „Térhangzás” lehetőséget. Ajánlott.</string>
     <string name="settings_surround_stereo_description">Csak sztereó — mindig az alkalmazásban dekódoljon, és sima 2.0 hangot küldjön. Ezt használd TV-hangszórón vagy sztereó hangprojektoron, illetve ha a hang lemarad a képhez képest.</string>
     <string name="settings_surround_forced_description">Térhangzás — Dolby/DTS küldése valódi 5.1/7.1 erősítőnek. Ha elnémul vagy akadozik, az OwnTV akkor is sztereóra vált, és szól róla.</string>
     <string name="settings_panel_width">Panelszélesség beállítása</string>

@@ -1081,7 +1081,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> sets</item>
     </plurals>
     <string name="settings_surround_stereo">Alleen stereo</string>
-    <string name="settings_surround_auto_description">Auto — probeer Dolby/DTS-surround en schakel automatisch terug naar stereo als de tv of soundbar het niet afspeelt. Aanbevolen.</string>
+    <string name="settings_surround_auto_description">Auto — gewone stereo op elk apparaat, de veilige keuze voor tv-luidsprekers en soundbars. Kies „Surround” voor een echte 5.1/7.1-receiver. Aanbevolen.</string>
     <string name="settings_surround_stereo_description">Alleen stereo — decodeer altijd in de app en stuur gewoon 2.0-geluid. Gebruik dit op tv-luidsprekers of een stereo-soundbar, of als audio achterloopt op het beeld.</string>
     <string name="settings_surround_forced_description">Surround — stuur Dolby/DTS naar een echte 5.1/7.1-receiver. Als het stil wordt of hapert, valt OwnTV alsnog terug op stereo en meldt je dat.</string>
     <string name="settings_panel_width">Paneelbreedte aanpassen</string>

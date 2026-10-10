@@ -1100,7 +1100,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> set</item>
     </plurals>
     <string name="settings_surround_stereo">Solo stereo</string>
-    <string name="settings_surround_auto_description">Auto — prova il surround Dolby/DTS e torna automaticamente allo stereo se la TV o la soundbar non lo riproducono. Consigliato.</string>
+    <string name="settings_surround_auto_description">Auto — stereo semplice su ogni dispositivo, la scelta sicura per gli altoparlanti della TV e le soundbar. Per un vero ricevitore 5.1/7.1 scegli «Surround». Consigliato.</string>
     <string name="settings_surround_stereo_description">Solo stereo — decodifica sempre nell\'app e invia un normale audio stereo 2.0. Usa questa opzione con gli altoparlanti della TV o una soundbar stereo, oppure se l\'audio è in ritardo rispetto all\'immagine.</string>
     <string name="settings_surround_forced_description">Surround — invia Dolby/DTS a un vero ricevitore 5.1/7.1. Se l\'audio va in muto o ha degli intoppi, OwnTV torna comunque allo stereo e te lo segnala.</string>
     <string name="settings_panel_width">Regolazione larghezza pannelli</string>

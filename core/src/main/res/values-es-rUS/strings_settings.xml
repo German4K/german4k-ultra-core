@@ -1100,7 +1100,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> configuradas</item>
     </plurals>
     <string name="settings_surround_stereo">Solo estéreo</string>
-    <string name="settings_surround_auto_description">Automático: intenta usar el sonido envolvente Dolby/DTS y vuelve al estéreo automáticamente si la TV o la barra de sonido no lo reproduce. Recomendado.</string>
+    <string name="settings_surround_auto_description">Automático: estéreo en todos los dispositivos, la opción segura para las bocinas de la TV y las barras de sonido. Para un receptor 5.1/7.1 real, elige \"Sonido envolvente\". Recomendado.</string>
     <string name="settings_surround_stereo_description">Solo estéreo: decodifica siempre en la aplicación y envía sonido 2.0 normal. Úsalo en los altavoces de la TV o en una barra de sonido estéreo, o si el audio va retrasado respecto a la imagen.</string>
     <string name="settings_surround_forced_description">Sonido envolvente: envía Dolby/DTS a un receptor 5.1/7.1 real. Si se queda en silencio o tartamudea, OwnTV igual vuelve al estéreo y te avisa.</string>
     <string name="settings_panel_width">Ajuste de ancho de panel</string>

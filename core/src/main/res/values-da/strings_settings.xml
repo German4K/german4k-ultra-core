@@ -1081,7 +1081,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> overstyringer</item>
     </plurals>
     <string name="settings_surround_stereo">Kun stereo</string>
-    <string name="settings_surround_auto_description">Auto – prøv Dolby/DTS-surround, og skift automatisk tilbage til stereo, hvis tv’et eller soundbaren ikke kan afspille det. Anbefalet.</string>
+    <string name="settings_surround_auto_description">Auto – almindelig stereo på alle enheder, det sikre valg til tv-højttalere og soundbars. Vælg „Surround“ til en ægte 5.1/7.1-receiver. Anbefalet.</string>
     <string name="settings_surround_stereo_description">Kun stereo – afkod altid i appen og send almindelig 2.0-lyd. Brug dette på tv-højttalere eller en stereo-soundbar, eller hvis lyden halter efter billedet.</string>
     <string name="settings_surround_forced_description">Surround – send Dolby/DTS til en ægte 5.1/7.1-modtager. Hvis lyden forsvinder eller hakker, falder OwnTV stadig tilbage til stereo og fortæller dig det.</string>
     <string name="settings_panel_width">Panelbreddejustering</string>

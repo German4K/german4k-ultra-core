@@ -1062,7 +1062,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 项设置</item>
     </plurals>
     <string name="settings_surround_stereo">仅立体声</string>
-    <string name="settings_surround_auto_description">自动 — 尝试 Dolby/DTS 环绕声，如果电视或条形音箱无法播放，则自动切换回立体声。推荐使用。</string>
+    <string name="settings_surround_auto_description">自动 — 所有设备均使用普通立体声，是电视扬声器和条形音箱的稳妥选择。如使用真正的 5.1/7.1 接收器，请选择“环绕声”。推荐使用。</string>
     <string name="settings_surround_stereo_description">仅立体声 — 始终在应用内解码并输出普通 2.0 声音。适用于电视扬声器或立体声条形音箱，或音频落后于画面时使用。</string>
     <string name="settings_surround_forced_description">环绕声 — 将 Dolby/DTS 发送到真正的 5.1/7.1 接收器。如果声音消失或出现卡顿，OwnTV 仍会回退到立体声并通知你。</string>
     <string name="settings_panel_width">面板宽度调整</string>

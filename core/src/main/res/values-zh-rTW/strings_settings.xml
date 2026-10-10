@@ -1062,7 +1062,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> 個播放清單</item>
     </plurals>
     <string name="settings_surround_stereo">僅立體聲</string>
-    <string name="settings_surround_auto_description">自動 — 嘗試播放 Dolby/DTS 環繞音效，如果電視或 Soundbar 無法播放，就會自動切回立體聲。建議使用。</string>
+    <string name="settings_surround_auto_description">自動 — 所有裝置皆使用一般立體聲，是電視喇叭與 Soundbar 的安全選擇。若使用實體的 5.1/7.1 環繞擴大機，請選擇「環繞音效」。建議使用。</string>
     <string name="settings_surround_stereo_description">僅立體聲 — 一律在應用程式內解碼，並傳送純 2.0 音效。電視喇叭或立體聲 Soundbar 請使用此選項；若聲音比畫面慢，也請使用此選項。</string>
     <string name="settings_surround_forced_description">環繞音效 — 將 Dolby/DTS 傳送至實體的 5.1/7.1 環繞擴大機。如果出現無聲或卡頓，OwnTV 仍會自動切回立體聲並通知你。</string>
     <string name="settings_panel_width">面板寬度調整</string>

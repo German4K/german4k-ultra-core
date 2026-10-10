@@ -1157,7 +1157,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> من قوائم التشغيل</item>
     </plurals>
     <string name="settings_surround_stereo">ستيريو فقط</string>
-    <string name="settings_surround_auto_description">تلقائي — جرّب صوت Dolby/DTS المحيطي، وارجع إلى الستيريو تلقائيًا إذا لم يشغّله التلفزيون أو شريط الصوت. موصى به.</string>
+    <string name="settings_surround_auto_description">تلقائي — ستيريو على كل جهاز، الخيار الآمن لسماعات التلفزيون وأشرطة الصوت. لمستقبل 5.1/7.1 حقيقي اختر «صوت محيطي». موصى به.</string>
     <string name="settings_surround_stereo_description">ستيريو فقط — فكّ الترميز دائمًا داخل التطبيق وأرسل صوت 2.0 عاديًا. استخدم هذا مع مكبرات صوت التلفزيون أو شريط ستيريو، أو إذا تأخر الصوت خلف الصورة.</string>
     <string name="settings_surround_forced_description">صوت محيطي — أرسل Dolby/DTS إلى مستقبل 5.1/7.1 حقيقي. إذا انقطع الصوت أو تذبذب، يعود OwnTV إلى الستيريو ويخبرك.</string>
     <string name="settings_panel_width">ضبط عرض اللوحة</string>

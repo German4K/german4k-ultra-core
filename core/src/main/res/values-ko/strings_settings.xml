@@ -1062,7 +1062,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>개 설정됨</item>
     </plurals>
     <string name="settings_surround_stereo">스테레오만</string>
-    <string name="settings_surround_auto_description">자동 — Dolby/DTS 서라운드를 시도하고, TV나 사운드바가 재생하지 못하면 자동으로 스테레오로 전환합니다. 권장합니다.</string>
+    <string name="settings_surround_auto_description">자동 — 모든 기기에서 일반 스테레오로 출력하며, TV 스피커와 사운드바에 안전한 선택입니다. 실제 5.1/7.1 리시버에는 \'서라운드\'를 선택하세요. 권장합니다.</string>
     <string name="settings_surround_stereo_description">스테레오만 — 항상 앱에서 디코딩하고 일반 2.0 사운드를 보냅니다. TV 스피커나 스테레오 사운드바에서 사용하거나, 오디오가 화면보다 늦어질 때 사용하세요.</string>
     <string name="settings_surround_forced_description">서라운드 — Dolby/DTS를 실제 5.1/7.1 리시버로 보냅니다. 소리가 나지 않거나 끊기면 OwnTV가 그래도 스테레오로 전환하고 알려 줍니다.</string>
     <string name="settings_panel_width">패널 너비 조정</string>

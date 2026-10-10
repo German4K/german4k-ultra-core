@@ -1062,7 +1062,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g>件</item>
     </plurals>
     <string name="settings_surround_stereo">ステレオのみ</string>
-    <string name="settings_surround_auto_description">自動 — Dolby/DTSサラウンドを試し、テレビまたはサウンドバーで再生できない場合は自動的にステレオに切り替えます。推奨。</string>
+    <string name="settings_surround_auto_description">自動 — どの端末でも通常のステレオ。テレビのスピーカーやサウンドバーに安全な選択です。本物の5.1/7.1レシーバーには「サラウンド」を選んでください。推奨。</string>
     <string name="settings_surround_stereo_description">ステレオのみ — 常にアプリ内でデコードし、通常の2.0サウンドを送信します。テレビの内蔵スピーカーやステレオサウンドバーで使用するか、音声が映像より遅れる場合に使用してください。</string>
     <string name="settings_surround_forced_description">サラウンド — Dolby/DTSを実際の5.1/7.1レシーバーに送信します。無音になったりカクついたりする場合は、OwnTVはステレオに切り替えてその旨通知します。</string>
     <string name="settings_panel_width">パネル幅の調整</string>

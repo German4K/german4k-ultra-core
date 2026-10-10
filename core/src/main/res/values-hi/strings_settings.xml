@@ -1081,7 +1081,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> सेट</item>
     </plurals>
     <string name="settings_surround_stereo">केवल स्टीरियो</string>
-    <string name="settings_surround_auto_description">ऑटो — Dolby/DTS सराउंड आज़माता है, और अगर टीवी या साउंडबार उसे नहीं चला पाता तो अपने आप स्टीरियो पर लौट आता है। अनुशंसित।</string>
+    <string name="settings_surround_auto_description">ऑटो — हर डिवाइस पर साधारण स्टीरियो, टीवी स्पीकर और साउंडबार के लिए सुरक्षित विकल्प। असली 5.1/7.1 रिसीवर के लिए „सराउंड“ चुनें। अनुशंसित।</string>
     <string name="settings_surround_stereo_description">केवल स्टीरियो — हमेशा ऐप में डिकोड करता है और सादा 2.0 ऑडियो भेजता है। इसे टीवी स्पीकर या स्टीरियो साउंडबार पर इस्तेमाल करें, या अगर ऑडियो वीडियो से पीछे रह जाता है।</string>
     <string name="settings_surround_forced_description">सराउंड — Dolby/DTS को असली 5.1/7.1 रिसीवर पर भेजता है। अगर आवाज़ बंद हो जाए या अटक जाए, तो OwnTV फिर भी स्टीरियो पर लौट आता है और आपको बता देता है।</string>
     <string name="settings_panel_width">पैनल चौड़ाई समायोजन</string>

@@ -1100,7 +1100,7 @@
         <item quantity="other"><xliff:g id="count">%1$d</xliff:g> definições</item>
     </plurals>
     <string name="settings_surround_stereo">Apenas estéreo</string>
-    <string name="settings_surround_auto_description">Automático — experimente o surround Dolby/DTS e volte ao estéreo automaticamente se a TV ou a soundbar não o reproduzir. Recomendado.</string>
+    <string name="settings_surround_auto_description">Automático — estéreo simples em qualquer dispositivo, a escolha segura para os altifalantes da TV e soundbars. Para um recetor 5.1/7.1 verdadeiro, escolha \"Surround\". Recomendado.</string>
     <string name="settings_surround_stereo_description">Apenas estéreo — descodifica sempre na aplicação e envia som 2.0 simples. Utilize isto em altifalantes da TV ou numa soundbar estéreo, ou se o áudio estiver atrasado em relação à imagem.</string>
     <string name="settings_surround_forced_description">Surround — envia Dolby/DTS para um recetor 5.1/7.1 verdadeiro. Se ficar em silêncio ou gaguejar, a OwnTV volta ao estéreo e avisa-o.</string>
     <string name="settings_panel_width">Ajuste da largura dos painéis</string>
