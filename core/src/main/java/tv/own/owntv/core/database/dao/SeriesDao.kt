@@ -91,24 +91,24 @@ interface SeriesDao {
     @Query("SELECT * FROM episodes WHERE seriesId = :seriesId AND seasonNumber = :season AND episodeNumber = :episode LIMIT 1")
     suspend fun findEpisodeByNumber(seriesId: Long, season: Int, episode: Int): EpisodeEntity?
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC, id ASC")
     fun pagingByCategory(categoryId: Long): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY name ASC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY name ASC, id ASC")
     fun pagingByCategoryAlpha(categoryId: Long): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY name ASC")
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY name ASC, id ASC")
     fun pagingAll(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC")
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC, id ASC")
     fun pagingAllOriginal(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     // Highest provider rating first; unrated (NULL) sink to the bottom (SQLite sorts NULL last in DESC).
     // Index-served by (sourceId, rating, name) / (categoryId, rating, name) — see MIGRATION_10_11.
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC")
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC, id ASC")
     fun pagingAllRating(sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC, id ASC")
     fun pagingByCategoryRating(categoryId: Long): PagingSource<Int, SeriesEntity>
 
     // Date added / last modification (newest first). NULLs sort lowest in SQLite, so unknown
@@ -119,10 +119,10 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun pagingByCategoryDateAdded(categoryId: Long): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC")
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun searchAllDateAdded(query: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY addedAt DESC, sortOrder DESC, id DESC")
     fun searchInCategoryDateAdded(query: String, categoryId: Long): PagingSource<Int, SeriesEntity>
 
     // German4K: Erscheinungsjahr, neueste zuerst (Kundenwunsch Aleks959). year = Anbieterjahr (Filme: sonst
@@ -134,10 +134,10 @@ interface SeriesDao {
     @Query("SELECT * FROM series WHERE categoryId = :categoryId ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
     fun pagingByCategoryYear(categoryId: Long): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
     fun searchAllYear(query: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC")
     fun searchInCategoryYear(query: String, categoryId: Long): PagingSource<Int, SeriesEntity>
 
     // --- Manual order (Move) — see ChannelDao for the join shape. ---
@@ -145,7 +145,7 @@ interface SeriesDao {
         "SELECT s.* FROM series s " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE s.categoryId = :categoryId " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name, s.id",
     )
     fun pagingByCategoryManual(categoryId: Long, profileId: Long, contextKey: String): PagingSource<Int, SeriesEntity>
 
@@ -154,7 +154,7 @@ interface SeriesDao {
         "SELECT s.* FROM series s " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE s.categoryId = :categoryId " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name, s.id",
     )
     fun pagingByCategoryManualAlpha(categoryId: Long, profileId: Long, contextKey: String): PagingSource<Int, SeriesEntity>
 
@@ -163,7 +163,7 @@ interface SeriesDao {
             "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC, s.id",
     )
     fun pagingFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
@@ -171,7 +171,7 @@ interface SeriesDao {
         "SELECT s.* FROM series s " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE s.categoryId = :categoryId " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name LIMIT :limit",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name, s.id LIMIT :limit",
     )
     suspend fun snapshotByCategoryManual(categoryId: Long, profileId: Long, contextKey: String, limit: Int): List<SeriesEntity>
 
@@ -180,7 +180,7 @@ interface SeriesDao {
             "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC, s.id LIMIT :limit",
     )
     suspend fun snapshotFavoritesManual(profileId: Long, contextKey: String, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 
@@ -225,38 +225,40 @@ interface SeriesDao {
 
     @Query(
         "SELECT * FROM series WHERE sourceId IN (:sourceIds) " +
-            "AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :query) ORDER BY name ASC",
+            "AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :query) ORDER BY name ASC, id ASC",
     )
     fun search(query: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     // --- Inline folder-scoped search (substring) ---
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC")
+    // German4K 3.1.1 (E): Raster-Suchen prüfen zusätzlich den Namen ohne Leerzeichen, Punkt und Bindestrich
+    // („sat1“ findet „SAT.1“, „orf 1“ findet „ORF1“). Leere Normalform (nur Satzzeichen) zählt nicht, sonst passte alles.
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY name ASC, id ASC")
     fun searchAll(query: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
-    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY sortOrder ASC, name ASC")
+    @Query("SELECT * FROM series WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY sortOrder ASC, name ASC, id ASC")
     fun searchInCategory(query: String, categoryId: Long): PagingSource<Int, SeriesEntity>
 
     /** Bounded list for global search (across all of a profile's sources). */
-    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit")
+    @Query("SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC, id ASC LIMIT :limit")
     suspend fun searchList(query: String, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 
     /** FTS-backed bounded list for global as-you-type search (see MovieDao.searchListFts). */
     @Query(
         "SELECT * FROM series WHERE sourceId IN (:sourceIds) " +
-            "AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery) ORDER BY name ASC LIMIT :limit",
+            "AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery) ORDER BY name ASC, id ASC LIMIT :limit",
     )
     suspend fun searchListFts(ftsQuery: String, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
-            "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC",
+            "WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC, s.id",
     )
     fun searchFavorites(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s " +
             "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' " +
-            "WHERE f.profileId = :profileId ORDER BY f.addedAt DESC",
+            "WHERE f.profileId = :profileId ORDER BY f.addedAt DESC, s.id",
     )
     fun pagingFavorites(profileId: Long): PagingSource<Int, SeriesEntity>
 
@@ -275,20 +277,20 @@ interface SeriesDao {
 
     @Query(
         "SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' " +
-            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC, s.id",
     )
     fun pagingHistory(profileId: Long, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     @Query(
         "SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' " +
-            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC",
+            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC, s.id",
     )
     fun searchHistory(query: String, profileId: Long, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
     /** Search "Continue" chip: recently-watched series snapshot (one-shot). */
     @Query(
         "SELECT s.* FROM series s INNER JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' " +
-            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC LIMIT :limit",
+            "WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC, s.id LIMIT :limit",
     )
     suspend fun recentlyWatchedSnapshot(profileId: Long, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 
@@ -297,7 +299,7 @@ interface SeriesDao {
         "SELECT s.* FROM series s " +
             "INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' AND f.profileId = :profileId " +
             "LEFT JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' AND h.profileId = :profileId " +
-            "WHERE s.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC LIMIT :limit",
+            "WHERE s.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC, s.id LIMIT :limit",
     )
     suspend fun unwatchedFavorites(profileId: Long, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 

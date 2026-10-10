@@ -430,8 +430,13 @@
 1	technical	core/src/main/java/tv/own/owntv/core/content/AirDate.kt	UTC
 1	regex	core/src/main/java/tv/own/owntv/core/content/AirDate.kt	\\d{4}-\\d{2}-\\d{2}
 1	technical	core/src/main/java/tv/own/owntv/core/content/AirDate.kt	yyyy-MM-dd
-1	empty	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	\0
+3	empty	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	\0
+1	sql	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	"${parts.joinToString(" ") { "$it*" }}"
 1	sql	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	$it*
+1	sql	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	$t*
+1	sql	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	($t* OR "${split.joinToString(" ")}*")
+1	regex	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	(?<=\\p{L})(?=\\p{N})|(?<=\\p{N})(?=\\p{L})
+1	regex	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	[^\\p{L}\\p{N}]+
 1	regex	core/src/main/java/tv/own/owntv/core/content/SearchReader.kt	\\s+
 1	empty	core/src/main/java/tv/own/owntv/core/customize/BulkRenameSession.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/customize/CustomizationStore.kt	${c.sourceId}:${c.remoteId ?: c.name}
@@ -893,9 +898,18 @@
 3	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey
 3	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = mv.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey
 3	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, c.name
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, mv.name
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, c.name, c.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name, c.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name, c.id LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name, mv.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name, mv.id LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name, s.id LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, mv.name, mv.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, c.sortOrder, c.name, c.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, mv.sortOrder, mv.name, mv.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	ORDER BY m.position, s.sortOrder, s.name, s.id
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT EXISTS(SELECT 1 FROM custom_category_members WHERE profileId = :profileId AND mediaType = :type AND contextKey = :contextKey AND itemId = :itemId)
 4	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT c.* FROM channels c
 4	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/CustomCategoryDao.kt	SELECT mv.* FROM movies mv
@@ -1023,8 +1037,8 @@
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MetadataDao.kt	SELECT * FROM metadata_match WHERE localKey IN (:keys)
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	(SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery)
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND (categoryId IS NULL OR categoryId NOT IN (:excludedCategoryIds))
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND id IN (SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery) ORDER BY name ASC LIMIT :limit
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND id IN (SELECT rowid FROM movies_fts WHERE movies_fts MATCH :query) ORDER BY name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND id IN (SELECT rowid FROM movies_fts WHERE movies_fts MATCH :ftsQuery) ORDER BY name ASC, id ASC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	AND id IN (SELECT rowid FROM movies_fts WHERE movies_fts MATCH :query) ORDER BY name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	DELETE FROM movies WHERE sourceId = :sourceId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	DELETE FROM movies WHERE sourceId = :sourceId AND remoteId IS NULL
@@ -1033,19 +1047,20 @@
 3	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	INNER JOIN watch_history h ON h.itemId = m.id AND h.mediaType = 'MOVIE'
 5	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	LEFT JOIN content_order o ON o.itemId = m.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	LEFT JOIN watch_history h ON h.itemId = m.id AND h.mediaType = 'MOVIE' AND h.profileId = :profileId
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.name
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.sortOrder, m.name
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.sortOrder, m.name LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC, m.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC, m.id LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.name, m.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.sortOrder, m.name, m.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.sortOrder, m.name, m.id LIMIT :limit
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC LIMIT :limit
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY sortOrder ASC, name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY addedAt DESC, sortOrder DESC, id DESC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY sortOrder ASC, name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE id = :id
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE id IN (:ids)
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId = :sourceId AND name = :name LIMIT 1
@@ -1053,14 +1068,15 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId = :sourceId AND titleSignature = '' LIMIT :limit
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds)
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY addedAt DESC, sortOrder DESC, id DESC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY name ASC, id ASC
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND addedAt IS NOT NULL ORDER BY addedAt DESC, sortOrder DESC, id DESC LIMIT :limit
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC, id ASC LIMIT :limit
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT * FROM movies WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM favorites f INNER JOIN movies m ON m.id = f.itemId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM movies WHERE categoryId = :categoryId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT COUNT(*) FROM movies WHERE sourceId = :sourceId
@@ -1078,15 +1094,15 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	SELECT remoteId, id, contentHash, sortOrder FROM movies WHERE sourceId = :sourceId AND remoteId IS NOT NULL
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE f.profileId = :profileId AND f.mediaType = 'MOVIE' AND m.sourceId IN (:sourceIds)
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE f.profileId = :profileId AND m.sourceId IN (:sourceIds)
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE f.profileId = :profileId AND m.sourceId IN (:sourceIds) AND m.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE f.profileId = :profileId ORDER BY f.addedAt DESC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE f.profileId = :profileId AND m.sourceId IN (:sourceIds) AND m.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC, m.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE f.profileId = :profileId ORDER BY f.addedAt DESC, m.id
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId AND h.mediaType = 'MOVIE' AND m.sourceId IN (:sourceIds)
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) AND m.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC LIMIT :limit
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) AND m.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC, m.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC, m.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId AND m.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC, m.id LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE h.profileId = :profileId ORDER BY h.watchedAt DESC, m.id LIMIT :limit
 3	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE m.categoryId = :categoryId
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE m.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE m.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC, m.id LIMIT :limit
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE sourceId = :sourceId AND id IN
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	WHERE sourceId = :sourceId AND titleSignature IN (:titleSignatures)
 2	sql	core/src/main/java/tv/own/owntv/core/database/dao/MovieDao.kt	titleSignature, parsedYear, providerLanguage, qualityRank, advertisedCapabilities FROM movies
@@ -1164,8 +1180,8 @@
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/RecordingDao.kt	filePath = :filePath, startedAt = :startedAt, endedAt = :endedAt, updatedAt = :timestamp WHERE id = :id
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	(SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery)
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND (categoryId IS NULL OR categoryId NOT IN (:excludedCategoryIds))
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery) ORDER BY name ASC LIMIT :limit
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :query) ORDER BY name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :ftsQuery) ORDER BY name ASC, id ASC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	AND id IN (SELECT rowid FROM series_fts WHERE series_fts MATCH :query) ORDER BY name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	DELETE FROM episodes WHERE id IN (:ids)
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	DELETE FROM episodes WHERE seriesId = :seriesId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	DELETE FROM seasons WHERE seriesId = :seriesId
@@ -1176,11 +1192,11 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	INNER JOIN favorites f ON f.itemId = s.id AND f.mediaType = 'SERIES' AND f.profileId = :profileId
 5	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	LEFT JOIN watch_history h ON h.itemId = s.id AND h.mediaType = 'SERIES' AND h.profileId = :profileId
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC LIMIT :limit
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, f.addedAt DESC, s.id LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.sortOrder, s.name, s.id LIMIT :limit
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	ORDER BY sortOrder ASC, name ASC, id ASC LIMIT :limit
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM episodes WHERE id = :id
@@ -1189,12 +1205,13 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM episodes WHERE seriesId = :seriesId AND seasonNumber = :season AND episodeNumber = :episode LIMIT 1
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM episodes WHERE seriesId = :seriesId ORDER BY seasonNumber ASC, episodeNumber ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM seasons WHERE seriesId = :seriesId ORDER BY seasonNumber ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId AND name LIKE '%' || :query || '%' ORDER BY sortOrder ASC, name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY addedAt DESC, sortOrder DESC, id DESC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY sortOrder ASC, name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY rating DESC, name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE categoryId = :categoryId ORDER BY sortOrder ASC, name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE id = :id
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE id IN (:ids)
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId = :sourceId AND name = :name LIMIT 1
@@ -1202,13 +1219,14 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId = :sourceId AND remoteId IN (:remoteIds)
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId = :sourceId AND titleSignature = '' LIMIT :limit
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds)
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY COALESCE(year, parsedYear) IS NULL, COALESCE(year, parsedYear) DESC, name COLLATE NOCASE ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY addedAt DESC, sortOrder DESC, id DESC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND (name LIKE '%' || :query || '%' OR (REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') <> '' AND REPLACE(REPLACE(REPLACE(name, ' ', ''), '.', ''), '-', '') LIKE '%' || REPLACE(REPLACE(REPLACE(:query, ' ', ''), '.', ''), '-', '') || '%')) ORDER BY name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) AND name LIKE '%' || :query || '%' ORDER BY name ASC, id ASC LIMIT :limit
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY addedAt DESC, sortOrder DESC, id DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY rating DESC, name ASC, id ASC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT * FROM series WHERE sourceId IN (:sourceIds) ORDER BY sourceId ASC, sortOrder ASC, name ASC, id ASC
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM episodes WHERE seriesId = :seriesId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM favorites f INNER JOIN series s ON s.id = f.itemId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	SELECT COUNT(*) FROM series WHERE categoryId = :categoryId
@@ -1231,14 +1249,14 @@
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	UPDATE series SET episodesSyncedAt = :at WHERE id = :seriesId
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE f.profileId = :profileId AND f.mediaType = 'SERIES' AND s.sourceId IN (:sourceIds)
 2	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds)
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE f.profileId = :profileId ORDER BY f.addedAt DESC
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE f.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY f.addedAt DESC, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE f.profileId = :profileId ORDER BY f.addedAt DESC, s.id
 1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND h.mediaType = 'SERIES' AND s.sourceId IN (:sourceIds)
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' ORDER BY h.watchedAt DESC, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC, s.id
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE h.profileId = :profileId AND s.sourceId IN (:sourceIds) ORDER BY h.watchedAt DESC, s.id LIMIT :limit
 3	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE s.categoryId = :categoryId
-1	room-schema	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE s.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC LIMIT :limit
+1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE s.sourceId IN (:sourceIds) AND h.itemId IS NULL ORDER BY f.addedAt DESC, s.id LIMIT :limit
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE seriesId IN (:seriesIds) AND seasonNumber > 0 GROUP BY seriesId
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE sourceId = :sourceId AND id IN
 1	sql	core/src/main/java/tv/own/owntv/core/database/dao/SeriesDao.kt	WHERE sourceId = :sourceId AND titleSignature IN (:titleSignatures)
@@ -4035,6 +4053,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	off expected — the sink resyncs itself, not treating this as an output failure
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	passthrough
 1	log	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	stereo-only sink unavailable, using device capabilities
+1	compiler	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	unused
 1	technical	player-core/src/main/java/tv/own/owntv/player/AudioOutputPolicy.kt	·
 1	log	player-core/src/main/java/tv/own/owntv/player/ContentFds.kt	ContentFds
 1	log	player-core/src/main/java/tv/own/owntv/player/ContentFds.kt	cannot open a descriptor for a document — letting mpv fail it
@@ -4400,6 +4419,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Exo codec gate: audio codec='$codec' → safe (allowlist)
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	FILE_LOADED with pendingStopEndFiles=$pendingStops generation=$loadGeneration
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	Genymotion
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	German4K resume reload: $reason, pos=${_position.value}ms exo=$exoActive
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	HTTP error (4\\d\\d)
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	HUD engine toggle: ExoPlayer → mpv
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	HUD engine toggle: mpv → ExoPlayer
@@ -4448,6 +4468,7 @@
 2	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-codec-name
 2	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-delay
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-format
+1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-normalize-downmix
 2	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-out-params/channel-count
 1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-out-params/format
 1	protocol	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	audio-out-params/samplerate
@@ -4467,6 +4488,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	auto-safe
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	av1
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	avc
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	buffering ${(now - stallSince) / 1000}s at ${p}ms after resume
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	c2.android
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	cache
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	cache-pause-initial
@@ -4622,6 +4644,7 @@
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	path:${extSelect.path}
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	path:${it.path}
 8	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pause
+1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pause ${pausedFor / 1000}s
 3	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	paused-for-cache
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	paused-for-cache=${getPropertyString("paused-for-cache")}
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	pcm
@@ -4738,7 +4761,7 @@
 1	log	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	watchdog: archive loaded but produced no video
 4	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	width
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	xsub
-24	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	yes
+25	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	yes
 1	technical	player-core/src/main/java/tv/own/owntv/player/OwnTVPlayer.kt	ytdl
 6	empty	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	\0
 2	file-path	player-core/src/main/java/tv/own/owntv/player/PlaybackErrorLog.kt	$relativePath$EXPORT_NAME

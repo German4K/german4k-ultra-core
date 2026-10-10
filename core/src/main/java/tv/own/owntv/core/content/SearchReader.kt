@@ -60,7 +60,7 @@ class SearchReader(
         profileId: Long,
         sources: ActiveProfileSources,
         query: String,
-        limit: Int = LIMIT,
+        limit: Int = SEARCH_LIMIT,
     ): SearchResults {
         if (profileId < 0 || !sources.hasAny) return SearchResults()
         val fts = ftsQuery(query)
@@ -157,22 +157,55 @@ class SearchReader(
     }
 
     companion object {
-        /** How many rows of each kind a search returns. */
+        /** How many rows of each kind a curated list returns. */
         const val LIMIT = 40
 
+        /** German4K 3.1.1: How many rows of each kind a typed search returns (was 40 — „ORF" alone filled it). */
+        const val SEARCH_LIMIT = 100
+
+        private val WHITESPACE = Regex("\\s+")
+
+        /** Everything the FTS4 "simple" tokenizer treats as a separator (it splits on ASCII punctuation). */
+        private val NON_TOKEN = Regex("[^\\p{L}\\p{N}]+")
+
+        /** A letter↔digit boundary inside one word ("orf|1", "sky|1", "s|01"). */
+        private val LETTER_DIGIT = Regex("(?<=\\p{L})(?=\\p{N})|(?<=\\p{N})(?=\\p{L})")
+
         /**
-         * A sanitized FTS4 MATCH expression: each whitespace-separated token is stripped to letters
-         * and digits and turned into a prefix term ("harry pot" → "harry* pot*", implicit AND).
+         * A sanitized FTS4 MATCH expression. Each whitespace-separated word is split exactly like the FTS
+         * "simple" tokenizer splits the indexed names — anything that is not a letter or digit separates —
+         * and becomes prefix terms, implicit AND between words ("harry pot" → "harry* pot*").
+         *
+         * German4K 3.1.1:
+         *  - A word the user wrote with punctuation inside ("O.C.", "SAT.1") becomes a PHRASE of its parts,
+         *    `"o* c*"`: the index holds "The O.C." as the adjacent tokens "o" and "c". Separate terms
+         *    (`o* c*`) would also hit every "Oct 10 … Colgate" event and bury the series (emulator, 10.10.).
+         *  - A word that switches between letters and digits also matches the spaced form, so "ORF1"
+         *    finds both "ORF1 HD" and "ORF 1 HD": `(orf1* OR "orf 1*")`. The parentheses make this safe
+         *    on every Android: under the standard query syntax (Android's build) and the enhanced one
+         *    alike, `(a OR b) c` means "(a or b) and c" — measured against SQLite 3.19 (Android 9).
+         *  - Everything is lower-cased, so typed "or"/"and"/"not"/"near" never become operators.
+         *
          * Null when nothing tokenizable remains (symbols-only input) — the caller then falls back to
          * the substring LIKE queries. Prefix terms match word starts rather than mid-word substrings,
          * which is the accepted trade-off for an index-served search over ~220k rows per keystroke.
          */
         fun ftsQuery(query: String): String? {
-            val tokens = query.split(Regex("\\s+"))
-                .map { t -> t.filter { it.isLetterOrDigit() } }
-                .filter { it.isNotEmpty() }
-            if (tokens.isEmpty()) return null
-            return tokens.joinToString(" ") { "$it*" }
+            val terms = query.lowercase(java.util.Locale.ROOT)
+                .split(WHITESPACE)
+                .mapNotNull { word ->
+                    val parts = word.split(NON_TOKEN).filter { it.isNotEmpty() }
+                    when {
+                        parts.isEmpty() -> null
+                        parts.size > 1 -> "\"${parts.joinToString(" ") { "$it*" }}\""
+                        else -> {
+                            val t = parts[0]
+                            val split = t.split(LETTER_DIGIT).filter { it.isNotEmpty() }
+                            if (split.size < 2) "$t*" else "($t* OR \"${split.joinToString(" ")}*\")"
+                        }
+                    }
+                }
+            return terms.takeIf { it.isNotEmpty() }?.joinToString(" ")
         }
     }
 }
