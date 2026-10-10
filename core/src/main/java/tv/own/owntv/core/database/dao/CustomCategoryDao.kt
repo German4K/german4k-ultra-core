@@ -168,7 +168,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = c.id AND m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
             "WHERE c.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name, c.id",
     )
     fun pagingChannels(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
@@ -180,7 +180,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = c.id AND m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
             "WHERE c.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, c.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, c.name, c.id",
     )
     fun pagingChannelsAlpha(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
@@ -189,7 +189,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = mv.id AND m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = mv.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey " +
             "WHERE mv.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name, mv.id",
     )
     fun pagingMovies(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
@@ -199,7 +199,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = mv.id AND m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = mv.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey " +
             "WHERE mv.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, mv.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, mv.name, mv.id",
     )
     fun pagingMoviesAlpha(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
@@ -208,7 +208,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = s.id AND m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE s.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name, s.id",
     )
     fun pagingSeries(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
@@ -218,7 +218,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = s.id AND m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE s.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, s.name, s.id",
     )
     fun pagingSeriesAlpha(profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 
@@ -245,7 +245,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = c.id AND m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = c.id AND o.profileId = :profileId AND o.mediaType = 'LIVE' AND o.contextKey = :contextKey " +
             "WHERE c.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name LIMIT :limit",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, c.sortOrder, c.name, c.id LIMIT :limit",
     )
     suspend fun snapshotChannels(profileId: Long, contextKey: String, sourceIds: List<Long>, limit: Int): List<ChannelEntity>
 
@@ -254,7 +254,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = mv.id AND m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = mv.id AND o.profileId = :profileId AND o.mediaType = 'MOVIE' AND o.contextKey = :contextKey " +
             "WHERE mv.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name LIMIT :limit",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, mv.sortOrder, mv.name, mv.id LIMIT :limit",
     )
     suspend fun snapshotMovies(profileId: Long, contextKey: String, sourceIds: List<Long>, limit: Int): List<MovieEntity>
 
@@ -263,7 +263,7 @@ interface CustomCategoryDao {
             "INNER JOIN custom_category_members m ON m.itemId = s.id AND m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey " +
             "LEFT JOIN content_order o ON o.itemId = s.id AND o.profileId = :profileId AND o.mediaType = 'SERIES' AND o.contextKey = :contextKey " +
             "WHERE s.sourceId IN (:sourceIds) " +
-            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name LIMIT :limit",
+            "ORDER BY (CASE WHEN o.position IS NULL THEN 1 ELSE 0 END), o.position, m.position, s.sortOrder, s.name, s.id LIMIT :limit",
     )
     suspend fun snapshotSeries(profileId: Long, contextKey: String, sourceIds: List<Long>, limit: Int): List<SeriesEntity>
 
@@ -272,7 +272,7 @@ interface CustomCategoryDao {
         "SELECT c.* FROM channels c " +
             "INNER JOIN custom_category_members m ON m.itemId = c.id AND m.profileId = :profileId AND m.mediaType = 'LIVE' AND m.contextKey = :contextKey " +
             "WHERE c.sourceId IN (:sourceIds) AND c.name LIKE '%' || :query || '%' " +
-            "ORDER BY m.position, c.sortOrder, c.name",
+            "ORDER BY m.position, c.sortOrder, c.name, c.id",
     )
     fun searchChannels(query: String, profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, ChannelEntity>
 
@@ -280,7 +280,7 @@ interface CustomCategoryDao {
         "SELECT mv.* FROM movies mv " +
             "INNER JOIN custom_category_members m ON m.itemId = mv.id AND m.profileId = :profileId AND m.mediaType = 'MOVIE' AND m.contextKey = :contextKey " +
             "WHERE mv.sourceId IN (:sourceIds) AND mv.name LIKE '%' || :query || '%' " +
-            "ORDER BY m.position, mv.sortOrder, mv.name",
+            "ORDER BY m.position, mv.sortOrder, mv.name, mv.id",
     )
     fun searchMovies(query: String, profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, MovieEntity>
 
@@ -288,7 +288,7 @@ interface CustomCategoryDao {
         "SELECT s.* FROM series s " +
             "INNER JOIN custom_category_members m ON m.itemId = s.id AND m.profileId = :profileId AND m.mediaType = 'SERIES' AND m.contextKey = :contextKey " +
             "WHERE s.sourceId IN (:sourceIds) AND s.name LIKE '%' || :query || '%' " +
-            "ORDER BY m.position, s.sortOrder, s.name",
+            "ORDER BY m.position, s.sortOrder, s.name, s.id",
     )
     fun searchSeries(query: String, profileId: Long, contextKey: String, sourceIds: List<Long>): PagingSource<Int, SeriesEntity>
 }
