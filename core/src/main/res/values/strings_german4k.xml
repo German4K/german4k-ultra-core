@@ -263,4 +263,22 @@
     <string name="g4k_jetzt_im_tv">On TV now</string>
     <string name="g4k_virtuell_normal">This channel is playing in normal mode right now</string>
     <string name="g4k_stoerung_erneut">Check again</string>
+    <!-- German4K 3.2 (N1/N2): Angesagt & Top 10 -->
+    <string name="g4k_angesagt_titel">🔥 Trending</string>
+    <string name="g4k_angesagt_untertitel">Movies and series everyone is watching right now – and that you have with us</string>
+    <string name="g4k_angesagt_unter_top">trending worldwide, available here</string>
+    <string name="g4k_angesagt_nr1">🔥 #1 TRENDING THIS WEEK</string>
+    <string name="g4k_angesagt_imdb">★ IMDb %1$s</string>
+    <string name="g4k_top10_filme">🏆 Top 10 movies on German4K</string>
+    <string name="g4k_top10_serien">🏆 Top 10 series on German4K</string>
+    <string name="g4k_top10_untertitel">most watched in the last 7 days</string>
+    <string name="g4k_art_film">Movie</string>
+    <string name="g4k_art_serie">Series</string>
+    <string name="g4k_kennung_film">FILM</string>
+    <string name="g4k_kennung_serie">SERIES</string>
+    <string name="g4k_badge_neue_folge">NEW EPISODE</string>
+    <string name="g4k_badge_neu">NEW</string>
+    <string name="g4k_badge_4k">4K</string>
+    <string name="g4k_trenner" translatable="false">" · "</string>
+    <string name="g4k_angesagt_nicht_da">This title is not available on this device right now.</string>
 </resources>

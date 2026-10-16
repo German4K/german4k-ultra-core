@@ -148,11 +148,14 @@ class SearchReader(
         cust: SectionCustomizations,
         isKidsProfile: Boolean,
     ): Set<Long> {
-        if (cust.hiddenCategories.isEmpty() && !isKidsProfile) return emptySet()
+        // German4K 3.2 (F1): Erwachsenes erscheint in der Suche erst nach einer PIN-Eingabe in dieser Sitzung.
+        val erwachsenAus = isKidsProfile || !German4kErwachsenSitzung.frei
+        if (cust.hiddenCategories.isEmpty() && !erwachsenAus) return emptySet()
         return AdultCategoryClassifier.hiddenCategoryIds(
             categoryDao.observe(sourceIds, type).first(),
             cust.hiddenCategories,
             isKidsProfile,
+            hideAdult = erwachsenAus,
         )
     }
 
