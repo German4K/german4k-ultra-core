@@ -263,4 +263,32 @@
     <string name="g4k_jetzt_im_tv">On TV now</string>
     <string name="g4k_virtuell_normal">This channel is playing in normal mode right now</string>
     <string name="g4k_stoerung_erneut">Check again</string>
+    <!-- German4K 3.2 (Teil B): Erinnern, Konferenz, Länder -->
+    <string name="g4k_erinnern_kanal">Reminders</string>
+    <string name="g4k_erinnern_gleich">⏰ Coming up: <xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <string name="g4k_erinnern_zeile"><xliff:g id="zusatz" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="uhr" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <string name="g4k_erinnern_knopf">⏰ Remind me</string>
+    <string name="g4k_erinnern_knopf_gesetzt">⏰ Reminder set</string>
+    <string name="g4k_erinnern_gesetzt">Reminder set – we will let you know <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> min before.</string>
+    <string name="g4k_erinnern_geloescht">Reminder removed.</string>
+    <string name="g4k_erinnern_geht_nicht">Reminders work only for upcoming programmes.</string>
+    <string name="g4k_erinnern_umschalten">Switch over</string>
+    <string name="g4k_erinnern_spaeter">Later</string>
+    <string name="g4k_erinnern_verpasst">Missed it? On for <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> min</string>
+    <string name="g4k_erinnern_kein_sender">The channel is not in your list right now.</string>
+    <string name="g4k_erinnern_liste_titel">My reminders</string>
+    <string name="g4k_erinnern_liste_text">Programmes and matches you do not want to miss. Press OK on one to delete it.</string>
+    <string name="g4k_erinnern_liste_leer">No reminders yet. In the TV guide or in Football: ⏰ Remind me.</string>
+    <string name="g4k_erinnern_vorbei">Over</string>
+    <string name="g4k_erinnern_lang_druecken">Hold OK on a match: ⏰ Remind me</string>
+    <string name="g4k_sport_konferenz_kopf">🔴 <xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="zeit" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · <xliff:g id="spiele" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$s</xliff:g></string>
+    <string name="g4k_sport_konferenz_laut_plan">according to the fixture list</string>
+    <string name="g4k_laender_live">Live</string>
+    <string name="g4k_laender_filme">Movies</string>
+    <string name="g4k_laender_serien">Series</string>
+    <string name="g4k_laender_bereiche_auf">Show areas</string>
+    <string name="g4k_laender_bereiche_zu">Hide areas</string>
+    <string name="g4k_laender_fehler">That did not work. Please try again in a moment.</string>
+    <string name="g4k_laender_an">On</string>
+    <string name="g4k_laender_aus">Off</string>
 </resources>

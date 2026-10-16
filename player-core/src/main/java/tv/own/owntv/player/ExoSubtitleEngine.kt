@@ -69,6 +69,8 @@ class ExoSubtitleEngine(
         /** German4K 3.1: die Datei hat Ton, aber keine Spur, die ExoPlayer spielen kann (DTS/TrueHD). */
         fun onAudioUnplayable() {}
         fun onError(failure: PlaybackFailure)
+        /** German4K 3.2 (F5/N6): der Anbieter weist mit „Leitung belegt“ ab (458/460) — kein Rückfall, keine Wiederholung. */
+        fun onLeitungBelegt(code: Int) { onError(PlaybackFailure.StreamUnavailable(customUserAgentHint = false)) }
         /** Playback reached the end of the file (drives VOD auto-play-next while this engine is active). */
         fun onEnded()
     }
@@ -267,6 +269,13 @@ class ExoSubtitleEngine(
             // Network / source / DRM errors are NOT retried here: a different decoder cannot fix them,
             // and mpv (with its own retry ladder and different HTTP stack) is the better next step.
             val url = currentUrl
+            // German4K 3.2 (F5/N6): belegte Leitung — weder Software-Decoder noch mpv können das lösen.
+            val status = PlayerErrors.httpStatusOf(error)
+            if (German4kLeitung.belegtStatus(status)) {
+                android.util.Log.w(TAG, "Leitung belegt: HTTP $status — kein Rückfall")
+                callbacks.onLeitungBelegt(status!!)
+                return
+            }
             if (error.errorCode in DECODE_ERROR_CODES && softwareRungAvailable() && url != null) {
                 android.util.Log.w(TAG, "software rescue: ${error.errorCodeName} on the hardware decoder, restarting in software decode")
                 onSoftwareRescue?.invoke(url, isArchiveItem)

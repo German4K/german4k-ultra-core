@@ -1476,6 +1476,10 @@ class OwnTVPlayer(
             }
         }
         override fun onEnded() { scope.launch { onExoEnded() } }
+        // German4K 3.2 (F5/N6): belegte Leitung → Hinweis statt Rückfall auf mpv und Endlos-Neuladen.
+        override fun onLeitungBelegt(code: Int) {
+            scope.launch { leitungBelegt(code) }
+        }
         // German4K 3.1: Exo als erster Film-Player, aber kein spielbarer Ton (DTS/TrueHD) → mpv, statt stumm.
         override fun onAudioUnplayable() {
             if (item.exoPrimaryThisItem && item.exoVodFallback && itemEngine.allowsHandover) {
@@ -2571,6 +2575,27 @@ class OwnTVPlayer(
     /** The metadata of the item currently loaded — every reload (retry, reconnect, engine switch,
      *  background restore) re-passes this rather than rebuilding it field by field, so a field added
      *  to [MediaMeta] can't be dropped on the way (P6: [MediaMeta.contentKey] is one such field). */
+    /**
+     * German4K 3.2 (F5/N6): die Leitung ist belegt. Wiedergabe anhalten, keine Leiter, kein Neuladen; die
+     * Overlay-Schicht zeigt „Dein Zugang wird gerade auf einem anderen Gerät genutzt“ mit „Verbindung freigeben“.
+     */
+    private fun leitungBelegt(code: Int?) {
+        android.util.Log.w(TAG, "line busy (${German4kLeitung.grund(code)}) — stopping, no fallback")
+        loadGeneration++ // laufende Wiederholungen/Rettungen dieses Items verfallen
+        load.expectingPlayback = false
+        errorCheckJob?.cancel()
+        runCatching { exoEngine?.stop() }
+        mpvAsync { command(arrayOf("stop")) }
+        _buffering.value = false
+        _error.value = PlaybackFailure.StreamUnavailable(customUserAgentHint = false)
+        PlaybackErrorLog.event(
+            context, if (exoActive) "exoplayer" else "mpv", isLiveContent,
+            reason = PlayerFailureReason.ONE_SESSION_PROVIDER,
+            detail = "VOD: ${German4kLeitung.grund(code)} — Leitung belegt, kein Rückfall",
+        )
+        German4kLeitung.melden(currentTitle, code)
+    }
+
     private fun currentMetaSnapshot() =
         MediaMeta(currentTitle, currentSubtitle, currentYear, currentLogoUrl, currentContentKey, currentSeasonNumber, currentEpisodeNumber, currentRewindStartMs)
 
@@ -4633,6 +4658,12 @@ class OwnTVPlayer(
                             android.util.Log.w(TAG, "playback didn't start — offline, skipping retries")
                             _buffering.value = false
                             _error.value = PlaybackFailure.NoInternet
+                            return@launch
+                        }
+                        // German4K 3.2 (F5/N6): ein Film/eine Folge, die der Anbieter mit „Leitung belegt“
+                        // abweist, wird durch keinen weiteren Versuch besser — sofort aufhören und es sagen.
+                        if (!isLiveContent && German4kLeitung.belegtText(load.lastMpvError)) {
+                            leitungBelegt(httpStatusOf(load.lastMpvError))
                             return@launch
                         }
                         // A LIVE stream that retried once and still won't start may be on a panel that only

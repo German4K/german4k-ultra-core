@@ -129,6 +129,55 @@ interface ChannelDao {
     )
     suspend fun channelsWithGuide(sourceIds: List<Long>, query: String, limit: Int): List<ChannelEntity>
 
+    /**
+     * German4K 3.2 (F3): dieselbe Auswahl wie [channelsWithGuide], aber nur die Kennungen — in
+     * derselben Reihenfolge. Eine Spalte je Zeile passt auch bei 20.000 Sendern in ein CursorWindow.
+     */
+    @Query(
+        "SELECT id FROM channels WHERE sourceId IN (:sourceIds) AND epgChannelId IS NOT NULL AND epgChannelId != '' " +
+            "AND (:query = '' OR name LIKE '%' || :query || '%') " +
+            "AND LOWER(TRIM(epgChannelId)) IN (" +
+            "  SELECT DISTINCT epgChannelId FROM epg_programmes WHERE sourceId IN (:sourceIds)" +
+            ") ORDER BY number ASC, name ASC LIMIT :limit",
+    )
+    suspend fun channelIdsWithGuide(sourceIds: List<Long>, query: String, limit: Int): List<Long>
+
+    @Query("SELECT * FROM channels WHERE id IN (:ids)")
+    suspend fun byIds(ids: List<Long>): List<ChannelEntity>
+
+    /**
+     * German4K 3.2 (F3): [channelsWithGuide] ohne den Absturz „Couldn't read row …, col 0 from
+     * CursorWindow“ (Zenit877, waipu.tv-Box; vorher Fire TV AFTSS, TCL).
+     *
+     * Warum er kam: `SELECT *` über eine große Senderliste füllt mehr als ein 2-MB-CursorWindow.
+     * Für jedes weitere Fenster führt Android die Abfrage NEU aus und springt zur Zeile N — läuft
+     * gerade ein Abgleich (Sender oder EPG werden ersetzt), gibt es Zeile N nicht mehr, und schon das
+     * Lesen von Spalte 0 scheitert. Deshalb erst die Kennungen (klein, ein Fenster), dann die Zeilen in
+     * Paketen zu [CHANNEL_PAGE] (jedes Paket ein Fenster, höchstens 900 Platzhalter — Android 9 erlaubt
+     * 999). Eine Zeile, die zwischendurch verschwunden ist, fehlt einfach, statt die App zu beenden.
+     */
+    suspend fun channelsWithGuidePaged(sourceIds: List<Long>, query: String, limit: Int): List<ChannelEntity> {
+        val ids = channelIdsWithGuide(sourceIds, query, limit)
+        return loadInOrder(ids) { byIds(it) }
+    }
+
+    companion object {
+        /** Zeilen je Abfrage: < 999 SQLite-Variablen, und 500 Sender passen sicher in ein 2-MB-Fenster. */
+        const val CHANNEL_PAGE = 500
+
+        /** Lädt [ids] paketweise über [load] und gibt die Zeilen in der Reihenfolge von [ids] zurück. */
+        suspend fun loadInOrder(
+            ids: List<Long>,
+            page: Int = CHANNEL_PAGE,
+            load: suspend (List<Long>) -> List<ChannelEntity>,
+        ): List<ChannelEntity> {
+            if (ids.isEmpty()) return emptyList()
+            val byId = HashMap<Long, ChannelEntity>(ids.size * 2)
+            ids.chunked(page).forEach { chunk -> load(chunk).forEach { byId[it.id] = it } }
+            return ids.mapNotNull { byId[it] }
+        }
+    }
+
     /** Channels matching these remoteIds (Xtream stream ids) — to resolve smart-matched channels in bulk
      *  without loading the whole channel table. */
     @Query("SELECT * FROM channels WHERE sourceId IN (:sourceIds) AND remoteId IN (:remoteIds)")

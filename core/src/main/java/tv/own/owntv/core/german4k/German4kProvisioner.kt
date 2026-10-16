@@ -173,7 +173,8 @@ class German4kProvisioner(
                 German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features)
                 // Kindersicherung: unsere Rubriken beim Namen nennen, statt sie raten zu lassen.
                 if (it.erwachsen.isNotEmpty()) tv.own.owntv.core.content.AdultCategoryClassifier.setzeErwachsenRubriken(it.erwachsen)
-                pendingTestNote?.let(::debugTestNote)
+                // German4K 3.2 (F10): ein erzwungener Testhinweis überlebt die frische Panel-Antwort.
+                (pendingTestNote ?: debugNote?.first)?.let { typ -> debugNoteAnwenden(typ, debugNote?.second) }
                 pendingTestStunden?.let(::debugTestzugang)
                 // Absturz vom letzten Mal und, wenn das Panel darum bittet, das Fehlerprotokoll.
                 German4kDiagnose.nachPanelAntwort(context, panel, deviceId, it)
@@ -495,19 +496,32 @@ class German4kProvisioner(
     fun debugTestNote(typ: String) {
         if (context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE == 0) return
         // The intent usually arrives before the panel answered: remember it and apply it after the next answer.
+        // German4K 3.2 (F10): jede Auslösung bekommt eine eigene note_id — sonst blendet ein einmal
+        // gedrücktes „Verstanden“ den Testhinweis für immer aus, und die Abnahme am TV-Emulator (D-Pad,
+        // Fokus auf dem Knopf, Zurück = Später) ließe sich nicht wiederholen.
+        debugNoteAnwenden(typ, null)
+    }
+
+    /** German4K 3.2 (F10): zuletzt erzwungener Testhinweis (Typ, note_id), wird nach jeder Antwort neu gesetzt. */
+    @Volatile private var debugNote: Pair<String, String>? = null
+
+    private fun debugNoteAnwenden(typ: String, noteId: String?) {
+        val id = noteId ?: "$typ:test:${System.currentTimeMillis()}"
         val base = _answer.value ?: run { pendingTestNote = typ; return }
         pendingTestNote = null
+        debugNote = typ to id
         val expire = java.time.LocalDate.now().plusDays(5).toString()
         val (title, body) = when (typ) {
             "verlaengern" -> "Zugang läuft bald ab" to "Dein Zugang läuft am $expire ab. Verlängern: QR-Code scannen oder german4k.com – dann läuft alles ohne Unterbrechung weiter."
             "abgelaufen" -> "Zugang abgelaufen" to "Der Zugang auf diesem Gerät ist abgelaufen. Verlängern: QR-Code scannen oder german4k.com – danach ist die Liste sofort wieder da."
+            "test" -> "Dein Testzugang läuft" to "Noch 4 Stunden Testzeit. Gefällt es dir? QR-Code scannen und den Zugang direkt kaufen."
             "wartung" -> "Wartungsarbeiten" to "Beim Rechenzentrum laufen gerade angekündigte Wartungsarbeiten. Bild und Liste können in dieser Zeit fehlen – das ist keine Störung deines Zugangs."
             else -> "Hinweis" to "Testhinweis vom Panel."
         }
         // Like the panel: an expired or locked line comes without sources.
         val expired = typ == "abgelaufen" || typ == "gesperrt"
         _answer.value = base.copy(
-            noteTyp = typ, noteId = "$typ:test", noteTitle = title, noteContent = body,
+            noteTyp = typ, noteId = id, noteTitle = title, noteContent = body,
             expireDate = when (typ) { "verlaengern" -> expire; "abgelaufen" -> java.time.LocalDate.now().minusDays(1).toString(); else -> base.expireDate },
             locked = typ == "gesperrt",
             sources = if (expired) emptyList() else base.sources,

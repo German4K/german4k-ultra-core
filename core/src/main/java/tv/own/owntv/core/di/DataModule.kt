@@ -191,6 +191,10 @@ val dataModule = module {
     // German4K Sport-Hub: Spielplan (context, panel) und streamId → Kanal (settings, sourceDao, channelDao).
     single { tv.own.owntv.core.german4k.German4kSportRepository(androidContext(), get()) }
     single { tv.own.owntv.core.german4k.SportChannelResolver(get(), get(), get()) }
+    // German4K 3.2 (N7): „⏰ Erinnern“ — Wecker (context) und Ablage (context, erinnerungDao, settings,
+    // channelDao, categoryDao, sport, resolver, panel, wecker).
+    single { tv.own.owntv.core.german4k.German4kErinnerungsWecker(androidContext()) }
+    single { tv.own.owntv.core.german4k.German4kErinnerungen(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
     // German4K virtuelle 24/7-Sender (Weg B): Sendepläne über /api/app/virtuell.
     single {
         val panel = get<tv.own.owntv.core.german4k.German4kPanelClient>()

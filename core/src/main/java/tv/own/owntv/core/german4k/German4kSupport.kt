@@ -33,4 +33,11 @@ object German4kSupport {
 
     fun bereicheOeffnen() { _bereiche.value = true }
     fun bereicheSchliessen() { _bereiche.value = false }
+
+    /** German4K 3.2 (N7): „Meine Erinnerungen“ — gemerkte Sendungen und Spiele, löschen möglich. */
+    private val _erinnerungen = MutableStateFlow(false)
+    val erinnerungenSichtbar: StateFlow<Boolean> = _erinnerungen.asStateFlow()
+
+    fun erinnerungenOeffnen() { _erinnerungen.value = true }
+    fun erinnerungenSchliessen() { _erinnerungen.value = false }
 }

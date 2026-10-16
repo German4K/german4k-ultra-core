@@ -57,6 +57,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- German4K 3.2 (N7): „⏰ Erinnern“ — ungefährer Wecker (setAndAllowWhileIdle, keine
+             Exakt-Erlaubnis), zeigt eine Benachrichtigung, wenn die App zu ist. Nicht exportiert. -->
+        <receiver
+            android:name="tv.own.owntv.core.german4k.German4kErinnerungReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="tv.own.owntv.core.action.G4K_ERINNERUNG" />
+            </intent-filter>
+        </receiver>
+
         <!-- Re-arms alarms after a reboot, after an update, and when the exact-alarm permission
              changes. It must never start the recording service itself — an app targeting Android 15
              may not start a mediaPlayback foreground service from BOOT_COMPLETED. Exported because

@@ -89,7 +89,20 @@ data class German4kSportAntwort(
                 rechte = s.optJSONObject("rechte")?.let { r ->
                     German4kSportRechte(r.optString("sender"), textOderNull(r, "hinweis"), textOderNull(r, "kategorie"))
                 },
+                // German4K 3.2 (N4/C2): nur bei `art = "konferenz"` gefüllt; fehlt bei alten Servern → leer/null.
+                paarungen = paarungenAus(s.optJSONArray("paarungen")),
+                bestaetigt = if (!s.has("bestaetigt") || s.isNull("bestaetigt")) null else s.optBoolean("bestaetigt"),
             )
+        }
+
+        private fun paarungenAus(arr: JSONArray?): List<German4kPaarung> = buildList {
+            if (arr != null) for (i in 0 until arr.length()) {
+                val p = arr.optJSONObject(i) ?: continue
+                val heim = p.optString("heim").trim()
+                val gast = p.optString("gast").trim()
+                if (heim.isEmpty() && gast.isEmpty()) continue
+                add(German4kPaarung(heim, gast, zeitpunkt(p.optString("start"))))
+            }
         }
     }
 
@@ -120,6 +133,12 @@ data class German4kSportAntwort(
                     put("rechte", s.rechte?.let { r ->
                         JSONObject().put("sender", r.sender).put("hinweis", r.hinweis ?: JSONObject.NULL).put("kategorie", r.kategorie ?: JSONObject.NULL)
                     } ?: JSONObject.NULL)
+                    if (s.paarungen.isNotEmpty()) put("paarungen", JSONArray().apply {
+                        s.paarungen.forEach { p ->
+                            put(JSONObject().put("heim", p.heim).put("gast", p.gast).put("start", p.start?.toString() ?: JSONObject.NULL))
+                        }
+                    })
+                    put("bestaetigt", s.bestaetigt ?: JSONObject.NULL)
                 })
             }
         })
@@ -144,11 +163,19 @@ data class German4kSpiel(
     val senderUnbekannt: Boolean,
     val bereich: German4kSportBereich?,
     val rechte: German4kSportRechte?,
+    /** German4K 3.2 (N4): die Spiele einer Konferenz, klein unter der Karte. Sonst leer. */
+    val paarungen: List<German4kPaarung> = emptyList(),
+    /** Konferenz: true = EPG des Senders sagt „Konferenz“, false = laut Spielplan, null = unbekannt. */
+    val bestaetigt: Boolean? = null,
 ) {
     val laeuft: Boolean get() = zustand == ZUSTAND_LAEUFT
     val beendet: Boolean get() = zustand == ZUSTAND_BEENDET
 
+    /** German4K 3.2 (N4/C2): Konferenz-Eintrag — die App zeigt dafür eine eigene Karte ganz oben. */
+    val istKonferenz: Boolean get() = art == ART_KONFERENZ
+
     companion object {
+        const val ART_KONFERENZ = "konferenz"
         const val ZUSTAND_GEPLANT = "geplant"
         const val ZUSTAND_LAEUFT = "laeuft"
         const val ZUSTAND_BEENDET = "beendet"
@@ -168,6 +195,9 @@ data class German4kSportSender(
 )
 
 data class German4kSportBereich(val name: String, val hinweis: String?)
+
+/** German4K 3.2 (N4): eine Paarung einer Konferenz. [start] fehlt, wenn der Server sie nicht mitgibt. */
+data class German4kPaarung(val heim: String, val gast: String, val start: Instant?)
 
 data class German4kSportRechte(val sender: String, val hinweis: String?, val kategorie: String? = null)
 
@@ -195,12 +225,14 @@ fun chipFilter(spiele: List<German4kSpiel>, chip: SportChip): List<German4kSpiel
 
 /** Die vier Regale der Übersicht. */
 data class SportRegale(
+    /** German4K 3.2 (N4): Konferenz-Karten ganz oben — laufende zuerst, dann nach Anstoß; beendete fallen weg. */
+    val konferenzen: List<German4kSpiel> = emptyList(),
     val live: List<German4kSpiel> = emptyList(),
     val heute: List<German4kSpiel> = emptyList(),
     val spaeter: List<German4kSpiel> = emptyList(),
     val beendet: List<German4kSpiel> = emptyList(),
 ) {
-    val leer: Boolean get() = live.isEmpty() && heute.isEmpty() && spaeter.isEmpty() && beendet.isEmpty()
+    val leer: Boolean get() = konferenzen.isEmpty() && live.isEmpty() && heute.isEmpty() && spaeter.isEmpty() && beendet.isEmpty()
 }
 
 /** Zeitzone, in der „heute" gilt. */
@@ -210,12 +242,16 @@ val SPORT_ZONE: ZoneId = ZoneId.of("Europe/Berlin")
  * Einsortieren: live nach Relevanz; heute (geplant, Starttag in [zone] == [heute]) nach Anstoß, dann
  * Relevanz; später = übrige geplante nach Anstoß; beendet für sich, jüngste zuerst.
  */
-fun regale(spiele: List<German4kSpiel>, heute: LocalDate, zone: ZoneId = SPORT_ZONE): SportRegale {
+fun regale(alle: List<German4kSpiel>, heute: LocalDate, zone: ZoneId = SPORT_ZONE): SportRegale {
+    // German4K 3.2 (N4): Konferenzen bekommen ihre eigene Karte und stehen nicht noch einmal in den Regalen.
+    val (konf, spiele) = alle.partition { it.istKonferenz }
+    val konferenzen = konf.filter { !it.beendet }.sortedWith(compareByDescending<German4kSpiel> { it.laeuft }.thenBy { it.start })
     val live = spiele.filter { it.laeuft }.sortedByDescending { it.relevanz }
     val beendet = spiele.filter { it.beendet }.sortedByDescending { it.start }
     val geplant = spiele.filter { !it.laeuft && !it.beendet }
     val (heuteListe, rest) = geplant.partition { it.start.atZone(zone).toLocalDate() == heute }
     return SportRegale(
+        konferenzen = konferenzen,
         live = live,
         heute = heuteListe.sortedWith(compareBy<German4kSpiel> { it.start }.thenByDescending { it.relevanz }),
         spaeter = rest.sortedBy { it.start },

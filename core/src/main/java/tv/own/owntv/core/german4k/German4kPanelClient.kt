@@ -385,6 +385,50 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
         }
 
     /**
+     * German4K 3.2 (N8/C3): Länder-Ansicht lesen ([schalter] = null) oder ein Land/einen Bereich schalten.
+     * Die Antwort trägt immer den Stand, den der Server wirklich hat — auch bei `ok=false` (mit `grund`).
+     * Transportfehler → `ok=false` ohne Länder und ohne Grund.
+     */
+    suspend fun laender(deviceId: String, appVersion: String, schalter: German4kLaenderSchalter? = null): German4kLaenderAntwort =
+        withContext(Dispatchers.IO) {
+            val body = laenderAnfrage(deviceId, schalter).toString()
+            val request = Request.Builder()
+                .url((debugBasis()?.let { "$it/api/app/ultra" } ?: endpoint) + "/bereiche")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    if (!r.isSuccessful) throw IOException("HTTP ${r.code}")
+                    German4kLaenderAntwort.parse(r.body.string())
+                }
+            }.onFailure { Log.w(TAG, "laender failed: ${it.message}") }.getOrNull()
+                ?: German4kLaenderAntwort(ok = false, grund = null, version = null, laender = emptyList(), meldung = null, warnung = null, bereicheStand = null)
+        }
+
+    /**
+     * German4K 3.2 (C1): Mess-Ereignis `POST /api/app/ultra/ereignis` → `app_aufrufe`
+     * (`erinnerung_gesetzt`, `erinnerung_umgeschaltet`, `konferenz_klick`, `angesagt_klick`, `top10_klick`).
+     * Still: jeder Fehler wird geschluckt, nie wartet eine Oberfläche darauf.
+     */
+    suspend fun ereignis(deviceId: String, appVersion: String, aktion: String, detail: String?): Boolean =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("aktion", aktion)
+                if (detail != null) put("detail", detail.take(200))
+            }.toString()
+            val request = Request.Builder()
+                .url((debugBasis()?.let { "$it/api/app/ultra" } ?: endpoint) + "/ereignis")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching { client.newCall(request).execute().use { it.isSuccessful } }.getOrDefault(false)
+        }
+
+    /**
      * Sport-Hub: Spielplan mit den Sendern dieses Kunden. Transportfehler → null (≠ `ok=false`, das
      * ist eine gültige Antwort mit `grund`). Nie eine streamId daraus zwischenspeichern.
      */

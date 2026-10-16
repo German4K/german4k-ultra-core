@@ -176,6 +176,10 @@ class OwnTVDatabaseMigrationTest {
             // maxConnections: a playlist whose Xtream panel already published its limit keeps it.
             assertColumnExists(sqlite, "sources", "maxConnectionsProbedAt")
             assertColumnValue(sqlite, "sources", "maxConnectionsProbedAt", 10, 0L)
+            // v41 (German4K 3.2): „⏰ Erinnern“. Neu und leer — ein Update darf keine Erinnerung erfinden.
+            assertTableExists(sqlite, "erinnerungen")
+            assertIndexExists(sqlite, "index_erinnerungen_profileId_schluessel")
+            assertCount(sqlite, "erinnerungen", 0)
             assertIndexExists(sqlite, "index_movies_sourceId_rating_name")
             // v20: direct-tune index on (sourceId, number).
             assertIndexExists(sqlite, "index_channels_sourceId_number")
@@ -324,6 +328,59 @@ class OwnTVDatabaseMigrationTest {
             assertCount(sqlite, "playback_prefs", 1)
             sqlite.execSQL("DELETE FROM profiles WHERE id = 1")
             assertCount(sqlite, "playback_prefs", 0)
+        } finally {
+            db.close()
+        }
+    }
+
+    /**
+     * German4K 3.2 (N7), v40 → v41: die Tabelle `erinnerungen`. Läuft Pflicht auf Android 9
+     * (SQLite 3.19, Lehre `ON CONFLICT` 20.09.2026): die Migration selbst, das `INSERT OR IGNORE` der
+     * DAO (zweites „Erinnern“ legt nichts doppelt an) und das Mitlöschen mit dem Profil.
+     */
+    @Test
+    fun migrateVersion40ToCurrent_addsErinnerungen_ignoresDuplicates_andCascadesProfileDelete() {
+        context.deleteDatabase(DB_NAME)
+        val db40 = context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null)
+        try {
+            executeSchemaQueries(db40, "tv.own.owntv.core.database.OwnTVDatabase/40.json")
+            db40.execSQL("INSERT INTO profiles (id, name, avatarColor, avatarId, isKids, pinHash, createdAt) VALUES (1, 'Primary', 1122867, 7, 0, NULL, 1)")
+            db40.execSQL("INSERT INTO content_order (profileId, mediaType, contextKey, itemId, position) VALUES (1, '${MediaType.LIVE.name}', '10:cat-live', 30, 0)")
+            db40.version = 40
+        } finally {
+            db40.close()
+        }
+
+        val db = openWithAllMigrations()
+        try {
+            val sqlite = db.openHelper.writableDatabase
+            assertTableExists(sqlite, "erinnerungen")
+            assertIndexExists(sqlite, "index_erinnerungen_profileId")
+            assertIndexExists(sqlite, "index_erinnerungen_startMs")
+            assertIndexExists(sqlite, "index_erinnerungen_profileId_schluessel")
+            assertCount(sqlite, "profiles", 1)
+            assertCount(sqlite, "content_order", 1)
+            assertCount(sqlite, "erinnerungen", 0)
+
+            val dao = db.erinnerungDao()
+            val e = tv.own.owntv.core.database.entity.ErinnerungEntity(
+                profileId = 1, art = "spiel", schluessel = "spiel:-900001", titel = "Bundesliga-Konferenz",
+                startMs = 1_000_000L, spielId = -900001L, vorlaufMin = 10, createdAt = 1L,
+            )
+            runBlocking {
+                val erste = dao.einfuegen(e)
+                val zweite = dao.einfuegen(e.copy(titel = "doppelt"))
+                assertEquals(-1L, zweite)
+                assertEquals("Bundesliga-Konferenz", dao.getById(erste)?.titel)
+                dao.verschieben(erste, 2_000_000L)
+                assertEquals(2_000_000L, dao.getById(erste)?.startMs)
+                assertEquals(1, dao.offeneFuer(1).size)
+            }
+            assertCount(sqlite, "erinnerungen", 1)
+
+            sqlite.execSQL("PRAGMA foreign_keys = ON")
+            sqlite.execSQL("DELETE FROM profiles WHERE id = 1")
+            assertCount(sqlite, "erinnerungen", 0)
         } finally {
             db.close()
         }

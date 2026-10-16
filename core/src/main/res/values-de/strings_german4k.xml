@@ -262,4 +262,32 @@
     <string name="g4k_jetzt_im_tv">Jetzt im TV</string>
     <string name="g4k_virtuell_normal">Sender läuft gerade im normalen Modus</string>
     <string name="g4k_stoerung_erneut">Erneut prüfen</string>
+    <!-- German4K 3.2 (Teil B): Erinnern, Konferenz, Länder -->
+    <string name="g4k_erinnern_kanal">Erinnerungen</string>
+    <string name="g4k_erinnern_gleich">⏰ Gleich: <xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <string name="g4k_erinnern_zeile"><xliff:g id="zusatz" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="uhr" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <string name="g4k_erinnern_knopf">⏰ Erinnern</string>
+    <string name="g4k_erinnern_knopf_gesetzt">⏰ Erinnerung gesetzt</string>
+    <string name="g4k_erinnern_gesetzt">Erinnerung gesetzt – wir melden uns <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Min vorher.</string>
+    <string name="g4k_erinnern_geloescht">Erinnerung gelöscht.</string>
+    <string name="g4k_erinnern_geht_nicht">Erinnern geht nur bei Sendungen, die noch kommen.</string>
+    <string name="g4k_erinnern_umschalten">Umschalten</string>
+    <string name="g4k_erinnern_spaeter">Später</string>
+    <string name="g4k_erinnern_verpasst">Verpasst? Läuft seit <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Min</string>
+    <string name="g4k_erinnern_kein_sender">Der Sender ist gerade nicht in deiner Liste.</string>
+    <string name="g4k_erinnern_liste_titel">Meine Erinnerungen</string>
+    <string name="g4k_erinnern_liste_text">Sendungen und Spiele, die du nicht verpassen willst. OK auf einer Erinnerung löscht sie.</string>
+    <string name="g4k_erinnern_liste_leer">Noch keine Erinnerungen. Im Programmführer oder bei Fußball: ⏰ Erinnern.</string>
+    <string name="g4k_erinnern_vorbei">Vorbei</string>
+    <string name="g4k_erinnern_lang_druecken">OK lange drücken auf einem Spiel: ⏰ Erinnern</string>
+    <string name="g4k_sport_konferenz_kopf">🔴 <xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="zeit" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · <xliff:g id="spiele" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$s</xliff:g></string>
+    <string name="g4k_sport_konferenz_laut_plan">laut Spielplan</string>
+    <string name="g4k_laender_live">Live</string>
+    <string name="g4k_laender_filme">Filme</string>
+    <string name="g4k_laender_serien">Serien</string>
+    <string name="g4k_laender_bereiche_auf">Bereiche zeigen</string>
+    <string name="g4k_laender_bereiche_zu">Bereiche ausblenden</string>
+    <string name="g4k_laender_fehler">Das hat nicht geklappt. Bitte gleich noch einmal versuchen.</string>
+    <string name="g4k_laender_an">An</string>
+    <string name="g4k_laender_aus">Aus</string>
 </resources>
