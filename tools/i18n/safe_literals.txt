@@ -1766,6 +1766,70 @@
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	set|
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	src
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAbgleich.kt	t
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	(^|[^A-Z])(DE|GER|DEU|DEUTSCH|GERMAN)([^A-Z]|$)
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	4k
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	DE
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	\\b(DV|DOVI|DOLBY VISION)\\b
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	\\b(HEVC|H\\.?265|X265)\\b
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	\\b(kinder\\w*|kids?|kinderfilme?|family|familie\\w*|zeichentrick\\w*|cartoons?|animation|animationsfilme?|junior)\\b
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	angesagt
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	art
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	avc
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	badge
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	codec
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	fassungen
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	fhd
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	h264
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	h265
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	hd
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	hevc
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	id
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	jahr
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	label
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	movie
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	neu
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	neu_filme
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	neu_serien
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	neue_folge
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	null
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	rang
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	res
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	sd
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	series
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	sid
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	stand
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	titel
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	tmdb
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	top_filme
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	top_serien
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	uhd
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	v
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	x264
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagt.kt	x265
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	$CACHE_NAME.tmp
+1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	/api/app/ultra/ereignis
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	Accept
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	German4K-Ultra/${CoreBuildInfo.versionName}
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	German4kAngesagt
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	HTTP ${r.code}
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	User-Agent
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	aktion
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	android.os.SystemProperties
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	angesagt: ${it.message}
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	angesagt: Datei unlesbar
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	app_device_id
+2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	application/json
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	application/json; charset=utf-8
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	body
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	debug.g4k.angesagt
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	detail
+1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	ereignis: ${it.message}
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	german4k_angesagt.json
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	get
+2	url	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	http
+1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	https://german4k.com
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	url
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kAngesagtRepository.kt	zeit
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDbRettung.kt	German4kDbRettung
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDbRettung.kt	close failed: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kDbRettung.kt	database corrupt — deleting it, next start re-imports from the panel
@@ -2046,6 +2110,7 @@
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	alt_servers
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	an
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	android.os.SystemProperties
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	angesagt_url
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	apk_link
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app
 9	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	app_device_id
@@ -2069,7 +2134,7 @@
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	fenster_h
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	get
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	grund
-1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	http
+2	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	http
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com
 1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/sport
 1	url	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	https://german4k.com/api/app/ultra

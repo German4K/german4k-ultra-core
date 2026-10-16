@@ -165,12 +165,18 @@ class German4kProvisioner(
         // Hosts from the last answer are valid before the network is: a start without connectivity to the
         // primary host must already know the alternative.
         val vorher = cached()
-        vorher?.let { registerHosts(it); German4kFeatures.set(it.features); if (_answer.value == null) _answer.value = it }
+        vorher?.let {
+            registerHosts(it); German4kFeatures.set(it.features); if (_answer.value == null) _answer.value = it
+            // German4K 3.2: Angesagt kennt seine Adresse schon vor dem Netz (Cache-Antwort, nicht „frisch").
+            if (German4kAngesagtQuelle.url == null) German4kAngesagtQuelle.setze(it.angesagtUrl, frischeAntwort = false)
+        }
         var fromCache = false
         val answer: German4kPanelAnswer = try {
             panel.fetch(deviceId, version, username, password).also {
                 cache(it); registerHosts(it); _answer.value = it
                 German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features)
+                // German4K 3.2: Adresse von angesagt.json (fehlt = Feature aus → Regal weg).
+                German4kAngesagtQuelle.setze(it.angesagtUrl, frischeAntwort = true)
                 // Kindersicherung: unsere Rubriken beim Namen nennen, statt sie raten zu lassen.
                 if (it.erwachsen.isNotEmpty()) tv.own.owntv.core.content.AdultCategoryClassifier.setzeErwachsenRubriken(it.erwachsen)
                 // German4K 3.2 (F10): ein erzwungener Testhinweis überlebt die frische Panel-Antwort.

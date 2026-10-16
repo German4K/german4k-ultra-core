@@ -208,7 +208,10 @@ class HomeFeedReader(
             val recentLiveAsync = async {
                 channelDao.recentlyWatchedWithTimestampFiltered(profileId, liveIds.toList(), RECENT_LIVE_ROW_LIMIT).first()
             }
-            val trending = buildTrendingItems(
+            // German4K 3.2: Das alte TMDB-Trend-Regal (fremder Worker tmdb.owntv.me, Namensvergleich) ist
+            // abgelöst durch „🔥 Angesagt" aus unserer angesagt.json (German4kAngesagtReader). Alte
+            // Schnappschüsse in trending_items dürfen deshalb nicht mehr auftauchen.
+            val trending: List<TrendingHomeItem> = if (!G4K_ALTES_TRENDING) emptyList() else buildTrendingItems(
                 movieSourceIds = movieIds,
                 seriesSourceIds = seriesIds,
                 hidden = hidden,
@@ -305,12 +308,17 @@ class HomeFeedReader(
         val movie = customize.observe(profileId, MediaType.MOVIE).first()
         val series = customize.observe(profileId, MediaType.SERIES).first()
         val isKidsProfile = profileDao.getById(profileId)?.isKids == true
+        // German4K 3.2 (F1, Traian 16.10.): Nichts aus Erwachsenen-Rubriken (Live, Filme, Serien) auf der
+        // Startseite — für JEDES Profil, auch nach PIN. Weil alle Reihen (Weiterschauen, Hero, Favoriten,
+        // Zuletzt gesehen, „Jetzt im TV", Neu bei Filme) hier durch dieselben Rubrik-Sperren laufen, reicht
+        // EINE Stelle. Vorher galt das nur im Kinderprofil (Thomas915, 15.10.: Erotik-Neuheiten auf der Startseite).
         suspend fun catIds(type: MediaType, hiddenKeys: Set<String>): Set<Long> {
-            if ((hiddenKeys.isEmpty() && !isKidsProfile) || sourceIds.isEmpty()) return emptySet()
+            if (sourceIds.isEmpty()) return emptySet()
             return AdultCategoryClassifier.hiddenCategoryIds(
                 categoryDao.observe(sourceIds, type).first(),
                 hiddenKeys,
                 isKidsProfile,
+                hideAdult = true,
             )
         }
         return HiddenState(
@@ -505,3 +513,6 @@ private const val RECENT_LIVE_ROW_LIMIT = 20
 // German4K 3.0/32 (D2): Reihe „Neu bei Filme" — mehr holen, als gezeigt wird, weil Dubletten wegfallen.
 private const val NEW_MOVIES_LIMIT = 20
 private const val NEW_MOVIES_FETCH = 80
+// German4K 3.2: altes TMDB-Trend-Regal aus (siehe HomeFeedReader.load) — Schalter statt Löschen, damit
+// der OwnTV-Code bei einem späteren Abgleich mit dem Original nicht auseinanderläuft.
+private const val G4K_ALTES_TRENDING = false

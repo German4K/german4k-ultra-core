@@ -15,6 +15,21 @@ import tv.own.owntv.core.database.entity.CategoryEntity
  * such as "Sex and the City". Provider categories classified here are system-hidden for kids
  * profiles; ordinary profile customizations cannot unhide them.
  */
+/**
+ * German4K 3.2 (F1): Wurde in dieser App-Sitzung eine PIN eingegeben (Profil-PIN oder die PIN von
+ * „Anpassen")? Nur dann zeigt die globale Suche Erwachsenes. Bewusst nur im Speicher: nach einem
+ * Neustart der App gilt wieder „gesperrt". Die Startseite fragt das NIE — dort ist Erwachsenes immer aus.
+ */
+object German4kErwachsenSitzung {
+    @Volatile var frei: Boolean = false
+        private set
+
+    fun pinEingegeben() { frei = true }
+
+    /** Profilwechsel oder Abmelden: wieder sperren. */
+    fun sperren() { frei = false }
+}
+
 object AdultCategoryClassifier {
     private val safeExceptions = listOf(
         Regex("\\badult\\s+swim\\b"),
@@ -60,15 +75,22 @@ object AdultCategoryClassifier {
         }
     }
 
-    /** Category ids hidden by either profile customization or the kids-profile system policy. */
+    /**
+     * Category ids hidden by either profile customization or the kids-profile system policy.
+     *
+     * German4K 3.2 (F1): [hideAdult] trennt „Erwachsenes ausblenden" vom Kinderprofil. Die Startseite
+     * blendet es für JEDES Profil aus (Traian 16.10.: nie, auch nicht nach PIN), die Suche bis zur
+     * PIN-Eingabe dieser Sitzung ([German4kErwachsenSitzung]). Ohne Angabe gilt das alte Verhalten.
+     */
     fun hiddenCategoryIds(
         categories: List<CategoryEntity>,
         customizedHiddenKeys: Set<String>,
         isKidsProfile: Boolean,
+        hideAdult: Boolean = isKidsProfile,
     ): Set<Long> = categories.asSequence()
         .filter { category ->
             CustomizeKeys.category(category) in customizedHiddenKeys ||
-                (isKidsProfile && isAdult(category.name))
+                ((isKidsProfile || hideAdult) && isAdult(category.name))
         }
         .mapTo(linkedSetOf()) { it.id }
 
@@ -85,6 +107,10 @@ object AdultCategoryClassifier {
         val categoryName = categoryId?.let { categoryDao.getById(it)?.name }
         return !isAdult(categoryName)
     }
+
+    /** German4K 3.2 (F1): liegt dieser Titel in einer Erwachsenen-Rubrik? Unbekannte Rubrik = nein. */
+    suspend fun inErwachsenRubrik(categoryId: Long?, categoryDao: CategoryDao): Boolean =
+        categoryId != null && isAdult(categoryDao.getById(categoryId)?.name)
 
     private fun compact(value: String): String = value
             .replace(Regex("[^\\p{L}\\p{N}+]"), " ")

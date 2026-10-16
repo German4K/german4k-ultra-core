@@ -290,4 +290,21 @@
     <string name="g4k_laender_fehler">Das hat nicht geklappt. Bitte gleich noch einmal versuchen.</string>
     <string name="g4k_laender_an">An</string>
     <string name="g4k_laender_aus">Aus</string>
+    <!-- German4K 3.2 (N1/N2): Angesagt & Top 10 -->
+    <string name="g4k_angesagt_titel">🔥 Angesagt</string>
+    <string name="g4k_angesagt_untertitel">Filme und Serien, die gerade alle schauen – und die du bei uns hast</string>
+    <string name="g4k_angesagt_unter_top">weltweit im Trend, bei uns verfügbar</string>
+    <string name="g4k_angesagt_nr1">🔥 #1 ANGESAGT DIESE WOCHE</string>
+    <string name="g4k_angesagt_imdb">★ IMDb %1$s</string>
+    <string name="g4k_top10_filme">🏆 Top 10 Filme bei German4K</string>
+    <string name="g4k_top10_serien">🏆 Top 10 Serien bei German4K</string>
+    <string name="g4k_top10_untertitel">die meistgeschauten der letzten 7 Tage</string>
+    <string name="g4k_art_film">Film</string>
+    <string name="g4k_art_serie">Serie</string>
+    <string name="g4k_kennung_film">FILM</string>
+    <string name="g4k_kennung_serie">SERIE</string>
+    <string name="g4k_badge_neue_folge">NEUE FOLGE</string>
+    <string name="g4k_badge_neu">NEU</string>
+    <string name="g4k_badge_4k">4K</string>
+    <string name="g4k_angesagt_nicht_da">Dieser Titel ist auf diesem Gerät gerade nicht da.</string>
 </resources>

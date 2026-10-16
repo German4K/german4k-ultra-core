@@ -195,6 +195,9 @@ val dataModule = module {
     // channelDao, categoryDao, sport, resolver, panel, wecker).
     single { tv.own.owntv.core.german4k.German4kErinnerungsWecker(androidContext()) }
     single { tv.own.owntv.core.german4k.German4kErinnerungen(androidContext(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    // German4K 3.2: Angesagt / Top 10 — Datei angesagt.json (context, http) und Abgleich mit dem Katalog.
+    single { tv.own.owntv.core.german4k.German4kAngesagtRepository(androidContext(), get()) }
+    single { tv.own.owntv.core.german4k.German4kAngesagtReader(get(), get(), get(), get(), get(), get(), get(), get()) }
     // German4K virtuelle 24/7-Sender (Weg B): Sendepläne über /api/app/virtuell.
     single {
         val panel = get<tv.own.owntv.core.german4k.German4kPanelClient>()

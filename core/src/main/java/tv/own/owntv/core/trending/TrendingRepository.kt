@@ -62,6 +62,10 @@ class TrendingRepository(
         force: Boolean = false,
         onProgress: (TrendingRefreshProgress) -> Unit = {},
     ): TrendingRefreshOutcome {
+        // German4K 3.2: Das Trend-Regal kommt aus unserer angesagt.json (German4kAngesagtRepository), nicht
+        // mehr vom fremden Worker tmdb.owntv.me — dieser Lauf holt deshalb nichts mehr und rührt keinen
+        // Schnappschuss an. Bewusst ein früher Ausstieg statt Löschen (Abgleich mit dem OwnTV-Original).
+        if (!G4K_TMDB_TRENDING) return TrendingRefreshOutcome.SkippedHidden
         val totalStarted = SystemClock.elapsedRealtime()
         val config = settings.metadataConfig()
         if (!config.enabled) return TrendingRefreshOutcome.SkippedProviderMode
@@ -531,6 +535,9 @@ class TrendingRepository(
         private const val BELOW_THRESHOLD_RETRY_MS = 12L * 60 * 60 * 1000
     }
 }
+
+/** German4K 3.2: TMDB-Trend über tmdb.owntv.me aus (siehe [TrendingRepository.refresh]). */
+private const val G4K_TMDB_TRENDING = false
 
 /**
  * The Trending pages held for one media type during a refresh, whichever way they arrived — restored
