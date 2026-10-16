@@ -213,6 +213,8 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
                 put("app_device_id", deviceId)
                 put("version", appVersion)
                 put("app", "ultra")
+                // German4K 3.2: Build mitsenden — ohne ihn sah der Server Build 0 (Angesagt aus, kein Update-Zwang).
+                if (tv.own.owntv.core.CoreBuildInfo.versionCode > 0) put("build", tv.own.owntv.core.CoreBuildInfo.versionCode)
                 if (!username.isNullOrBlank()) { put("username", username.trim()); put("password", password.orEmpty()) }
             }.toString()
             val request = Request.Builder()

@@ -2120,7 +2120,7 @@
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche failed: ${it.message}
 3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	bereiche_stand
-2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	build
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	build
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	channel
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	debug.g4k.panel
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	detail
