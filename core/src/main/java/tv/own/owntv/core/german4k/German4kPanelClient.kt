@@ -447,7 +447,9 @@ class German4kPanelClient(private val client: OkHttpClient, private val endpoint
                 put("tage", tage)
             }.toString()
             val request = Request.Builder()
-                .url(SPORT_ENDPOINT)
+                // German4K 3.2 (C5): Debug-Umweg wie bei /api/app/ultra — sonst lässt sich die Sport-Karte (Wappen,
+                // Konferenz) am Emulator nicht gegen einen lokalen Testserver prüfen. Release: immer Produktion.
+                .url(debugBasis()?.let { "$it/api/app/sport" } ?: SPORT_ENDPOINT)
                 .header("User-Agent", "German4K-Ultra/$appVersion")
                 .header("Accept", "application/json")
                 .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
