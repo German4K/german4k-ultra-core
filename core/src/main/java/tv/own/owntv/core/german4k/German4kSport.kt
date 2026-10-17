@@ -92,7 +92,23 @@ data class German4kSportAntwort(
                 // German4K 3.2 (N4/C2): nur bei `art = "konferenz"` gefüllt; fehlt bei alten Servern → leer/null.
                 paarungen = paarungenAus(s.optJSONArray("paarungen")),
                 bestaetigt = if (!s.has("bestaetigt") || s.isNull("bestaetigt")) null else s.optBoolean("bestaetigt"),
+                // German4K 3.2 (C5): Vereinswappen; fehlen bei alten Servern → null, die App zeigt dann Initialen.
+                heimLogo = logoUrl(s, "heim_logo"),
+                gastLogo = logoUrl(s, "gast_logo"),
             )
+        }
+
+        /**
+         * German4K 3.2 (C5): Wappen-URL nur, wenn sie wirklich ein Bild laden kann — http(s) mit Host. Leer,
+         * „null“ als Text oder Unsinn → null, damit die Karte Initialen zeigt statt eines kaputten Bildes.
+         */
+        internal fun logoUrl(o: JSONObject, feld: String): String? {
+            val roh = textOderNull(o, feld)?.trim() ?: return null
+            val uri = runCatching { java.net.URI(roh) }.getOrNull() ?: return null
+            val schema = uri.scheme?.lowercase()
+            if (schema != "https" && schema != "http") return null
+            if (uri.host.isNullOrBlank()) return null
+            return roh
         }
 
         private fun paarungenAus(arr: JSONArray?): List<German4kPaarung> = buildList {
@@ -101,7 +117,7 @@ data class German4kSportAntwort(
                 val heim = p.optString("heim").trim()
                 val gast = p.optString("gast").trim()
                 if (heim.isEmpty() && gast.isEmpty()) continue
-                add(German4kPaarung(heim, gast, zeitpunkt(p.optString("start"))))
+                add(German4kPaarung(heim, gast, zeitpunkt(p.optString("start")), logoUrl(p, "heim_logo"), logoUrl(p, "gast_logo")))
             }
         }
     }
@@ -135,10 +151,15 @@ data class German4kSportAntwort(
                     } ?: JSONObject.NULL)
                     if (s.paarungen.isNotEmpty()) put("paarungen", JSONArray().apply {
                         s.paarungen.forEach { p ->
-                            put(JSONObject().put("heim", p.heim).put("gast", p.gast).put("start", p.start?.toString() ?: JSONObject.NULL))
+                            put(
+                                JSONObject().put("heim", p.heim).put("gast", p.gast).put("start", p.start?.toString() ?: JSONObject.NULL)
+                                    .put("heim_logo", p.heimLogo ?: JSONObject.NULL).put("gast_logo", p.gastLogo ?: JSONObject.NULL),
+                            )
                         }
                     })
                     put("bestaetigt", s.bestaetigt ?: JSONObject.NULL)
+                    put("heim_logo", s.heimLogo ?: JSONObject.NULL)
+                    put("gast_logo", s.gastLogo ?: JSONObject.NULL)
                 })
             }
         })
@@ -167,6 +188,9 @@ data class German4kSpiel(
     val paarungen: List<German4kPaarung> = emptyList(),
     /** Konferenz: true = EPG des Senders sagt „Konferenz“, false = laut Spielplan, null = unbekannt. */
     val bestaetigt: Boolean? = null,
+    /** German4K 3.2 (C5): Wappen (quadratische PNG) oder null → Initialen-Platzhalter. */
+    val heimLogo: String? = null,
+    val gastLogo: String? = null,
 ) {
     val laeuft: Boolean get() = zustand == ZUSTAND_LAEUFT
     val beendet: Boolean get() = zustand == ZUSTAND_BEENDET
@@ -197,7 +221,44 @@ data class German4kSportSender(
 data class German4kSportBereich(val name: String, val hinweis: String?)
 
 /** German4K 3.2 (N4): eine Paarung einer Konferenz. [start] fehlt, wenn der Server sie nicht mitgibt. */
-data class German4kPaarung(val heim: String, val gast: String, val start: Instant?)
+data class German4kPaarung(
+    val heim: String,
+    val gast: String,
+    val start: Instant?,
+    /** German4K 3.2 (C5): Wappen je Paarung, null → Initialen. */
+    val heimLogo: String? = null,
+    val gastLogo: String? = null,
+)
+
+// ---------------------------------------------------------------------------------------------
+// German4K 3.2 (C5): Initialen als Ersatz, wenn ein Verein (noch) kein Wappen hat.
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * Rechtsform-/Vereinskürzel, die in fast jedem Namen stehen und deshalb nichts unterscheiden
+ * („1. FC Köln“ und „1. FC Union Berlin“ wären sonst beide „FC…“). Kleingeschrieben, ohne Punkt.
+ */
+private val VEREINS_KUERZEL: Set<String> =
+    "fc sv vfb tsg vfl sc tsv fsv ssv spvgg bv bsc sg fk nk sk ac as afc cf cd ssc us ev club".split(' ').toSet()
+
+/** Kleine Füllwörter in Vereinsnamen („Atlético de Madrid“ → „AM“). */
+private val FUELLWOERTER: Set<String> = "de del la di da van von der le les y e".split(' ').toSet()
+
+/** Trenner zwischen Wörtern eines Vereinsnamens: Leerraum, Bindestrich, Schrägstrich, Punkt. */
+private val NAMENS_TRENNER = Regex("[\\s\\-/.]+")
+
+/**
+ * 1–3 Initialen eines Vereinsnamens für den runden Platzhalter: „Eintracht Frankfurt“ → „EF“,
+ * „1. FC Köln“ → „K“, „Paris Saint-Germain“ → „PSG“, „Bayer 04 Leverkusen“ → „BL“. Zahlen, Kürzel und
+ * Füllwörter fallen weg; bleibt nichts übrig, zählen doch die Kürzel („FC“ → „F“). Leer → "".
+ */
+fun vereinsInitialen(name: String): String {
+    val woerter = name.split(NAMENS_TRENNER).map { it.trim('\'', '(', ')', ',') }.filter { it.isNotEmpty() }
+    val mitBuchstabe = woerter.filter { w -> w.any { it.isLetter() } }
+    val kern = mitBuchstabe.filter { it.lowercase() !in VEREINS_KUERZEL && it.lowercase() !in FUELLWOERTER }
+    val basis = kern.ifEmpty { mitBuchstabe }
+    return buildString { basis.mapNotNull { w -> w.firstOrNull { it.isLetter() }?.uppercaseChar() }.take(3).forEach { append(it) } }
+}
 
 data class German4kSportRechte(val sender: String, val hinweis: String?, val kategorie: String? = null)
 

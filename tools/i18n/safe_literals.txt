@@ -2275,6 +2275,7 @@
 1	locale	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	IT
 1	locale	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	TR
 1	locale	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	US
+1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	[\\s\\-/.]+
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	\\s+PPV$
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	\\s+\\d+$
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	an
@@ -2284,13 +2285,19 @@
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	bestaetigt
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	bundesliga
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	champions
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	de del la di da van von der le les y e
+1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	fc sv vfb tsg vfl sc tsv fsv ssv spvgg bv bsc sg fk nk sk ac as afc cf cd ssc us ev club
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	gast
+4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	gast_logo
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	geplant
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	grund
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	gruppe
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	gruppeName
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	heim
+4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	heim_logo
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	hinweis
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	http
+1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	https
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	id
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	kategorie
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	konferenz
