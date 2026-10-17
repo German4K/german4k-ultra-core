@@ -24,6 +24,11 @@ data class German4kSportAntwort(
     val stand: String?,
     val serverTime: String,
     val spiele: List<German4kSpiel>,
+    /**
+     * German4K 3.2: Reiter vom Server (nur Wettbewerbe mit Spielen HEUTE, schon sortiert) oder null bei einem
+     * alten Server — dann bleiben die festen Chips. „Alle“ setzt immer die App davor.
+     */
+    val reiter: List<German4kSportReiter>? = null,
 ) {
     companion object {
         /** Tolerant wie [German4kPanelAnswer.parse]; kaputtes JSON → null. `events` wird ignoriert. */
@@ -41,7 +46,26 @@ data class German4kSportAntwort(
                 stand = textOderNull(o, "stand"),
                 serverTime = o.optString("server_time"),
                 spiele = spiele,
+                reiter = reiterAus(o),
             )
+        }
+
+        /** Fehlt `reiter` (oder ist es kein Array) → null. Einträge ohne id/titel/wettbewerbe und „alle“ fallen weg. */
+        internal fun reiterAus(o: JSONObject): List<German4kSportReiter>? {
+            val arr = o.optJSONArray("reiter") ?: return null
+            val gesehen = HashSet<String>()
+            return buildList {
+                for (i in 0 until arr.length()) {
+                    val r = arr.optJSONObject(i) ?: continue
+                    val id = r.optString("id").trim()
+                    val titel = r.optString("titel").trim()
+                    if (id.isEmpty() || titel.isEmpty() || id.equals(SportTab.ALLE_ID, ignoreCase = true) || !gesehen.add(id)) continue
+                    val w = r.optJSONArray("wettbewerbe") ?: continue
+                    val wettbewerbe = (0 until w.length()).mapNotNull { j -> (w.opt(j) as? String)?.trim()?.takeIf { it.isNotEmpty() } }
+                    if (wettbewerbe.isEmpty()) continue
+                    add(German4kSportReiter(id, titel, wettbewerbe))
+                }
+            }
         }
 
         private fun textOderNull(o: JSONObject, feld: String): String? =
@@ -129,6 +153,11 @@ data class German4kSportAntwort(
         put("grund", grund ?: JSONObject.NULL)
         put("stand", stand ?: JSONObject.NULL)
         put("server_time", serverTime)
+        reiter?.let { l ->
+            put("reiter", JSONArray().apply {
+                l.forEach { r -> put(JSONObject().put("id", r.id).put("titel", r.titel).put("wettbewerbe", JSONArray(r.wettbewerbe))) }
+            })
+        }
         put("spiele", JSONArray().apply {
             spiele.forEach { s ->
                 put(JSONObject().apply {
@@ -290,6 +319,32 @@ fun chipFilter(spiele: List<German4kSpiel>, chip: SportChip): List<German4kSpiel
         val wort = CHIP_WOERTER.getValue(chip)
         spiele.filter { it.wettbewerb?.lowercase()?.contains(wort) == true }
     }
+}
+
+/** German4K 3.2: ein Reiter vom Server — Filter = Spiele, deren `wettbewerb` in [wettbewerbe] steht. */
+data class German4kSportReiter(val id: String, val titel: String, val wettbewerbe: List<String>)
+
+/**
+ * German4K 3.2: ein Reiter über der Liste — entweder ein fester Chip (alter Server, [chip] gesetzt, Text aus
+ * strings.xml) oder ein Server-Reiter ([titel] + [wettbewerbe]). „Alle“ ist immer der feste Chip ALLE.
+ */
+data class SportTab(val id: String, val chip: SportChip?, val titel: String?, val wettbewerbe: List<String>?) {
+    companion object {
+        const val ALLE_ID = "alle"
+        val ALLE = SportTab(ALLE_ID, SportChip.ALLE, null, null)
+    }
+}
+
+/** Reiter zur Antwort: mit `reiter` „Alle“ + genau diese, sonst die festen Chips wie bisher. */
+fun sportTabs(reiter: List<German4kSportReiter>?): List<SportTab> =
+    if (reiter == null) SportChip.entries.map { if (it == SportChip.ALLE) SportTab.ALLE else SportTab(it.name.lowercase(), it, null, null) }
+    else listOf(SportTab.ALLE) + reiter.map { SportTab(it.id, null, it.titel, it.wettbewerbe) }
+
+/** Spiele zum gewählten Reiter. Server-Reiter: Wettbewerb exakt (ohne Groß/Klein, getrimmt) in der Liste. */
+fun tabFilter(spiele: List<German4kSpiel>, tab: SportTab): List<German4kSpiel> {
+    val liste = tab.wettbewerbe ?: return chipFilter(spiele, tab.chip ?: SportChip.ALLE)
+    val namen = liste.map { it.trim().lowercase() }.toSet()
+    return spiele.filter { s -> s.wettbewerb?.trim()?.lowercase()?.let { it in namen } == true }
 }
 
 /** Die vier Regale der Übersicht. */
