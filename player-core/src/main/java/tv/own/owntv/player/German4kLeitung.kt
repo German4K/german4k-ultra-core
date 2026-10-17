@@ -19,11 +19,18 @@ import java.util.Locale
  */
 object German4kLeitung {
 
-    fun belegtStatus(code: Int?): Boolean = code == 458 || code == 460
+    /**
+     * German4K 3.2: Notschalter `leitung_belegt` (fehlt = an) und die Codes aus `konfig.leitung_codes`
+     * (Standard 458/460). Schalter aus ⇒ nie „belegt“ — die App geht ihre alte Rückfall-Leiter.
+     */
+    fun aktiv(): Boolean = tv.own.owntv.core.german4k.German4kFeatures.an(tv.own.owntv.core.german4k.German4kSchalter.LEITUNG_BELEGT)
+
+    fun belegtStatus(code: Int?): Boolean =
+        code != null && aktiv() && code in tv.own.owntv.core.german4k.German4kKonfig.leitungCodes
 
     /** mpv-Fehlerzeile oder Anbietertext. */
     fun belegtText(text: String?): Boolean {
-        if (text.isNullOrBlank()) return false
+        if (text.isNullOrBlank() || !aktiv()) return false
         if (belegtStatus(STATUS.find(text)?.groupValues?.get(1)?.toIntOrNull())) return true
         val t = text.lowercase(Locale.ROOT)
         return WOERTER.any { it in t }

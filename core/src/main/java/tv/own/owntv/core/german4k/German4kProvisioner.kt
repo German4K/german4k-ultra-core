@@ -166,7 +166,7 @@ class German4kProvisioner(
         // primary host must already know the alternative.
         val vorher = cached()
         vorher?.let {
-            registerHosts(it); German4kFeatures.set(it.features); if (_answer.value == null) _answer.value = it
+            registerHosts(it); German4kFeatures.set(it.features); German4kKonfig.set(it.konfig); if (_answer.value == null) _answer.value = it
             // German4K 3.2: Angesagt kennt seine Adresse schon vor dem Netz (Cache-Antwort, nicht „frisch").
             if (German4kAngesagtQuelle.url == null) German4kAngesagtQuelle.setze(it.angesagtUrl, frischeAntwort = false)
         }
@@ -174,7 +174,7 @@ class German4kProvisioner(
         val answer: German4kPanelAnswer = try {
             panel.fetch(deviceId, version, username, password).also {
                 cache(it); registerHosts(it); _answer.value = it
-                German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features)
+                German4kUpdateSource.offer(it.update); German4kFeatures.set(it.features); German4kKonfig.set(it.konfig)
                 // German4K 3.2: Adresse von angesagt.json (fehlt = Feature aus → Regal weg).
                 German4kAngesagtQuelle.setze(it.angesagtUrl, frischeAntwort = true)
                 // Kindersicherung: unsere Rubriken beim Namen nennen, statt sie raten zu lassen.
@@ -407,6 +407,15 @@ class German4kProvisioner(
 
     private suspend fun cache(answer: German4kPanelAnswer) {
         context.german4kStore.edit { it[Keys.LAST_ANSWER] = answer.toJson() }
+    }
+
+    /**
+     * German4K 3.2: Schalter und Konfig aus der zuletzt gespeicherten Antwort, falls dieser Prozess noch keine
+     * Antwort gesehen hat (z. B. vom Erinnerungs-Wecker kalt gestartet). Eine schon gesetzte Antwort bleibt.
+     */
+    suspend fun schalterAusCache() {
+        if (_answer.value != null) return
+        cached()?.let { German4kFeatures.set(it.features); German4kKonfig.set(it.konfig) }
     }
 
     private suspend fun cached(): German4kPanelAnswer? =

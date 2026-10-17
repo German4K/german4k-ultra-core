@@ -94,6 +94,8 @@ data class German4kPanelAnswer(
     /** German4K 3.2: Adresse der Datei `angesagt.json` (Schnittstelle C1) oder null, wenn das Feature
      *  `angesagt` für dieses Gerät aus ist — dann bleiben Angesagt und Top 10 weg. */
     val angesagtUrl: String? = null,
+    /** German4K 3.2: Stellschrauben (`konfig`) oder null, wenn der Server keine schickt → Standardwerte. */
+    val konfig: German4kKonfigWerte? = null,
 ) {
     /** German4K 3.1: `stand`, ersatzweise `bereiche_stand` (ältere Server). */
     val standEffektiv: String? get() = stand ?: bereicheStand
@@ -166,6 +168,7 @@ data class German4kPanelAnswer(
                 bereicheStand = if (o.isNull("bereiche_stand")) null else o.optString("bereiche_stand").takeIf { it.isNotBlank() },
                 stand = if (o.isNull("stand")) null else o.optString("stand").takeIf { it.isNotBlank() },
                 angesagtUrl = if (o.isNull("angesagt_url")) null else o.optString("angesagt_url").trim().takeIf { it.startsWith("http") },
+                konfig = o.optJSONObject("konfig")?.let { German4kKonfigWerte.parse(it) },
             )
         }
     }
@@ -181,6 +184,7 @@ data class German4kPanelAnswer(
         put("bereiche_stand", bereicheStand ?: JSONObject.NULL) // German4K: Cache-Rundreise
         put("stand", stand ?: JSONObject.NULL) // German4K 3.1
         put("angesagt_url", angesagtUrl ?: JSONObject.NULL) // German4K 3.2
+        konfig?.let { put("konfig", it.toJson()) } // German4K 3.2
         test?.let { t -> put("test", JSONObject().apply { put("stunden_offen", t.stundenOffen); put("kaufen_url", t.kaufenUrl) }) }
         put("erwachsen", org.json.JSONArray(erwachsen))
         put("kunde", JSONObject().apply {

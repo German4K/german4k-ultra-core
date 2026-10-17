@@ -81,7 +81,7 @@ class German4kAngesagtRepository(
                 return@withLock
             }
             val jetzt = System.currentTimeMillis()
-            if (!force && cache != null && cache.first == url && jetzt - cache.second < FRISCH_MS) {
+            if (!force && cache != null && cache.first == url && jetzt - cache.second < German4kKonfig.angesagtFrischMs) {
                 if (_datei.value == null) _datei.value = cache.third
                 return@withLock
             }

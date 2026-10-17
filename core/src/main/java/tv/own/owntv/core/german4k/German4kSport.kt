@@ -311,9 +311,15 @@ val SPORT_ZONE: ZoneId = ZoneId.of("Europe/Berlin")
  * Einsortieren: live nach Relevanz; heute (geplant, Starttag in [zone] == [heute]) nach Anstoß, dann
  * Relevanz; später = übrige geplante nach Anstoß; beendet für sich, jüngste zuerst.
  */
-fun regale(alle: List<German4kSpiel>, heute: LocalDate, zone: ZoneId = SPORT_ZONE): SportRegale {
+fun regale(
+    alle: List<German4kSpiel>,
+    heute: LocalDate,
+    zone: ZoneId = SPORT_ZONE,
+    /** German4K 3.2: Notschalter `konferenz_karte` — aus ⇒ Konferenz steht wie ein Spiel in den Regalen (3.1.1-Zeile). */
+    konferenzKarte: Boolean = German4kFeatures.an(German4kSchalter.KONFERENZ_KARTE),
+): SportRegale {
     // German4K 3.2 (N4): Konferenzen bekommen ihre eigene Karte und stehen nicht noch einmal in den Regalen.
-    val (konf, spiele) = alle.partition { it.istKonferenz }
+    val (konf, spiele) = if (konferenzKarte) alle.partition { it.istKonferenz } else emptyList<German4kSpiel>() to alle
     val konferenzen = konf.filter { !it.beendet }.sortedWith(compareByDescending<German4kSpiel> { it.laeuft }.thenBy { it.start })
     val live = spiele.filter { it.laeuft }.sortedByDescending { it.relevanz }
     val beendet = spiele.filter { it.beendet }.sortedByDescending { it.start }

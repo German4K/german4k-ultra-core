@@ -2066,6 +2066,18 @@
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kKategorie.kt	alle sender
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kKategorie.kt	alle serien
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kKategorie.kt	|•·-–—:
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	angesagt_frisch_h
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	angesagt_titel
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	angesagt_untertitel
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	erinnern_vorlauf_sendung_min
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	erinnern_vorlauf_spiel_min
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	konferenz_titel_bl
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	leitung_belegt_text
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	leitung_codes
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	texte
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	top10_filme_titel
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	top10_serien_titel
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kKonfig.kt	top10_untertitel
 4	json	core/src/main/java/tv/own/owntv/core/german4k/German4kLaender.kt	an
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kLaender.kt	ansicht
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kLaender.kt	app_device_id
@@ -2143,6 +2155,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	is_default
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kaufen_url
 1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kick
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	konfig
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kontakt_url
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	kunde
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kPanelClient.kt	laender failed: ${it.message}
@@ -2337,8 +2350,17 @@
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kTitel.kt	\\s*[(\\[]((?:19|20)\\d{2})[)\\]]\\s*$
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kTitel.kt	\\s+
 1	regex	core/src/main/java/tv/own/owntv/core/german4k/German4kTitel.kt	^\\s*([A-Z0-9+]{1,3}(?:-[A-Z0-9+]{1,4})?)\\s+-\\s+
-2	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	angesagt_hero
+3	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	aus
 1	protocol	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	entwicklung
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	erinnern
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	konferenz_karte
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	laender_v2
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	leitung_belegt
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	top10
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	vereinslogos
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	wettbewerb_logo
+1	json	core/src/main/java/tv/own/owntv/core/german4k/German4kUpdateSource.kt	zapp_liste
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kUserAgent.kt	German4K Ultra/${CoreBuildInfo.versionName} (Build ${CoreBuildInfo.versionCode}; ${Build.MODEL})
 2	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	\0
 1	technical	core/src/main/java/tv/own/owntv/core/german4k/German4kVariants.kt	4K

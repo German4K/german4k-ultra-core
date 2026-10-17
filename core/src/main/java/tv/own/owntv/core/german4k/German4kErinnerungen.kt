@@ -82,6 +82,7 @@ class German4kErinnerungen(
      * (schon begonnen, kein Profil, oder Erwachsenes — das ist nie erinnerbar, auch nicht mit PIN).
      */
     suspend fun sendungUmschalten(channel: ChannelEntity, titel: String, startMs: Long, endeMs: Long?): Boolean? {
+        if (!aktiv()) return null // German4K 3.2: Notschalter `erinnern` aus → keine neuen Wecker
         val p = settings.activeProfileIdNow()
         if (p < 0) return null
         val key = sendungSchluessel(channel, startMs)
@@ -91,13 +92,14 @@ class German4kErinnerungen(
         val e = ErinnerungEntity(
             profileId = p, art = ErinnerungEntity.ART_SENDUNG, schluessel = key, titel = titel.trim().ifEmpty { channel.name },
             zusatz = channel.name, startMs = startMs, endeMs = endeMs, channelId = channel.id, sourceId = channel.sourceId,
-            remoteId = channel.remoteId, vorlaufMin = German4kErinnern.VORLAUF_SENDUNG_MIN, createdAt = clock(),
+            remoteId = channel.remoteId, vorlaufMin = German4kKonfig.erinnernVorlaufSendungMin, createdAt = clock(),
         )
         return speichern(e, detail = "sendung:${channel.name}")
     }
 
     /** Spiel oder Konferenz merken/vergessen — hängt an der Spiel-Kennung, der Sender kommt erst beim Auslösen. */
     suspend fun spielUmschalten(spiel: German4kSpiel): Boolean? {
+        if (!aktiv()) return null // German4K 3.2: Notschalter `erinnern`
         val p = settings.activeProfileIdNow()
         if (p < 0) return null
         val key = German4kErinnern.spielSchluessel(spiel.id)
@@ -107,7 +109,7 @@ class German4kErinnerungen(
             profileId = p,
             art = if (spiel.istKonferenz) ErinnerungEntity.ART_KONFERENZ else ErinnerungEntity.ART_SPIEL,
             schluessel = key, titel = spiel.titel, zusatz = spiel.wettbewerb, startMs = spiel.start.toEpochMilli(),
-            spielId = spiel.id, vorlaufMin = German4kErinnern.VORLAUF_SPIEL_MIN, createdAt = clock(),
+            spielId = spiel.id, vorlaufMin = German4kKonfig.erinnernVorlaufSpielMin, createdAt = clock(),
         )
         return speichern(e, detail = "${e.art}:${spiel.id}")
     }
@@ -174,6 +176,8 @@ class German4kErinnerungen(
                 val jetzt = clock()
                 val offene = dao.offene()
                 German4kErinnern.vorbei(offene, jetzt).forEach { erledigen(it.id) }
+                // Notschalter aus: nichts neu stellen, aber auch nichts löschen — geht er wieder an, gelten sie weiter.
+                if (!aktiv()) return@runCatching
                 offene.filter { German4kErinnern.zustand(it, jetzt) == German4kErinnern.Zustand.Wartet && it.benachrichtigtAt == null }
                     .forEach { wecker.stellen(it.id, German4kErinnern.ausloeseZeit(it)) }
                 dao.aufraeumen(jetzt - German4kErinnern.AUFRAEUMEN_NACH_MS)
@@ -189,7 +193,7 @@ class German4kErinnerungen(
 
     /** Für den Knopf: künftig und nicht erwachsen. */
     suspend fun erinnerbar(channel: ChannelEntity, startMs: Long): Boolean =
-        German4kErinnern.erinnerbar(startMs, clock()) && !istErwachsen(channel)
+        aktiv() && German4kErinnern.erinnerbar(startMs, clock()) && !istErwachsen(channel)
 
     /**
      * Nur Debug-Builds (`--ez g4k_erinnerung_test true`): eine Erinnerung, die in [inMinuten] beginnt und
@@ -204,7 +208,7 @@ class German4kErinnerungen(
                 profileId = p, art = ErinnerungEntity.ART_SENDUNG, schluessel = "debug:$start",
                 titel = channel?.name ?: "Test", zusatz = channel?.name, startMs = start, endeMs = start + 30 * 60_000L,
                 channelId = channel?.id, sourceId = channel?.sourceId, remoteId = channel?.remoteId,
-                vorlaufMin = German4kErinnern.VORLAUF_SENDUNG_MIN, createdAt = clock(),
+                vorlaufMin = German4kKonfig.erinnernVorlaufSendungMin, createdAt = clock(),
             ),
         )
     }
@@ -216,6 +220,9 @@ class German4kErinnerungen(
 
     companion object {
         private const val TAG = "German4kErinnern"
+
+        /** German4K 3.2: Notschalter `erinnern` (fehlt = an). Aus ⇒ keine Knöpfe, keine Wecker, kein Auslösen. */
+        fun aktiv(): Boolean = German4kFeatures.an(German4kSchalter.ERINNERN)
 
         /** Anbieter-Kennung des Senders, ersatzweise die lokale id — siehe [German4kErinnern.sendungSchluessel]. */
         fun senderKennung(channel: ChannelEntity): String = channel.remoteId?.takeIf { it.isNotBlank() } ?: "id${channel.id}"
@@ -285,6 +292,9 @@ class German4kErinnerungReceiver : BroadcastReceiver() {
                 val koin = GlobalContext.getOrNull() ?: return@launch
                 val dao = koin.get<ErinnerungDao>()
                 val e = dao.getById(id) ?: return@launch
+                // German4K 3.2: kalter Prozess (nur der Wecker hat ihn geweckt) kennt die Schalter noch nicht.
+                runCatching { koin.get<German4kProvisioner>().schalterAusCache() }
+                if (!German4kErinnerungen.aktiv()) return@launch
                 if (e.erledigt || e.benachrichtigtAt != null) return@launch
                 if (German4kErinnern.zustand(e, System.currentTimeMillis()) == German4kErinnern.Zustand.Vorbei) return@launch
                 val tag = runCatching { koin.get<LocaleStore>().currentTag.value }.getOrNull()
