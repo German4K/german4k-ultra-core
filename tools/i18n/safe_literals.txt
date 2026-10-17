@@ -2321,6 +2321,7 @@
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	streamIds
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	titel
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	wettbewerb
+2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	wettbewerb_logo
 2	json	core/src/main/java/tv/own/owntv/core/german4k/German4kSport.kt	zustand
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kSportRepository.kt	Cache: ${it.message}
 1	log	core/src/main/java/tv/own/owntv/core/german4k/German4kSportRepository.kt	German4kSport

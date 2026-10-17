@@ -282,6 +282,8 @@
     <string name="g4k_erinnern_vorbei">Over</string>
     <string name="g4k_erinnern_lang_druecken">Hold OK on a match: ⏰ Remind me</string>
     <string name="g4k_sport_konferenz_kopf">🔴 <xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="zeit" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · <xliff:g id="spiele" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$s</xliff:g></string>
+    <!-- German4K 3.2 (C6): Konferenz-Kopf mit Wettbewerbslogo — das Logo steht statt des roten Punkts davor. -->
+    <string name="g4k_sport_konferenz_kopf_logo"><xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="zeit" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · <xliff:g id="spiele" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$s</xliff:g></string>
     <string name="g4k_sport_konferenz_laut_plan">according to the fixture list</string>
     <string name="g4k_laender_live">Live</string>
     <string name="g4k_laender_filme">Movies</string>

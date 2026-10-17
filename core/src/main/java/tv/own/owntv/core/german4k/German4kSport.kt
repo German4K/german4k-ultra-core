@@ -95,6 +95,8 @@ data class German4kSportAntwort(
                 // German4K 3.2 (C5): Vereinswappen; fehlen bei alten Servern → null, die App zeigt dann Initialen.
                 heimLogo = logoUrl(s, "heim_logo"),
                 gastLogo = logoUrl(s, "gast_logo"),
+                // German4K 3.2 (C6): Wettbewerbslogo (Spiel und Konferenz); fehlt bei alten Servern → null, dann kein Logo.
+                wettbewerbLogo = logoUrl(s, "wettbewerb_logo"),
             )
         }
 
@@ -160,6 +162,7 @@ data class German4kSportAntwort(
                     put("bestaetigt", s.bestaetigt ?: JSONObject.NULL)
                     put("heim_logo", s.heimLogo ?: JSONObject.NULL)
                     put("gast_logo", s.gastLogo ?: JSONObject.NULL)
+                    put("wettbewerb_logo", s.wettbewerbLogo ?: JSONObject.NULL)
                 })
             }
         })
@@ -191,6 +194,11 @@ data class German4kSpiel(
     /** German4K 3.2 (C5): Wappen (quadratische PNG) oder null → Initialen-Platzhalter. */
     val heimLogo: String? = null,
     val gastLogo: String? = null,
+    /**
+     * German4K 3.2 (C6): Logo des Wettbewerbs (quadratische, transparente PNG) oder null. Anders als beim Wappen
+     * gibt es KEINEN Ersatz: ohne Logo bleibt die Stelle leer, damit die Karte genauso aussieht wie in 3.1.
+     */
+    val wettbewerbLogo: String? = null,
 ) {
     val laeuft: Boolean get() = zustand == ZUSTAND_LAEUFT
     val beendet: Boolean get() = zustand == ZUSTAND_BEENDET
