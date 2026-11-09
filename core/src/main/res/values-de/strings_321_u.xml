@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1 — Strom U (Oberfläche). -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="settings_preferred_audio_language_description">Diese Tonspur automatisch auswählen, wenn sie verfügbar ist.</string>
+    <string name="settings_seconds_short"><xliff:g id="seconds">%1$d</xliff:g> s</string>
+    <!-- B3: filter chips on the start page's trending shelf. -->
+    <string name="g4k_angesagt_filter_alle">Alle</string>
+    <string name="g4k_angesagt_filter_filme">Filme</string>
+    <string name="g4k_angesagt_filter_serien">Serien</string>
+    <!-- D4: search keywords for the two device rows. -->
+    <string name="g4k_suche_darstellung">Darstellung Ansicht TV Handy Tablet Layout</string>
+    <string name="g4k_suche_abmelden">Abmelden Zugang entfernen Gerät Logout</string>
+    <!-- D5: start page settings status — reads the German4K trending shelf, not the old TMDB trend. -->
+    <plurals name="g4k_angesagt_status">
+        <item quantity="one">„Angesagt bei German4K“ zeigt <xliff:g id="count">%1$d</xliff:g> Titel auf der Startseite.</item>
+        <item quantity="other">„Angesagt bei German4K“ zeigt <xliff:g id="count">%1$d</xliff:g> Titel auf der Startseite.</item>
+    </plurals>
+    <!-- D2: descriptions of the German4K start page shelves in Layout > Start screen. -->
+    <string name="g4k_startregal_fussball_text">Laufende Fußballspiele mit den Sendern, die sie zeigen.</string>
+    <string name="g4k_startregal_jetzt_tv_text">Was gerade auf deinen Sendern läuft.</string>
+    <string name="g4k_startregal_neu_filme_text">Die neuesten Filme im Katalog.</string>
+    <!-- U19: own description for "Trending layout" (it showed the trending row's text). -->
+    <string name="g4k_trend_layout_text">Detailkarte mit Hintergrundbild und Beschreibung oder nur eine Reihe Poster.</string>
+    <!-- U24: detail page once the lookup came back empty (was "Loading…" forever). -->
+    <string name="g4k_detail_keine">Keine weiteren Angaben zu diesem Titel.</string>
+    <!-- U29: More > My access, when no expiry date is known (pane was empty). -->
+    <string name="g4k_mehr_zugang_text">Verlängern, ein zweites Gerät einrichten oder uns schreiben – jeweils per QR-Code mit dem Handy.</string>
+    <!-- U35: Live TV, empty preview column while the live preview setting is off. -->
+    <string name="g4k_live_vorschau_aus_titel">Live-Vorschau aus</string>
+    <string name="g4k_live_vorschau_aus_text">Markiere einen Sender – OK startet ihn.</string>
+    <string name="u321_untertitel_cc_kurz">Hörgeschädigte (CC)</string>
+    <string name="u321_live_zeit_rest"><xliff:g id="start" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g>–<xliff:g id="end" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · noch <xliff:g id="minutes" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$d</xliff:g> Min.</string>
+    <string name="g4k_multiview_max_text">Die Obergrenze für Multiview: Es startet mit zwei Kacheln, weitere fügst du bis zu dieser Zahl hinzu. Jede Kachel belegt eine Verbindung deines Anbieters.</string>
+    <string name="g4k_home_neue_filme">Neue Filme</string>
+</resources>

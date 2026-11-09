@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1 — p-15 (Abnahme Kandidat 8). -->
+<resources>
+    <string name="p15_hilfe_gesendet_kurz">Ist bei uns – danke!</string>
+    <string name="p15_login_user_fehlt">Bitte gib deinen Benutzernamen ein.</string>
+    <string name="p15_login_pass_fehlt">Bitte gib dein Passwort ein.</string>
+</resources>

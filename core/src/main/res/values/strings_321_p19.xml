@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K 3.2.1 (p-19): help line names only what really goes out — "Dolby", never a promise of Dolby Digital Plus. -->
+<resources>
+    <string name="p19_321_dolby">Dolby</string>
+    <string name="p19_321_weg_dolby">Dolby to the receiver</string>
+    <string name="p19_321_weg_dolby_stereo">Dolby to the receiver, otherwise stereo</string>
+</resources>

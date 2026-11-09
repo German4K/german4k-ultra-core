@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K 3.2.1 (p-19): Hilfe-Zeile nennt nur, was wirklich ausgegeben wird — „Dolby“, nie ein Versprechen von Dolby Digital Plus. -->
+<resources>
+    <string name="p19_321_dolby">Dolby</string>
+    <string name="p19_321_weg_dolby">Dolby an den Receiver</string>
+    <string name="p19_321_weg_dolby_stereo">Dolby an den Receiver, sonst Stereo</string>
+</resources>

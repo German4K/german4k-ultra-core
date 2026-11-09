@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1, Strom P (Player & Betrieb). -->
+<resources>
+    <string name="p321_mv_zweiter_dazu">Zweiten Sender dazu</string>
+    <string name="p321_mv_zweiter_hinweis">OK lange drücken: als zweiten Sender dazu</string>
+    <string name="p321_mv_zweiter_waehlen">Zweiten Sender wählen</string>
+    <string name="p321_leitung_neustart">Leitung freigegeben – der Sender startet gleich neu.</string>
+    <string name="p321_leitung_fehler">Das Freigeben hat nicht geklappt. Versuch es in ein paar Minuten noch einmal.</string>
+    <string name="p321_aufnahme_weicht">Aufnahme beendet – auf deiner einen Leitung hat Zuschauen Vorrang.</string>
+    <string name="p321_aufnahme_wartet">Aufnahme nicht gestartet – deine Leitung wird gerade zum Zuschauen gebraucht.</string>
+    <string name="p321_pflicht_downloader">Klappt der Download nicht: Öffne die App Downloader und gib den Code %1$s ein.</string>
+    <string name="p321_ton_sprachen">Ton: %1$s</string>
+    <!-- P7: Untertitel über Engine-Wechsel -->
+    <string name="p321_bild_ut_nur_exo">Bild-Untertitel (PGS/VobSub) zeigt bei diesem Film nur der ExoPlayer. Wähle die Spur im Untertitel-Menü, dann wechselt die Wiedergabe dorthin.</string>
+    <string name="p321_bild_ut_text_ersatz">Bild-Untertitel zeigt nur der ExoPlayer – mpv zeigt dir stattdessen „%1$s“.</string>
+    <string name="p321_bild_ut_exo_geht_nicht">Bild-Untertitel sind mit diesem Film nur im ExoPlayer möglich – und der kann ihn auf diesem Gerät nicht abspielen. Wähle einen Text-Untertitel.</string>
+    <string name="p321_untertitel_cc">Untertitel für Hörgeschädigte (CC)</string>
+</resources>

@@ -1,0 +1,645 @@
+package tv.own.owntv.core.german4k
+
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import java.io.IOException
+
+/** One Xtream source the German4K panel hands out (a "Kachel": same line on another host). */
+data class German4kSource(
+    val id: String,
+    val name: String,
+    val server: String,
+    val username: String,
+    val password: String,
+    val isDefault: Boolean,
+    /** Further hosts serving the same line (Multi-DNS stage 2); the app switches between them on failure. */
+    val altServers: List<String> = emptyList(),
+)
+
+/** German4K 3.3: Antwort auf „Problem melden“. */
+data class German4kProblemAntwort(val ok: Boolean, val nummer: String?, val text: String?, val aktionen: List<String>)
+
+data class German4kUpdate(val channel: String, val versionName: String, val versionCode: Int, val url: String, val notes: String, val required: Boolean)
+
+/**
+ * Vier Wege, die am Fernseher sonst fremde Hilfe brauchen: verlängern, ein zweites Gerät einrichten,
+ * jemanden werben, uns schreiben. Die App macht QR-Codes daraus — das Handy übernimmt den Rest.
+ */
+data class German4kKunde(
+    val verlaengernUrl: String = "",
+    val zweitgeraetUrl: String = "",
+    /** Leer, solange das Gerät an keine Line gekoppelt ist. */
+    val werbenUrl: String = "",
+    /** WhatsApp mit vorbereitetem Text (Gerät, Gerätecode). */
+    val kontaktUrl: String = "",
+    /** Restlaufzeit in Tagen, oder null. */
+    val tageOffen: Int? = null,
+)
+
+/**
+ * Ein laufender Testzugang.
+ *
+ * Ein Testkunde sieht dasselbe Bild wie ein zahlender und merkt oft erst, dass es ein Test war,
+ * wenn das Bild weg ist. Die Stundenzahl gehört deshalb dorthin, wo sonst das Ablaufdatum steht.
+ */
+data class German4kTest(val stundenOffen: Int, val kaufenUrl: String)
+
+/** Ein Land oder Bereich der Senderliste, mit Senderzahl — niemand schaltet blind etwas ab. */
+data class German4kBereich(val id: Int, val name: String, val sender: Int, val an: Boolean, val standard: Boolean)
+
+data class German4kBereiche(val ok: Boolean, val grund: String?, val liste: List<German4kBereich>)
+
+/** Answer of `POST https://german4k.com/api/app/ultra` — contract: lib/app-panel/ultra.ts in the website repo. */
+data class German4kPanelAnswer(
+    val mac: String,
+    val deviceKey: String,
+    val registered: Boolean,
+    val expireDate: String,
+    val locked: Boolean,
+    val noteTitle: String,
+    val noteContent: String,
+    val appVersion: String,
+    val apkLink: String,
+    val einrichtenUrl: String,
+    val loginHost: String,
+    val sources: List<German4kSource>,
+    /** Hint kind (verlaengern | abgelaufen | wartung | gesperrt | willkommen | login | info | ""), its stable id
+     *  (so "Verstanden" can hide it for the day) and the QR target for renewing. */
+    val noteTyp: String = "",
+    val noteId: String = "",
+    val verlaengernUrl: String = "",
+    /** What the in-app updater should offer (panel-driven, per device channel), or null. */
+    val update: German4kUpdate? = null,
+    /** Feature switches: aus | entwicklung | beta | an. */
+    val features: Map<String, String> = emptyMap(),
+    /** Verlängern, Zweitgerät, Werben, Kontakt — siehe [German4kKunde]. */
+    val kunde: German4kKunde = German4kKunde(),
+    /** Läuft hinter diesem Gerät ein Test, oder null bei einem gewöhnlichen Zugang. */
+    val test: German4kTest? = null,
+    /** Rubriken, die wir als „für Erwachsene" führen — das Kinderprofil blendet sie aus. */
+    val erwachsen: List<String> = emptyList(),
+    /** The panel asks this device to upload its error log on the next start (`/mac diagnose <MAC>`). */
+    val diagnoseRequested: Boolean = false,
+    /** Server clock (UTC, ISO). A device clock far off this makes the guide look shifted. */
+    val serverTime: String = "",
+    /** German4K: letzte Änderung der Länder/Bereiche dieses Kunden (UTC, ISO) oder null. Ist ein
+     *  Katalog älter, holt der Provisioner ihn neu — siehe German4kProvisioner.syncWennBereicheNeuer. */
+    val bereicheStand: String? = null,
+    /** German4K 3.1: letzte Konfig- ODER Laufzeitänderung der Line (UTC, ISO) oder null, solange der Server es
+     *  noch nicht liefert. Neuer als der Katalog → sofort neu holen (auch nach einer Verlängerung). */
+    val stand: String? = null,
+    /** German4K 3.2: Adresse der Datei `angesagt.json` (Schnittstelle C1) oder null, wenn das Feature
+     *  `angesagt` für dieses Gerät aus ist — dann bleiben Angesagt und Top 10 weg. */
+    val angesagtUrl: String? = null,
+    /** German4K 3.2: Stellschrauben (`konfig`) oder null, wenn der Server keine schickt → Standardwerte. */
+    val konfig: German4kKonfigWerte? = null,
+) {
+    /** German4K 3.1: `stand`, ersatzweise `bereiche_stand` (ältere Server). */
+    val standEffektiv: String? get() = stand ?: bereicheStand
+
+    companion object {
+        /**
+         * German4K 3.1: Hat sich die Laufzeit geändert, seit wir zuletzt gefragt haben? Neues Ablaufdatum oder
+         * neues Passwort einer Quelle heißt: Verlängerung oder Rotation — dann sind alle gespeicherten
+         * Stream-Adressen und ein stehender „Zugang abgelaufen"-Hinweis veraltet. Ohne alte Antwort: nein.
+         */
+        fun laufzeitGeaendert(alt: German4kPanelAnswer?, neu: German4kPanelAnswer): Boolean {
+            if (alt == null) return false
+            if (alt.expireDate != neu.expireDate) return true
+            val altPw = alt.sources.associate { it.username to it.password }
+            return neu.sources.any { s -> altPw[s.username]?.let { it != s.password } == true }
+        }
+
+        fun parse(json: String): German4kPanelAnswer {
+            val o = JSONObject(json)
+            val arr = o.optJSONArray("sources")
+            val sources = buildList {
+                if (arr != null) for (i in 0 until arr.length()) {
+                    val s = arr.getJSONObject(i)
+                    add(
+                        German4kSource(
+                            id = s.optString("id"),
+                            name = s.optString("name"),
+                            server = s.optString("server"),
+                            username = s.optString("username"),
+                            password = s.optString("password"),
+                            isDefault = s.optBoolean("is_default", false),
+                            altServers = s.optJSONArray("alt_servers")?.let { a -> List(a.length()) { a.optString(it) }.filter { it.isNotBlank() } } ?: emptyList(),
+                        ),
+                    )
+                }
+            }
+            return German4kPanelAnswer(
+                mac = o.optString("mac"),
+                deviceKey = o.optString("device_key"),
+                registered = o.optBoolean("mac_registered", false),
+                expireDate = o.optString("expire_date"),
+                locked = o.optInt("lock", 0) == 1,
+                noteTitle = o.optString("note_title"),
+                noteContent = o.optString("note_content"),
+                appVersion = o.optString("app_version"),
+                apkLink = o.optString("apk_link"),
+                einrichtenUrl = o.optString("einrichten_url"),
+                loginHost = o.optString("login_host"),
+                sources = sources,
+                noteTyp = o.optString("note_typ"),
+                noteId = o.optString("note_id"),
+                verlaengernUrl = o.optString("verlaengern_url"),
+                update = o.optJSONObject("update")?.let { u ->
+                    German4kUpdate(u.optString("channel"), u.optString("version_name"), u.optInt("version_code", 0), u.optString("url"), u.optString("notes"), u.optBoolean("required", false))
+                },
+                features = o.optJSONObject("features")?.let { f -> f.keys().asSequence().associateWith { k -> f.optString(k) } } ?: emptyMap(),
+                kunde = o.optJSONObject("kunde")?.let { k ->
+                    German4kKunde(
+                        verlaengernUrl = k.optString("verlaengern_url"),
+                        zweitgeraetUrl = k.optString("zweitgeraet_url"),
+                        werbenUrl = k.optString("werben_url"),
+                        kontaktUrl = k.optString("kontakt_url"),
+                        tageOffen = if (k.isNull("tage_offen")) null else k.optInt("tage_offen"),
+                    )
+                } ?: German4kKunde(),
+                test = o.optJSONObject("test")?.let { t -> German4kTest(t.optInt("stunden_offen", 0), t.optString("kaufen_url")) },
+                erwachsen = o.optJSONArray("erwachsen")?.let { a -> List(a.length()) { a.optString(it) }.filter { it.isNotBlank() } } ?: emptyList(),
+                diagnoseRequested = o.optBoolean("diagnose_requested", false),
+                serverTime = o.optString("server_time"),
+                bereicheStand = if (o.isNull("bereiche_stand")) null else o.optString("bereiche_stand").takeIf { it.isNotBlank() },
+                stand = if (o.isNull("stand")) null else o.optString("stand").takeIf { it.isNotBlank() },
+                angesagtUrl = if (o.isNull("angesagt_url")) null else o.optString("angesagt_url").trim().takeIf { it.startsWith("http") },
+                konfig = o.optJSONObject("konfig")?.let { German4kKonfigWerte.parse(it) },
+            )
+        }
+    }
+
+    fun toJson(): String = JSONObject().apply {
+        put("mac", mac); put("device_key", deviceKey); put("mac_registered", registered); put("expire_date", expireDate)
+        put("lock", if (locked) 1 else 0); put("note_title", noteTitle); put("note_content", noteContent)
+        put("app_version", appVersion); put("apk_link", apkLink); put("einrichten_url", einrichtenUrl); put("login_host", loginHost)
+        put("note_typ", noteTyp); put("note_id", noteId); put("verlaengern_url", verlaengernUrl)
+        update?.let { u -> put("update", JSONObject().apply { put("channel", u.channel); put("version_name", u.versionName); put("version_code", u.versionCode); put("url", u.url); put("notes", u.notes); put("required", u.required) }) }
+        put("features", JSONObject().apply { features.forEach { (k, v) -> put(k, v) } })
+        put("diagnose_requested", diagnoseRequested); put("server_time", serverTime)
+        put("bereiche_stand", bereicheStand ?: JSONObject.NULL) // German4K: Cache-Rundreise
+        put("stand", stand ?: JSONObject.NULL) // German4K 3.1
+        put("angesagt_url", angesagtUrl ?: JSONObject.NULL) // German4K 3.2
+        konfig?.let { put("konfig", it.toJson()) } // German4K 3.2
+        test?.let { t -> put("test", JSONObject().apply { put("stunden_offen", t.stundenOffen); put("kaufen_url", t.kaufenUrl) }) }
+        put("erwachsen", org.json.JSONArray(erwachsen))
+        put("kunde", JSONObject().apply {
+            put("verlaengern_url", kunde.verlaengernUrl); put("zweitgeraet_url", kunde.zweitgeraetUrl)
+            put("werben_url", kunde.werbenUrl); put("kontakt_url", kunde.kontaktUrl)
+            if (kunde.tageOffen != null) put("tage_offen", kunde.tageOffen) else put("tage_offen", JSONObject.NULL)
+        })
+        put("sources", org.json.JSONArray().apply {
+            sources.forEach { s ->
+                put(JSONObject().apply {
+                    put("id", s.id); put("name", s.name); put("server", s.server); put("username", s.username)
+                    put("password", s.password); put("is_default", s.isDefault)
+                    put("alt_servers", org.json.JSONArray(s.altServers))
+                })
+            }
+        })
+    }.toString()
+}
+
+/**
+ * Talks to the German4K panel. Plain JSON over HTTPS; the panel always answers 200 with a valid body
+ * (a hint instead of an error), so anything else is a transport failure and the caller falls back to
+ * the last cached answer.
+ */
+class German4kPanelClient(private val client: OkHttpClient, private val endpoint: String = ENDPOINT) {
+
+    /** Anfragekörper (rein, unit-getestet). */
+    internal fun anfrage(
+        deviceId: String,
+        appVersion: String,
+        build: Int,
+        username: String?,
+        password: String?,
+        still: Boolean,
+    ): JSONObject = JSONObject().apply {
+        put("app_device_id", deviceId)
+        put("version", appVersion)
+        put("app", "ultra")
+        // German4K 3.2: Build mitsenden — ohne ihn sah der Server Build 0 (Angesagt aus, kein Update-Zwang).
+        if (build > 0) put("build", build)
+        if (!username.isNullOrBlank()) { put("username", username.trim()); put("password", password.orEmpty()) }
+        if (still) put("still", true) // German4K 3.2.1 (U4, Review)
+    }
+
+    /** [still] = German4K 3.2.1 (U4, Review): Kopplungs-Abfrage — Server schreibt keine auth-Zeile in app_aufrufe. */
+    suspend fun fetch(
+        deviceId: String,
+        appVersion: String,
+        username: String? = null,
+        password: String? = null,
+        still: Boolean = false,
+    ): German4kPanelAnswer =
+        withContext(Dispatchers.IO) {
+            val body = anfrage(deviceId, appVersion, tv.own.owntv.core.CoreBuildInfo.versionCode, username, password, still).toString()
+            val request = Request.Builder()
+                // German4K 3.1: Debug-Builds können das ganze Panel auf einen lokalen Server lenken (Test Weg B).
+                .url(debugBasis()?.let { "$it/api/app/ultra" } ?: endpoint)
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) throw IOException("HTTP ${response.code} vom German4K-Panel")
+                val text = response.body.string()
+                Log.d(TAG, "panel answered: ${text.length} chars")
+                German4kPanelAnswer.parse(text)
+            }
+        }
+
+    /** Sends a diagnostics report (crash, playback errors, self-test). Fire and forget: never blocks the UI. */
+    suspend fun sendDiagnose(deviceId: String, appVersion: String, versionCode: Int, typ: String, text: String, meta: JSONObject?): Boolean =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("version", appVersion)
+                put("build", versionCode)
+                put("typ", typ)
+                put("text", text)
+                if (meta != null) put("meta", meta)
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/diagnose")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { it.isSuccessful }
+            }.getOrElse {
+                Log.w(TAG, "diagnose not delivered: ${it.message}")
+                false
+            }
+        }
+
+    /**
+     * German4K 3.3: Beta-Kanal selbst an/aus (`/beta`). true = Server hat es übernommen. Die neue Fassung kommt danach
+     * über den normalen Update-Weg (Panel-Antwort `update`), beim Verlassen der Beta als Rückweg-Build.
+     */
+    suspend fun betaSetzen(deviceId: String, appVersion: String, an: Boolean): Boolean =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("an", an)
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/beta")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r -> r.isSuccessful && JSONObject(r.body.string()).optBoolean("ok", false) }
+            }.getOrElse {
+                Log.w(TAG, "beta not set: ${it.message}")
+                false
+            }
+        }
+
+    /**
+     * German4K 3.3 „Problem melden“: Selbsttest + Protokoll an `/problem`. Antwort mit Kurznummer (P-xxxx) und
+     * Kundentext. `null` = Server kennt den Weg noch nicht oder nicht erreichbar → Aufrufer sendet wie bisher.
+     */
+    suspend fun problemMelden(deviceId: String, appVersion: String, versionCode: Int, text: String, meta: JSONObject?): German4kProblemAntwort? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("version", appVersion)
+                put("build", versionCode)
+                put("text", text)
+                if (meta != null) put("meta", meta)
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/problem")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    if (!r.isSuccessful) return@use null
+                    val j = JSONObject(r.body.string())
+                    val akt = j.optJSONArray("aktionen")
+                    German4kProblemAntwort(
+                        ok = j.optBoolean("ok", false),
+                        nummer = j.optString("nummer").takeIf { it.isNotBlank() },
+                        text = j.optString("text").takeIf { it.isNotBlank() } ?: j.optString("grund").takeIf { it.isNotBlank() },
+                        aktionen = (0 until (akt?.length() ?: 0)).map { akt!!.optString(it) },
+                    )
+                }
+            }.getOrElse {
+                Log.w(TAG, "problem not delivered: ${it.message}")
+                null
+            }
+        }
+
+    /**
+     * „Verbindung freigeben": tritt die Line dieses Geräts einmal durch (Soft-Reset im Panel,
+     * kostet nichts). Antwort ist `{ok, grund?}` — `grund` ist bereits Kundentext.
+     */
+    suspend fun sendReset(deviceId: String, appVersion: String): Pair<Boolean, String?> =
+        sendResetMitVorgang(deviceId, appVersion).let { Pair(it.ok, it.grund) }
+
+    /** German4K 3.2.1 (B4): Antwort von `/reset`; [vorgang] nur, wenn der Server eine Kennung liefert. */
+    data class Freigabe(val ok: Boolean, val grund: String?, val vorgang: String?)
+
+    suspend fun sendResetMitVorgang(deviceId: String, appVersion: String): Freigabe =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply { put("app_device_id", deviceId); put("aktion", "kick") }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/reset")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    Freigabe(
+                        o.optBoolean("ok", false),
+                        o.optString("grund").takeIf { it.isNotBlank() },
+                        o.optString("vorgang").takeIf { it.isNotBlank() },
+                    )
+                }
+            }.getOrElse {
+                Log.w(TAG, "reset failed: ${it.message}")
+                Freigabe(false, null, null)
+            }
+        }
+
+    /**
+     * German4K 3.2.1 (B4): Stand eines Freigabe-Vorgangs (`{app_device_id, vorgang}` an `/reset`, Server-Strom S).
+     * Liefert `wartet` | `fertig` | `fehler` | `unbekannt`, oder null, wenn der Server (noch) keinen Stand kennt —
+     * dann wartet die App einfach ein paar Sekunden. Tolerant: jede andere Antwortform gilt als null.
+     */
+    suspend fun freigabeStand(deviceId: String, appVersion: String, vorgang: String): String? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply { put("app_device_id", deviceId); put("vorgang", vorgang) }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/reset")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    JSONObject(r.body.string()).optString("stand").takeIf { it.isNotBlank() }
+                }
+            }.getOrNull()
+        }
+
+    /**
+     * German4K: „Zugang von diesem Gerät entfernen" — löst die Kopplung Gerät ⇄ Line im Panel
+     * (`app_geraete.line_username = null`). Danach liefert `/api/app/ultra` für dieses Gerät keine
+     * Quellen mehr, der nächste Start landet also im Anmeldebildschirm.
+     *
+     * Antwort ist wie bei [sendReset] immer HTTP 200 mit `{ok, grund?}` — `grund` ist bereits
+     * Kundentext (z. B. die Sperrfrist) und gehört deshalb auf den Schirm statt des allgemeinen
+     * Fehlertextes. Nur `ok == true` darf die App lokal aufräumen lassen: räumt sie bei einem
+     * Netzfehler trotzdem auf, legt der nächste Start dieselbe Quelle wieder an und der Kunde hält
+     * das Entfernen für kaputt.
+     */
+    suspend fun sendAbmelden(deviceId: String, appVersion: String): Pair<Boolean, String?> =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply { put("app_device_id", deviceId) }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/abmelden")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    Pair(o.optBoolean("ok", false), o.optString("grund").takeIf { it.isNotBlank() })
+                }
+            }.getOrElse {
+                Log.w(TAG, "abmelden failed: ${it.message}")
+                Pair(false, null)
+            }
+        }
+
+    /**
+     * Länder und Bereiche lesen (ohne [id]) oder einen schalten. Die Antwort trägt immer den neuen
+     * Stand, damit die Oberfläche nie raten muss, was gerade gilt.
+     */
+    /**
+     * Favoriten je Zugang abgleichen: schickt den eigenen Stand und bekommt den gemeinsamen zurück.
+     *
+     * `stand` ist eine flache Karte `Schlüssel -> { wert, zeit }`. Der Server versteht die Schlüssel
+     * nicht, er führt nur je Schlüssel den jüngeren Eintrag zusammen — damit zwei Geräte sich nicht
+     * gegenseitig überschreiben. Was die Werte bedeuten, weiß allein die App.
+     */
+    suspend fun sync(deviceId: String, appVersion: String, stand: Map<String, Pair<String, Long>>): Map<String, Pair<String, Long>>? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                if (stand.isNotEmpty()) {
+                    put(
+                        "stand",
+                        JSONObject().apply {
+                            stand.forEach { (k, v) -> put(k, JSONObject().put("wert", v.first).put("zeit", v.second)) }
+                        },
+                    )
+                }
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/sync")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    if (!o.optBoolean("ok", false)) return@use null
+                    val st = o.optJSONObject("stand") ?: return@use emptyMap<String, Pair<String, Long>>()
+                    buildMap {
+                        st.keys().forEach { k ->
+                            val e = st.optJSONObject(k) ?: return@forEach
+                            put(k, e.optString("wert") to e.optLong("zeit"))
+                        }
+                    }
+                }
+            }.getOrNull()
+        }
+
+    suspend fun bereiche(deviceId: String, appVersion: String, id: Int? = null, an: Boolean? = null): German4kBereiche =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("typ", "live")
+                if (id != null && an != null) { put("id", id); put("an", an) }
+            }.toString()
+            val request = Request.Builder()
+                .url("$endpoint/bereiche")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    val o = JSONObject(r.body.string())
+                    val arr = o.optJSONArray("bereiche")
+                    German4kBereiche(
+                        ok = o.optBoolean("ok", false),
+                        grund = o.optString("grund").takeIf { it.isNotBlank() },
+                        liste = buildList {
+                            if (arr != null) for (i in 0 until arr.length()) {
+                                val b = arr.getJSONObject(i)
+                                add(German4kBereich(b.optInt("id"), b.optString("name"), b.optInt("sender"), b.optBoolean("an"), b.optBoolean("standard")))
+                            }
+                        },
+                    )
+                }
+            }.getOrElse {
+                Log.w(TAG, "bereiche failed: ${it.message}")
+                German4kBereiche(ok = false, grund = null, liste = emptyList())
+            }
+        }
+
+    /**
+     * German4K 3.2 (N8/C3): Länder-Ansicht lesen ([schalter] = null) oder ein Land/einen Bereich schalten.
+     * Die Antwort trägt immer den Stand, den der Server wirklich hat — auch bei `ok=false` (mit `grund`).
+     * Transportfehler → `ok=false` ohne Länder und ohne Grund.
+     */
+    suspend fun laender(deviceId: String, appVersion: String, schalter: German4kLaenderSchalter? = null): German4kLaenderAntwort =
+        withContext(Dispatchers.IO) {
+            val body = laenderAnfrage(deviceId, schalter).toString()
+            val request = Request.Builder()
+                .url((debugBasis()?.let { "$it/api/app/ultra" } ?: endpoint) + "/bereiche")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    if (!r.isSuccessful) throw IOException("HTTP ${r.code}")
+                    German4kLaenderAntwort.parse(r.body.string())
+                }
+            }.onFailure { Log.w(TAG, "laender failed: ${it.message}") }.getOrNull()
+                ?: German4kLaenderAntwort(ok = false, grund = null, version = null, laender = emptyList(), meldung = null, warnung = null, bereicheStand = null)
+        }
+
+    /**
+     * German4K 3.2 (C1): Mess-Ereignis `POST /api/app/ultra/ereignis` → `app_aufrufe`
+     * (`erinnerung_gesetzt`, `erinnerung_umgeschaltet`, `konferenz_klick`, `angesagt_klick`, `top10_klick`).
+     * Still: jeder Fehler wird geschluckt, nie wartet eine Oberfläche darauf.
+     */
+    suspend fun ereignis(deviceId: String, appVersion: String, aktion: String, detail: String?): Boolean =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("aktion", aktion)
+                if (detail != null) put("detail", detail.take(200))
+                // 3.2.1: Build mitschicken, damit Zählpunkte je Fassung auswertbar sind.
+                if (tv.own.owntv.core.CoreBuildInfo.versionCode > 0) put("build", tv.own.owntv.core.CoreBuildInfo.versionCode)
+            }.toString()
+            val request = Request.Builder()
+                .url((debugBasis()?.let { "$it/api/app/ultra" } ?: endpoint) + "/ereignis")
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching { client.newCall(request).execute().use { it.isSuccessful } }.getOrDefault(false)
+        }
+
+    /**
+     * Sport-Hub: Spielplan mit den Sendern dieses Kunden. Transportfehler → null (≠ `ok=false`, das
+     * ist eine gültige Antwort mit `grund`). Nie eine streamId daraus zwischenspeichern.
+     */
+    suspend fun sport(deviceId: String, appVersion: String, tage: Int = 3): German4kSportAntwort? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("version", appVersion)
+                put("tage", tage)
+            }.toString()
+            val request = Request.Builder()
+                // German4K 3.2 (C5): Debug-Umweg wie bei /api/app/ultra — sonst lässt sich die Sport-Karte (Wappen,
+                // Konferenz) am Emulator nicht gegen einen lokalen Testserver prüfen. Release: immer Produktion.
+                .url(debugBasis()?.let { "$it/api/app/sport" } ?: SPORT_ENDPOINT)
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                client.newCall(request).execute().use { r ->
+                    if (!r.isSuccessful) throw IOException("HTTP ${r.code}")
+                    German4kSportAntwort.parse(r.body.string())
+                }
+            }.getOrElse {
+                Log.w(TAG, "sport failed: ${it.message}")
+                null
+            }
+        }
+
+    /**
+     * Virtuelle 24/7-Sender (Weg B): Sendeplan. Transportfehler → null; dann spielt der Sender normal.
+     * Eigenes Zeitlimit 3,5 s — der Kunde hat gerade umgeschaltet und wartet.
+     */
+    suspend fun virtuell(deviceId: String, appVersion: String, build: Int, streamId: Long?, fensterH: Int): German4kVirtuellAntwort? =
+        withContext(Dispatchers.IO) {
+            val body = JSONObject().apply {
+                put("app_device_id", deviceId)
+                put("version", appVersion)
+                put("build", build)
+                if (streamId != null) put("stream_id", streamId)
+                put("fenster_h", fensterH.coerceIn(1, 24))
+            }.toString()
+            val request = Request.Builder()
+                .url(virtuellEndpoint())
+                .header("User-Agent", "German4K-Ultra/$appVersion")
+                .header("Accept", "application/json")
+                .post(body.toRequestBody("application/json; charset=utf-8".toMediaType()))
+                .build()
+            runCatching {
+                // Ein Wiederholversuch auf frischer Verbindung: eine verwaiste Keep-alive-Verbindung („unexpected
+                // end of stream") soll den Kunden nicht auf Weg A schicken. Das Zeitlimit gilt für beides zusammen.
+                client.newBuilder().callTimeout(3_500, java.util.concurrent.TimeUnit.MILLISECONDS).retryOnConnectionFailure(true).build()
+                    .newCall(request).execute().use { r ->
+                        if (!r.isSuccessful) throw IOException("HTTP ${r.code}")
+                        German4kVirtuellAntwort.parse(r.body.string())
+                    }
+            }.getOrElse {
+                Log.w(TAG, "virtuell failed: ${it.message}")
+                null
+            }
+        }
+
+    companion object {
+        const val ENDPOINT = "https://german4k.com/api/app/ultra"
+        const val SPORT_ENDPOINT = "https://german4k.com/api/app/sport"
+
+        /**
+         * Nur Debug-Builds: `adb shell setprop debug.g4k.panel http://10.0.2.2:3000` lenkt /api/app/virtuell
+         * auf einen lokalen Server um. Android-Systemeigenschaft, nicht Java-System-Property.
+         */
+        fun virtuellEndpoint(): String = (debugBasis() ?: "https://german4k.com") + "/api/app/virtuell"
+
+        /** Regel für den Debug-Umweg; null = Produktion. */
+        fun debugBasis(prop: String?, debug: Boolean): String? =
+            if (!debug) null else prop?.trim()?.trimEnd('/')?.takeIf { it.startsWith("http") }
+
+        /** Debug-Umweg aus der Android-Systemeigenschaft `debug.g4k.panel`; in Release immer null. */
+        fun debugBasis(): String? {
+            if (!tv.own.owntv.core.CoreBuildInfo.debug) return null
+            val prop = runCatching {
+                Class.forName("android.os.SystemProperties").getMethod("get", String::class.java)
+                    .invoke(null, "debug.g4k.panel") as String
+            }.getOrNull()
+            return debugBasis(prop, debug = true)
+        }
+        private const val TAG = "German4kPanel"
+    }
+}

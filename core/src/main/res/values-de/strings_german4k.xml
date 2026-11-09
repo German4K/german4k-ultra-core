@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="g4k_checking">Zugang wird geprüft…</string>
+    <string name="g4k_importing">Deine Sender werden eingerichtet…</string>
+    <string name="g4k_uncoupled_title">Fast geschafft</string>
+    <string name="g4k_uncoupled_body">Dieses Gerät ist noch mit keinem Zugang verbunden. Drei Wege – du wählst:</string>
+    <string name="g4k_way_login_title">1 · Hier anmelden</string>
+    <string name="g4k_way_login_body">Benutzername und Passwort aus deiner Bestellung eintippen.</string>
+    <string name="g4k_way_qr_title">2 · QR-Code scannen</string>
+    <string name="g4k_way_qr_body">Seite am Handy öffnen und dort Zugangsdaten oder M3U-Link eintragen.</string>
+    <string name="g4k_way_photo_title">3 · Foto an uns schicken</string>
+    <string name="g4k_way_photo_body">Foto dieses Bildschirms per WhatsApp oder Telegram schicken – wir richten alles ein.</string>
+    <string name="g4k_mac">MAC-Adresse</string>
+    <string name="g4k_device_code">Gerätecode</string>
+    <string name="g4k_login_button">Jetzt anmelden</string>
+    <string name="g4k_retry_button">Erneut prüfen</string>
+    <string name="g4k_manual_button">Manuell einrichten</string>
+    <string name="g4k_username">Benutzername</string>
+    <string name="g4k_password">Passwort</string>
+    <string name="g4k_login_go">Anmelden</string>
+    <string name="g4k_back">Zurück</string>
+    <string name="g4k_offline_title">Keine Verbindung</string>
+    <string name="g4k_offline_body">german4k.com ist gerade nicht erreichbar. Bitte die Internetverbindung dieses Geräts prüfen und erneut versuchen.</string>
+    <string name="g4k_failed_title">Einrichtung fehlgeschlagen</string>
+    <string name="g4k_contact">WhatsApp &amp; Telegram: german4k.com</string>
+    <string name="g4k_expires">Zugang gültig bis <xliff:g id="date" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <string name="g4k_continue">Weiter</string>
+    <string name="g4k_device_id_unreadable">Gerätekennung nicht lesbar</string>
+    <string name="g4k_login_title">Hier anmelden</string>
+    <string name="g4k_profile_name" translatable="false">German4K</string>
+    <string name="g4k_einrichten_short" translatable="false">german4k.com/app/einrichten</string>
+    <string name="g4k_hint_renew_button">Jetzt verlängern</string>
+    <string name="g4k_hint_ok">Verstanden</string>
+    <string name="g4k_hint_later">Später</string>
+    <string name="g4k_hint_qr_renew">Scannen und am Handy verlängern – oder german4k.com/verlaengern öffnen</string>
+    <string name="g4k_hint_qr_setup">Scannen und am Handy einrichten</string>
+    <plurals name="g4k_expires_chip_tage">
+        <item quantity="one">Läuft in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tag ab</item>
+        <item quantity="other">Läuft in <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tagen ab</item>
+    </plurals>
+    <string name="g4k_expires_today">Läuft heute ab</string>
+    <string name="g4k_locked_title">Zugang nicht aktiv</string>
+    <string name="g4k_retry_button_short">Erneut prüfen</string>
+    <string name="g4k_feature_dev_title">Noch in Entwicklung</string>
+    <string name="g4k_feature_dev_body">Dieser Bereich ist noch nicht fertig. Es kann etwas fehlen oder falsch sein – trotzdem ansehen?</string>
+    <string name="g4k_feature_dev_open">Trotzdem ansehen</string>
+    <string name="g4k_about_expires">Zugang gültig bis <xliff:g id="date" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <!-- Build 8: Hilfe-Bildschirm, Selbsttest und was sein Ergebnis für den Kunden heißt. -->
+    <string name="g4k_help_title">Hilfe &amp; Verbindung</string>
+    <string name="g4k_help_subtitle">Hier kannst du deine Verbindung prüfen oder uns den Fehler schicken – du musst nichts abtippen.</string>
+    <string name="g4k_help_check">Verbindung prüfen</string>
+    <string name="g4k_help_checking">Wird geprüft…</string>
+    <string name="g4k_help_send">Fehler an German4K senden</string>
+    <string name="g4k_help_sent">Ist bei uns. Wir sehen jetzt, was passiert ist.</string>
+    <string name="g4k_help_device">Gerät <xliff:g id="mac" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · Code <xliff:g id="code" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <string name="g4k_help_build">German4K Ultra <xliff:g id="version" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> (Build <xliff:g id="code" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$d</xliff:g>)</string>
+    <string name="g4k_help_contact">Kommst du nicht weiter? Schreib uns über WhatsApp oder Telegram – german4k.com</string>
+    <string name="g4k_help_open">Hilfe &amp; Verbindung</string>
+
+    <string name="g4k_fehler_alles_gut_title">Alles läuft</string>
+    <string name="g4k_fehler_alles_gut_body">Verbindung, Zugang und Sender antworten normal. Wenn das Bild trotzdem fehlt, schreib uns – wir sehen die Einzelheiten jetzt.</string>
+    <string name="g4k_fehler_kein_netz_title">Kein Internet</string>
+    <string name="g4k_fehler_kein_netz_body">Dieses Gerät hat gerade keine Verbindung. Prüfe WLAN oder Netzwerkkabel; wenn nichts hilft, den Router drei Minuten vom Strom nehmen.</string>
+    <string name="g4k_fehler_zwangsportal_title">Dein Netz verlangt erst eine Anmeldung</string>
+    <string name="g4k_fehler_zwangsportal_body">Dieses WLAN (Hotel, Gast- oder Firmennetz) will, dass du dich zuerst auf einer Internetseite anmeldest. Öffne irgendeine Seite im Browser, melde dich an und versuche es dann noch einmal.</string>
+    <string name="g4k_fehler_router_sperre_title">Dein Router blockiert uns</string>
+    <string name="g4k_fehler_router_sperre_body">Das Internet läuft, aber dieses Netz lässt unsere Adresse nicht durch – meist ein Filter oder die Kindersicherung im Router. Zur Gegenprobe den Handy-Hotspot nehmen, danach german4k.tv im Router freigeben.</string>
+    <string name="g4k_fehler_anbieter_sperre_title">Dein Anbieter sperrt gerade</string>
+    <string name="g4k_fehler_anbieter_sperre_body">Alles von uns antwortet, trotzdem läuft kein Sender. Manche Anbieter sperren während Livespielen. Ein VPN hilft, nach dem Spiel geht es von allein wieder.</string>
+    <string name="g4k_fehler_host_ausfall_title">Auf die zweite Verbindung gewechselt</string>
+    <string name="g4k_fehler_host_ausfall_body">Eine unserer beiden Verbindungen war nicht erreichbar, die App hat von allein gewechselt. Das Bild ist wieder da – du musst nichts tun.</string>
+    <string name="g4k_fehler_leitung_belegt_title">Zugang läuft auf einem anderen Gerät</string>
+    <string name="g4k_fehler_leitung_belegt_body">Dein Zugang wird gerade woanders benutzt, oder eine alte Verbindung hängt noch. Schließe die App auf dem anderen Gerät – oder gib die Verbindung hier frei.</string>
+    <string name="g4k_fehler_abgelaufen_title">Zugang abgelaufen</string>
+    <string name="g4k_fehler_abgelaufen_body">Dieser Zugang ist abgelaufen. Verlängere ihn und drücke dann „Erneut prüfen“ – die Liste ist sofort wieder da.</string>
+    <string name="g4k_fehler_land_gesperrt_title">In diesem Land nicht freigeschaltet</string>
+    <string name="g4k_fehler_land_gesperrt_body">Dein Zugang ist für dieses Land nicht freigegeben. Schreib uns, wir stellen das ein.</string>
+    <string name="g4k_fehler_uhrzeit_title">Die Uhr dieses Geräts geht falsch</string>
+    <string name="g4k_fehler_uhrzeit_body">Die Uhrzeit weicht stark ab. Dann sieht der Programmführer verschoben aus und die Aufnahme greift daneben. Stelle Datum und Uhrzeit in den Geräteeinstellungen auf automatisch.</string>
+    <string name="g4k_fehler_unbekannt_title">Etwas läuft nicht</string>
+    <string name="g4k_fehler_unbekannt_body">Wir konnten es nicht eingrenzen. Schick uns den Fehler – dann sehen wir, was passiert ist, ohne dass du etwas abtippen musst.</string>
+
+    <string name="g4k_update_quellen_text">Android fragt einmal nach, bevor German4K Ultra ein Update installieren darf. Erlaube es im nächsten Bildschirm und starte das Update dann noch einmal.</string>
+    <string name="g4k_update_quellen_firetv">Fire TV fragt einmal nach, bevor German4K Ultra ein Update installieren darf: Einstellungen › Mein Fire TV › Entwickleroptionen › Apps aus unbekannten Quellen › German4K Ultra. Danach das Update noch einmal starten.</string>
+    <string name="g4k_update_quellen_button">Einstellungen öffnen</string>
+    <string name="g4k_uhr_hinweis">Die Uhr dieses Geräts geht falsch – der Programmführer sieht dann verschoben aus. Stelle Datum und Uhrzeit auf automatisch.</string>
+    <string name="g4k_schritt_netz">Netzwerk</string>
+    <string name="g4k_schritt_internet">Internet</string>
+    <string name="g4k_schritt_panel">German4K</string>
+    <string name="g4k_schritt_host">Verbindung</string>
+    <string name="g4k_schritt_stream">Sender</string>
+    <string name="g4k_schritt_uhr">Uhrzeit</string>
+    <!-- Build 9: Störungsfenster im Player. -->
+    <string name="g4k_stoerung_freigeben">Verbindung freigeben</string>
+    <string name="g4k_stoerung_freigegeben">Freigegeben. Starte den Sender gleich noch einmal.</string>
+    <string name="g4k_stoerung_pruefen">Verbindung prüfen</string>
+    <string name="g4k_stoerung_zu">Schließen</string>
+    <string name="g4k_stoerung_laeuft">Wird freigegeben…</string>
+    <string name="g4k_schritt_sprung">Weg</string>
+    <string name="g4k_fehler_vpn_filter_title">Deine Verbindung wird gefiltert</string>
+    <string name="g4k_fehler_vpn_filter_body">An deinem Zugang liegt es nicht — die Verbindung, über die dieses Gerät hinausgeht, wird abgewiesen. Das passiert bei manchen VPN-Standorten und beim „Bedrohungsschutz“, den einige VPNs eingebaut haben. Wähle im VPN ein anderes Land oder schalte diesen Schutz aus; ohne VPN läuft es meist sofort.</string>
+    <string name="g4k_dolby_title">Dieser Fernseher kann kein Dolby Vision</string>
+    <string name="g4k_dolby_body">Das ist unsere beste Fassung, sie ist in Dolby Vision kodiert. Dein Fernseher kann das nicht darstellen, deshalb wirkt das Bild grün-lila und zu dunkel — an der Datei liegt es nicht. Such denselben Titel in einem anderen Bereich, oder schau ihn trotzdem an.</string>
+    <string name="g4k_dolby_ok">Trotzdem ansehen</string>
+    <string name="g4k_kunde_titel">Dein Zugang</string>
+    <plurals name="g4k_kunde_tage_plural">
+        <item quantity="one">Läuft noch <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tag</item>
+        <item quantity="other">Läuft noch <xliff:g id="days" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Tage</item>
+    </plurals>
+    <string name="g4k_kunde_verlaengern">Verlängern</string>
+    <string name="g4k_kunde_verlaengern_text">Scannen und am Handy verlängern — dauert eine Minute, deine Zugangsdaten bleiben gleich.</string>
+    <string name="g4k_kunde_zweitgeraet">Zweites Gerät</string>
+    <string name="g4k_kunde_zweitgeraet_text">Scannen, um German4K auf einem weiteren Fernseher, Handy oder Tablet einzurichten.</string>
+    <string name="g4k_kunde_werben">Freunde werben</string>
+    <string name="g4k_kunde_werben_text">Scannen, um deinen persönlichen Einladungslink zu teilen.</string>
+    <string name="g4k_kunde_kontakt">Schreib uns</string>
+    <string name="g4k_kunde_kontakt_text">Scannen — Gerät und Version stehen schon in der Nachricht.</string>
+    <string name="g4k_kunde_zu">Schließen</string>
+    <string name="g4k_bereiche_titel">Länder &amp; Bereiche</string>
+    <string name="g4k_bereiche_text">Schalte ab, was du nie schaust — deine Liste wird kürzer und lädt schneller. Du kannst es jederzeit wieder anschalten.</string>
+    <string name="g4k_bereiche_sender"><xliff:g id="count" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Sender</string>
+    <string name="g4k_bereiche_laedt">Wird geladen…</string>
+    <string name="g4k_bereiche_leer">Keine Bereiche — dieses Gerät ist noch nicht mit einem Zugang verbunden.</string>
+    <string name="g4k_bereiche_neu">Gespeichert – deine Liste wird gleich aktualisiert.</string>
+    <string name="g4k_test_chip">Test · noch <xliff:g id="hours" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> h</string>
+    <string name="g4k_test_chip_bald">Test · endet gleich</string>
+    <string name="g4k_hint_qr_kaufen">Scannen und am Handy holen – oder german4k.com/kaufen öffnen</string>
+    <!-- Notenzeile: IMDb-Stimmen, kurz -->
+    <string name="g4k_stimmen_mio">(%1$.1f Mio.)</string>
+    <string name="g4k_stimmen_tsd">(%1$d Tsd.)</string>
+    <string name="g4k_stimmen">(%1$d)</string>
+    <string name="g4k_prozent">%1$d %%</string>
+    <string name="g4k_detailseite_titel">Detailseite vor dem Abspielen</string>
+    <string name="g4k_detailseite_text">Erst eine Seite mit Bewertung, Besetzung und Fassungen öffnen. Aus: sofort abspielen, Vorschau rechts.</string>
+    <string name="g4k_darstellung_titel">Darstellung</string>
+    <string name="g4k_darstellung_text">Automatisch: Fernseher bekommt die Seitenleiste, Handy und Tablet die untere Leiste.</string>
+    <string name="g4k_darstellung_auto">Automatisch</string>
+    <string name="g4k_darstellung_tv">Fernseher</string>
+    <string name="g4k_darstellung_mobil">Handy / Tablet</string>
+    <string name="g4k_darstellung_dialog">Darstellung</string>
+    <!-- Detailseite (Build 10): Querbild, Noten, Knoepfe, Besetzung, Fassungen. -->
+    <string name="g4k_detail_abspielen">Abspielen</string>
+    <string name="g4k_detail_fortsetzen">Fortsetzen bei %1$s</string>
+    <string name="g4k_detail_von_vorn">Von vorn</string>
+    <string name="g4k_detail_favorit">Favorit</string>
+    <string name="g4k_detail_favorit_entfernen">Favorit entfernen</string>
+    <string name="g4k_detail_folgen">Folgen</string>
+    <string name="g4k_detail_trailer">Trailer</string>
+    <string name="g4k_detail_besetzung">Regie &amp; Besetzung</string>
+    <string name="g4k_detail_regie">Regie</string>
+    <string name="g4k_detail_fassungen">Weitere Fassungen</string>
+    <string name="g4k_detail_dauer">%1$d Min.</string>
+    <string name="g4k_detail_laedt">Wird geladen…</string>
+    <string name="g4k_detail_fassung_fehlt">Diese Fassung ist auf diesem Gerät noch nicht da.</string>
+    <!-- Personenseite (Task 5): weitere Titel dieser Person im eigenen Katalog. -->
+    <string name="g4k_person_filme">Filme</string>
+    <string name="g4k_person_serien">Serien</string>
+    <string name="g4k_person_leer">Sonst nichts von dieser Person in deinem Katalog.</string>
+    <string name="g4k_person_laedt">Wird geladen…</string>
+    <string name="g4k_mehr_bereich_summary">Bereich öffnen</string>
+    <!-- Handy-/Tablet-Layout (Task 3): Drill-down Kategorien -> Inhalt. -->
+    <string name="g4k_mobil_zurueck">Zurück</string>
+    <string name="g4k_mobil_kategorien">Kategorien</string>
+    <!-- Sortier-Menue (Task 3): Titel des Auswahlfensters am Sortier-Chip. -->
+    <string name="g4k_sort_titel">Sortieren nach</string>
+    <string name="g4k_sort_imdb">Bewertung (IMDb)</string>
+    <!-- German4K: Sortierung nach Erscheinungsjahr, neueste zuerst (Kundenwunsch). -->
+    <string name="g4k_sort_jahr">Erscheinungsjahr</string>
+    <!-- Erstsync (Task 4): Fortschrittskarte auf der Startseite, solange der erste Katalog laedt. -->
+    <string name="g4k_sync_erstlauf_titel">Dein Katalog wird geladen</string>
+    <string name="g4k_sync_erstlauf_text">Bisher %1$s Sender · %2$s Filme · %3$s Serien. Der erste Start dauert ein paar Minuten; sobald das hier verschwindet, ist alles da.</string>
+    <!-- Abmelden (Task 4): Geraet vom Zugang trennen, Einstellungen -> eigene Zeile mit Rueckfrage. -->
+    <string name="g4k_abmelden_titel">Zugang von diesem Gerät entfernen</string>
+    <string name="g4k_abmelden_text">Trennt dieses Gerät von deinem Zugang und löscht den geladenen Katalog. Anmelden geht jederzeit wieder.</string>
+    <string name="g4k_abmelden_bestaetigen">Entfernen</string>
+    <string name="g4k_abmelden_fehler">Server nicht erreichbar. Bitte später noch einmal.</string>
+    <!-- German4K 3.0: Sport-Hub (Bereich Fussball). -->
+    <string name="g4k_nav_fussball">Fußball</string>
+    <string name="g4k_sport_regal_live">Jetzt live</string>
+    <string name="g4k_sport_regal_heute">Heute</string>
+    <string name="g4k_sport_regal_spaeter">Morgen &amp; später</string>
+    <string name="g4k_sport_regal_beendet">Beendet</string>
+    <string name="g4k_sport_chip_alle">Alle</string>
+    <string name="g4k_sport_chip_bundesliga">Bundesliga</string>
+    <string name="g4k_sport_chip_cl">Champions League</string>
+    <string name="g4k_sport_chip_pokal">DFB-Pokal</string>
+    <string name="g4k_sport_chip_international">International</string>
+    <string name="g4k_sport_stand">Stand %1$s</string>
+    <string name="g4k_sport_offline">Offline – Stand %1$s</string>
+    <string name="g4k_sport_leer">Heute keine Spiele im Plan.</string>
+    <string name="g4k_sport_aus">Dieser Bereich ist gerade nicht verfügbar.</string>
+    <string name="g4k_sport_sender_aus">In deinem Paket aus – Bereich %1$s einschalten</string>
+    <string name="g4k_sport_bereich">Läuft im Bereich %1$s – Sender wird kurz vor Anpfiff benannt</string>
+    <string name="g4k_sport_marke">Läuft bei %1$s – Kategorie öffnen</string>
+    <string name="g4k_sport_kein_kanal">Nicht in deiner Senderliste – Live TV öffnen</string>
+    <string name="g4k_sport_live">LIVE</string>
+    <string name="g4k_sport_next">Gleich</string>
+    <string name="g4k_sport_laden">Spiele werden geladen …</string>
+    <string name="g4k_sport_sender_mehr">%1$d Sender</string>
+    <!-- German4K 3.0/32: Karten-Fußzeile, LIVE-Minute, Tage, Senderzeilen -->
+    <string name="g4k_sport_sprache_de">Deutsch</string>
+    <string name="g4k_sport_sprache_en">Englisch</string>
+    <string name="g4k_sport_sprache_es">Spanisch</string>
+    <string name="g4k_sport_sprache_fr">Französisch</string>
+    <string name="g4k_sport_sprache_it">Italienisch</string>
+    <string name="g4k_sport_sprache_tr">Türkisch</string>
+    <string name="g4k_sport_fuss_sprache_marke">%1$s auf %2$s</string>
+    <string name="g4k_sport_fuss_weitere">%1$d weitere</string>
+    <string name="g4k_sport_fuss_rechte">Bei %1$s</string>
+    <string name="g4k_sport_fuss_bereich">Im Bereich %1$s</string>
+    <string name="g4k_sport_live_minute">LIVE %1$s</string>
+    <string name="g4k_sport_minute">%1$d′</string>
+    <string name="g4k_sport_nachspielzeit">90+′</string>
+    <string name="g4k_sport_halbzeit">Halbzeit</string>
+    <string name="g4k_sport_tag_morgen">Morgen · %1$s</string>
+    <plurals name="g4k_sport_aus_laender">
+        <item quantity="one">%1$d weiteres Land · nicht in deinem Paket</item>
+        <item quantity="other">%1$d weitere Länder · nicht in deinem Paket</item>
+    </plurals>
+    <!-- German4K 3.0 (32) Paket 1 -->
+    <string name="g4k_live_vorschau_titel">Sender auswählen</string>
+    <string name="g4k_live_vorschau_text">Die Vorschau startet, sobald ein Sender markiert ist.</string>
+    <string name="g4k_sort_nummer">Nummer</string>
+    <string name="g4k_live_suche">In „%1$s“ suchen</string>
+    <plurals name="g4k_live_sender_anzahl">
+        <item quantity="one">%1$s Sender</item>
+        <item quantity="other">%1$s Sender</item>
+    </plurals>
+    <!-- German4K 3.0/32: einzeiliger Kopf Filme/Serien auf dem Handy -->
+    <plurals name="g4k_filme_anzahl">
+        <item quantity="one">%1$s Film</item>
+        <item quantity="other">%1$s Filme</item>
+    </plurals>
+    <plurals name="g4k_serien_anzahl">
+        <item quantity="one">%1$s Serie</item>
+        <item quantity="other">%1$s Serien</item>
+    </plurals>
+    <string name="g4k_handy_zuletzt">Zuletzt gesehen</string>
+    <string name="g4k_epg_jetzt">Jetzt</string>
+    <string name="g4k_profil_kind">Kinderprofil</string>
+    <!-- German4K 3.0 (32) Paket 3 -->
+    <string name="g4k_home_fussball">Jetzt im Fußball</string>
+    <string name="g4k_home_neu_filme">Neu bei Filme</string>
+    <string name="g4k_live_kurz">LIVE</string>
+    <string name="g4k_zeitspanne"><xliff:g id="start" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> – <xliff:g id="ende" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <plurals name="g4k_fassungen">
+        <item quantity="one"><xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Fassung</item>
+        <item quantity="other"><xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Fassungen</item>
+    </plurals>
+    <string name="g4k_mehr_zugang">Mein Zugang</string>
+    <plurals name="g4k_mehr_zugang_tage">
+        <item quantity="one">noch <xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Tag</item>
+        <item quantity="other">noch <xliff:g id="n" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%d</xliff:g> Tage</item>
+    </plurals>
+    <string name="g4k_mehr_zugang_abgelaufen">Abgelaufen</string>
+    <!-- German4K: Hinweis im Profil-Editor, wenn der Name wie ein Zugangs-Benutzername aussieht (Kunde). -->
+    <string name="g4k_profil_name_wie_zugang">Willst du einen zweiten Zugang hinzufügen? Das geht unter Einstellungen → Quellen und Programm → Wiedergabelisten → Quelle hinzufügen. Ein Profil ist nur eine eigene Favoritenliste.</string>
+    <!-- German4K 3.1: virtuelle 24/7-Sender -->
+    <string name="g4k_virtuell_von_vorn">Folge von vorn</string>
+    <string name="g4k_virtuell_untertitel">%1$s · noch %2$d Min · danach: %3$s</string>
+    <string name="g4k_virtuell_untertitel_kurz">%1$s · noch %2$d Min</string>
+    <string name="g4k_jetzt_im_tv">Jetzt im TV</string>
+    <string name="g4k_virtuell_normal">Sender läuft gerade im normalen Modus</string>
+    <string name="g4k_stoerung_erneut">Erneut prüfen</string>
+    <!-- German4K 3.2 (Teil B): Erinnern, Konferenz, Länder -->
+    <string name="g4k_erinnern_kanal">Erinnerungen</string>
+    <string name="g4k_erinnern_gleich">⏰ Gleich: <xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g></string>
+    <string name="g4k_erinnern_zeile"><xliff:g id="zusatz" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="uhr" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g></string>
+    <string name="g4k_erinnern_knopf">⏰ Erinnern</string>
+    <string name="g4k_erinnern_knopf_gesetzt">⏰ Erinnerung gesetzt</string>
+    <string name="g4k_erinnern_gesetzt">Erinnerung gesetzt – wir melden uns <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Min vorher.</string>
+    <string name="g4k_erinnern_geloescht">Erinnerung gelöscht.</string>
+    <string name="g4k_erinnern_geht_nicht">Erinnern geht nur bei Sendungen, die noch kommen.</string>
+    <string name="g4k_erinnern_umschalten">Umschalten</string>
+    <string name="g4k_erinnern_spaeter">Später</string>
+    <string name="g4k_erinnern_verpasst">Verpasst? Läuft seit <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Min</string>
+    <string name="g4k_erinnern_kein_sender">Der Sender ist gerade nicht in deiner Liste.</string>
+    <string name="g4k_erinnern_liste_titel">Meine Erinnerungen</string>
+    <string name="g4k_erinnern_liste_text">Sendungen und Spiele, die du nicht verpassen willst. OK auf einer Erinnerung löscht sie.</string>
+    <string name="g4k_erinnern_liste_leer">Noch keine Erinnerungen. Im Programmführer oder bei Fußball: ⏰ Erinnern.</string>
+    <string name="g4k_erinnern_vorbei">Vorbei</string>
+    <string name="g4k_erinnern_lang_druecken">OK lange drücken auf einem Spiel: ⏰ Erinnern</string>
+    <string name="g4k_sport_konferenz_kopf">🔴 <xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="zeit" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · <xliff:g id="spiele" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$s</xliff:g></string>
+    <!-- German4K 3.2 (C6): Konferenz-Kopf mit Wettbewerbslogo — das Logo steht statt des roten Punkts davor. -->
+    <string name="g4k_sport_konferenz_kopf_logo"><xliff:g id="titel" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> · <xliff:g id="zeit" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · <xliff:g id="spiele" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$s</xliff:g></string>
+    <string name="g4k_sport_konferenz_laut_plan">laut Spielplan</string>
+    <string name="g4k_laender_live">Live</string>
+    <string name="g4k_laender_filme">Filme</string>
+    <string name="g4k_laender_serien">Serien</string>
+    <string name="g4k_laender_bereiche_auf">Bereiche zeigen</string>
+    <string name="g4k_laender_bereiche_zu">Bereiche ausblenden</string>
+    <string name="g4k_laender_fehler">Das hat nicht geklappt. Bitte gleich noch einmal versuchen.</string>
+    <!-- German4K 3.3: nach einem Länder-/Bereichsschalter 10 s lang -->
+    <string name="g4k_laender_rueckgaengig">Rückgängig</string>
+    <string name="g4k_was_ist_neu_titel">Neu in Version %1$s</string>
+    <string name="g4k_problem_melden">Problem melden</string>
+    <string name="g4k_beta_titel">Beta-Updates</string>
+    <string name="g4k_beta_desc">Neue Versionen früher bekommen</string>
+    <string name="g4k_beta_an_text">Beta-Versionen kommen früher und bringen Neues zuerst, können aber noch Fehler haben. Du kannst jederzeit zurück auf die stabile Version, deine Einstellungen und dein Zugang bleiben.</string>
+    <string name="g4k_beta_aus_text">Du gehst zurück auf die stabile Version. Wir bieten dir gleich ein Update an, deine Einstellungen und dein Zugang bleiben.</string>
+    <string name="g4k_beta_an_knopf">Beta beitreten</string>
+    <string name="g4k_beta_aus_knopf">Zurück zur stabilen Version</string>
+    <string name="g4k_beta_fehler">Das hat nicht geklappt. Bitte später noch einmal.</string>
+    <string name="g4k_beta_ok">Erledigt. Die neue Version wird dir gleich angeboten.</string>
+    <string name="g4k_laender_an">An</string>
+    <string name="g4k_laender_aus">Aus</string>
+    <!-- German4K 3.2 (N1/N2): Angesagt & Top 10 -->
+    <string name="g4k_angesagt_titel">🔥 Angesagt</string>
+    <string name="g4k_angesagt_untertitel">Filme und Serien, die gerade alle schauen – und die du bei uns hast</string>
+    <string name="g4k_angesagt_unter_top">weltweit im Trend, bei uns verfügbar</string>
+    <string name="g4k_angesagt_nr1">🔥 #1 ANGESAGT DIESE WOCHE</string>
+    <string name="g4k_angesagt_imdb">★ IMDb %1$s</string>
+    <string name="g4k_top10_filme">🏆 Top 10 Filme bei German4K</string>
+    <string name="g4k_top10_serien">🏆 Top 10 Serien bei German4K</string>
+    <string name="g4k_top10_untertitel">die meistgeschauten der letzten 7 Tage</string>
+    <string name="g4k_art_film">Film</string>
+    <string name="g4k_art_serie">Serie</string>
+    <string name="g4k_kennung_film">FILM</string>
+    <string name="g4k_kennung_serie">SERIE</string>
+    <string name="g4k_badge_neue_folge">NEUE FOLGE</string>
+    <string name="g4k_badge_neu">NEU</string>
+    <string name="g4k_badge_4k">4K</string>
+    <string name="g4k_angesagt_nicht_da">Dieser Titel ist auf diesem Gerät gerade nicht da.</string>
+    <!-- German4K 3.3: Länderfilter über der Kategorien-Rail -->
+    <string name="g4k_laender_alle">Alle</string>
+    <string name="g4k_laender_weitere">Weitere Kategorien</string>
+    <string name="g4k_laender_leiste">Nach Land filtern</string>
+    <!-- German4K 3.3: Erwachsenen-PIN -->
+    <string name="g4k_erwachsen_pin_titel">Erwachsenen-PIN eingeben</string>
+    <string name="g4k_erwachsen_pin_falsch">Falscher PIN – bitte noch einmal</string>
+    <string name="g4k_erwachsen_pin_hinweis">Standard-PIN: 0000 – ändern unter Einstellungen → Profil.</string>
+    <string name="g4k_erwachsen_pin_aendern">Erwachsenen-PIN ändern</string>
+    <string name="g4k_erwachsen_pin_aendern_text">PIN für Erwachsenen-Kategorien auf diesem Gerät (Standard 0000)</string>
+    <string name="g4k_erwachsen_pin_alt">Bisherigen Erwachsenen-PIN eingeben</string>
+    <string name="g4k_erwachsen_pin_neu">Neuer Erwachsenen-PIN (4 Ziffern)</string>
+    <string name="g4k_erwachsen_pin_neu_wiederholen">Neuen Erwachsenen-PIN wiederholen</string>
+    <string name="g4k_erwachsen_pin_ungleich">PINs stimmen nicht überein – neuen PIN noch einmal eingeben</string>
+    <string name="g4k_erwachsen_pin_gespeichert">Erwachsenen-PIN geändert</string>
+    <string name="g4k_pin_loeschen">Letzte Ziffer löschen</string>
+    <!-- German4K 3.3: Meine Mannschaft, Nächste Übertragung -->
+    <string name="g4k_mannschaft_merken">★ <xliff:g id="team" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> als meine Mannschaft</string>
+    <string name="g4k_mannschaft_entfernen">☆ <xliff:g id="team" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> nicht mehr meine Mannschaft</string>
+    <string name="g4k_mannschaft_gemerkt">★ <xliff:g id="team" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> ist jetzt deine Mannschaft – ihre Spiele stehen zuerst.</string>
+    <string name="g4k_mannschaft_entfernt"><xliff:g id="team" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g> ist nicht mehr deine Mannschaft.</string>
+    <string name="g4k_mannschaft_lang_druecken">OK lange drücken auf einem Spiel: ⏰ Erinnern · ★ Meine Mannschaft</string>
+    <string name="g4k_mannschaften_titel">Meine Mannschaften</string>
+    <string name="g4k_mannschaften_text">Spiele deiner Mannschaften stehen im Fußball-Bereich und auf der Startseite zuerst. OK auf einer Mannschaft entfernt sie.</string>
+    <string name="g4k_mannschaften_leer">Noch keine Mannschaft gewählt. Im Fußball-Bereich OK lange auf einem Spiel drücken und „★ … als meine Mannschaft“ wählen.</string>
+    <string name="g4k_mannschaften_erinnern_an">⏰ Erinnerung <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Min vor Anpfiff: an</string>
+    <string name="g4k_mannschaften_erinnern_aus">⏰ Erinnerung <xliff:g id="min" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$d</xliff:g> Min vor Anpfiff: aus</string>
+    <string name="g4k_uebertragung_wird_versucht">Andere Übertragung wird versucht …</string>
+    <string name="g4k_uebertragung_keine_weitere">Für dieses Spiel läuft gerade keine weitere Übertragung.</string>
+    <string name="g4k_uebertragung_knopf">Läuft gerade nicht? Nächste Übertragung</string>
+    <!-- German4K 3.3: Schlaf-Timer -->
+    <string name="g4k_schlaf_timer">Schlaf-Timer</string>
+    <string name="g4k_schlaf_minuten">%1$d min</string>
+    <string name="g4k_schlaf_hinweis">Wiedergabe stoppt in 1 Minute — OK zum Verlängern (+30 min)</string>
+    <!-- German4K 3.3: abgelaufener Zusatzzugang -->
+    <string name="g4k_abgelaufen_titel">Zugang abgelaufen</string>
+    <string name="g4k_abgelaufen_text">Zugang „%1$s“ ist abgelaufen — entfernen?</string>
+    <string name="g4k_abgelaufen_ja">Ja, entfernen</string>
+    <string name="g4k_abgelaufen_spaeter">Später</string>
+    <!-- German4K 3.3: Überlastung (502/503/504) bei Filmen/Serien -->
+    <string name="g4k_ueberlast_text">Gerade sehr viel los — wir versuchen es gleich noch einmal</string>
+    <string name="g4k_ueberlast_countdown">Neuer Versuch in %1$d s (%2$d von %3$d)</string>
+    <!-- German4K 3.3.1 (B4): Wiederholbremse Filme/Serien -->
+    <string name="g4k_vod_bremse">Dieser Titel lässt sich auf diesem Gerät gerade nicht abspielen. Bitte später noch einmal versuchen oder unter Einstellungen ▸ Wiedergabe den Player wechseln.</string>
+</resources>

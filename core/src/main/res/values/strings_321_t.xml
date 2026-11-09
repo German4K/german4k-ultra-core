@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K 3.2.1 (Strom T, Ton): sound stages, detected output, help line. -->
+<resources>
+    <string name="ton_321_receiver">Receiver</string>
+    <string name="ton_321_mehrkanal">Multichannel</string>
+    <string name="ton_321_auto_description">Automatic — German4K Ultra detects what your TV, soundbar or receiver can play and picks the best sound: Dolby/DTS goes straight to a receiver, otherwise clean stereo. Recommended.</string>
+    <string name="ton_321_mehrkanal_description">Multichannel — 5.1/7.1 is decoded in the app and sent as multichannel PCM, without Dolby/DTS passthrough. For TVs that go silent with passthrough.</string>
+    <string name="ton_321_receiver_description">Receiver — Dolby and DTS sound goes to your AV receiver or soundbar as a bitstream, in the format they accept. If the sound drops out, German4K Ultra switches to stereo and tells you.</string>
+    <string name="ton_321_beschreibung_erkannt">%1$s\n%2$s</string>
+    <string name="ton_321_erkannt">Detected: %1$s</string>
+    <string name="ton_321_erkannt_noch_nicht">Output not detected yet</string>
+    <string name="ton_321_erkannt_teile">%1$s, %2$s</string>
+    <string name="ton_321_erkannt_plus">%1$s + %2$s</string>
+    <string name="ton_321_art_hdmi">HDMI</string>
+    <string name="ton_321_art_hdmi_arc">HDMI ARC</string>
+    <string name="ton_321_art_hdmi_earc">HDMI eARC</string>
+    <string name="ton_321_art_bluetooth">Bluetooth</string>
+    <string name="ton_321_art_usb">USB</string>
+    <string name="ton_321_art_kopfhoerer">Headphones</string>
+    <string name="ton_321_art_lautsprecher">Speaker</string>
+    <string name="ton_321_art_unbekannt">Unknown output</string>
+    <string name="ton_321_kanaele_stereo">Stereo</string>
+    <string name="ton_321_kanaele_51">5.1</string>
+    <string name="ton_321_kanaele_71">7.1</string>
+    <string name="ton_321_kanaele_n">%1$d channels</string>
+    <string name="ton_321_codec_ac3">Dolby Digital</string>
+    <string name="ton_321_codec_eac3">Dolby Digital Plus</string>
+    <string name="ton_321_codec_atmos">Dolby Atmos</string>
+    <string name="ton_321_codec_dts">DTS</string>
+    <string name="ton_321_codec_dtshd">DTS-HD</string>
+    <string name="ton_321_codec_truehd">Dolby TrueHD</string>
+    <string name="ton_321_codec_ac4">Dolby AC-4</string>
+    <string name="ton_321_weg_stereo">Stereo</string>
+    <string name="ton_321_weg_alt">device decides</string>
+    <string name="ton_321_weg_mehrkanal">multichannel PCM</string>
+    <string name="ton_321_weg_durchreichen">Dolby/DTS to the receiver</string>
+    <string name="ton_321_weg_durchreichen_stereo">Dolby/DTS to the receiver, otherwise stereo</string>
+    <string name="ton_321_weg_gesperrt">Stereo (switched after a sound dropout)</string>
+    <string name="ton_321_hilfe_zeile">Sound: %1$s → %2$s</string>
+</resources>

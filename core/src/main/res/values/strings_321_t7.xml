@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K 3.2.1 (t-7): customer wording for playback errors — raw server text is never shown. -->
+<resources>
+    <string name="t7_321_leitung_belegt">Your access is currently being used on another device.</string>
+    <string name="t7_321_leitung_kachel">Your connection is not enough for a second tile right now.</string>
+    <string name="t7_321_leitung_freigeben">Free up the connection</string>
+    <string name="t7_321_abgelehnt">This channel was refused for your access. Please check whether your access is still active.</string>
+    <string name="t7_321_nicht_gefunden">This channel is not available right now. Please try another channel or try again later.</string>
+    <string name="t7_321_land">This channel is not available in your country.</string>
+    <string name="t7_321_anmeldung_netz">Your network does not let the stream through. If you use hotel or guest Wi-Fi, sign in there first — otherwise a VPN or protection filter may be blocking it.</string>
+    <string name="t7_321_ausgelastet">The server is busy right now. Please try again in a moment.</string>
+    <string name="t7_321_ausgelastet_warten">The server is busy right now. Trying again in %1$d s.</string>
+    <string name="t7_321_zeitueberschreitung">The channel is not responding. Please check your internet connection and try again.</string>
+    <string name="t7_321_format">This channel sends a format your device cannot play right now. Please try again in a moment.</string>
+</resources>

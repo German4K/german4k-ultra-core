@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1 — Strom q-3 (Player-Funde TV-Abnahme). -->
+<resources>
+    <string name="g4k_multiview_nicht_geoeffnet">This channel couldn\'t be opened here (connection or format). Try it in full screen.</string>
+</resources>

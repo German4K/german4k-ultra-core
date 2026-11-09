@@ -1,0 +1,141 @@
+package tv.own.owntv.core.content
+
+import java.text.Normalizer
+import java.util.Locale
+import tv.own.owntv.core.customize.CustomizeKeys
+import tv.own.owntv.core.database.dao.CategoryDao
+import tv.own.owntv.core.database.dao.ProfileDao
+import tv.own.owntv.core.database.entity.CategoryEntity
+
+/**
+ * Conservative parental-control classifier for provider category/folder names.
+ *
+ * IPTV protocols expose a category name, but no dependable adult flag. Keep this classifier
+ * category-only: applying these words to programme or movie titles would create false positives
+ * such as "Sex and the City". Provider categories classified here are system-hidden for kids
+ * profiles; ordinary profile customizations cannot unhide them.
+ */
+/**
+ * German4K 3.2 (F1): Wurde in dieser App-Sitzung eine PIN eingegeben (Profil-PIN oder die PIN von
+ * „Anpassen")? Nur dann zeigt die globale Suche Erwachsenes. Bewusst nur im Speicher: nach einem
+ * Neustart der App gilt wieder „gesperrt". Die Startseite fragt das NIE — dort ist Erwachsenes immer aus.
+ */
+object German4kErwachsenSitzung {
+    @Volatile var frei: Boolean = false
+        private set
+
+    fun pinEingegeben() { frei = true }
+
+    /** Profilwechsel oder Abmelden: wieder sperren. */
+    fun sperren() { frei = false }
+}
+
+object AdultCategoryClassifier {
+    private val safeExceptions = listOf(
+        Regex("\\badult\\s+swim\\b"),
+    )
+
+    private val adultMarkers = listOf(
+        Regex("(?:^|\\s)(?:18\\+|\\+18|21\\+|\\+21)(?:$|\\s)"),
+        Regex("\\b(?:adult|adults|xxx|porn|porno|pornography|erotic|erotica|erotik|sex|sexy|playboy|hustler|redlight)\\b"),
+        Regex("\\b(?:adulte|adultes|adulto|adultos|adulti|volwassenen|vuxen|voksne|aikuisille)\\b"),
+        Regex("\\b(?:dla\\s+doros.ych|pro\\s+dospele|pro\\s+dospely|fur\\s+erwachsene|para\\s+adultos)\\b"),
+        Regex("(?:yetiskin|для\\s+взрослых|взрослые|للكبار|بالغين|成人|成年人|성인)"),
+        Regex("\\brated\\s+r\\b"),
+    )
+
+    /**
+     * German4K: Rubriken, die das Panel ausdrücklich als „für Erwachsene" nennt.
+     *
+     * Die Erkennung unten rät am Namen, und für unsere beiden Rubriken trifft sie auch. Verlassen
+     * wollen wir uns darauf nicht: Die Namen im Katalog ändern wir, ohne an die App zu denken, und
+     * eine Rubrik, die durch das Raster fällt, stünde im Kinderprofil. Wer die Namen bekommt, muss
+     * nicht raten. Die Liste ergänzt die Erkennung, sie ersetzt sie nicht — ein Panel, das gerade
+     * nicht erreichbar ist, darf die Kindersicherung nicht abschalten.
+     */
+    @Volatile
+    private var vomPanel: Set<String> = emptySet()
+
+    fun setzeErwachsenRubriken(namen: Collection<String>) {
+        vomPanel = namen.mapNotNull { it.trim().lowercase(Locale.ROOT).takeIf(String::isNotEmpty) }.toSet()
+    }
+
+    fun isAdult(categoryName: String?): Boolean {
+        if (categoryName.isNullOrBlank()) return false
+        if (categoryName.trim().lowercase(Locale.ROOT) in vomPanel) return true
+        val raw = compact(categoryName.lowercase(Locale.ROOT))
+        val withoutMarks = Normalizer.normalize(categoryName, Normalizer.Form.NFKD)
+            .replace(Regex("\\p{M}+"), "")
+        val normalized = compact(withoutMarks.lowercase(Locale.ROOT))
+        return listOf(raw, normalized).distinct().any { candidate ->
+            val withoutSafePhrases = safeExceptions.fold(candidate) { value, exception ->
+                exception.replace(value, " ")
+            }
+            adultMarkers.any { it.containsMatchIn(withoutSafePhrases) }
+        }
+    }
+
+    /**
+     * Category ids hidden by either profile customization or the kids-profile system policy.
+     *
+     * German4K 3.2 (F1): [hideAdult] trennt „Erwachsenes ausblenden" vom Kinderprofil. Die Startseite
+     * blendet es für JEDES Profil aus (Betreiber 16.10.: nie, auch nicht nach PIN), die Suche bis zur
+     * PIN-Eingabe dieser Sitzung ([German4kErwachsenSitzung]). Ohne Angabe gilt das alte Verhalten.
+     */
+    fun hiddenCategoryIds(
+        categories: List<CategoryEntity>,
+        customizedHiddenKeys: Set<String>,
+        isKidsProfile: Boolean,
+        hideAdult: Boolean = isKidsProfile,
+    ): Set<Long> = categories.asSequence()
+        .filter { category ->
+            CustomizeKeys.category(category) in customizedHiddenKeys ||
+                ((isKidsProfile || hideAdult) && isAdult(category.name))
+        }
+        .mapTo(linkedSetOf()) { it.id }
+
+    /** Final access check for playback, downloads and deep links that bypass visible lists. */
+    suspend fun allows(
+        profileId: Long,
+        categoryId: Long?,
+        profileDao: ProfileDao,
+        categoryDao: CategoryDao,
+    ): Boolean {
+        if (profileId < 0L) return false
+        val profile = profileDao.getById(profileId) ?: return false
+        if (!profile.isKids) return true
+        val categoryName = categoryId?.let { categoryDao.getById(it)?.name }
+        return !isAdult(categoryName)
+    }
+
+    /**
+     * German4K 3.3: [allows] plus Erwachsenen-PIN — für Abspielen/Herunterladen, das der Kunde gerade selbst auslöst. Liegt der
+     * Titel in einer Erwachsenen-Rubrik und ist der PIN noch nicht eingegeben, fragt [German4kErwachsenPin.durchlassen] per
+     * Dialog nach (wartet auf die Antwort). Schalter `erwachsenen_pin` aus = exakt [allows].
+     *
+     * German4K 3.3.1 (B3): [abspielen] = true (Abspielen, Extern, Catch-up) meldet ein „Abbrechen" über
+     * [German4kErwachsenPin.abspielAbbruch] — die Shell schließt dann den Player. Herunterladen übergibt false.
+     */
+    suspend fun allowsMitPin(
+        profileId: Long,
+        categoryId: Long?,
+        profileDao: ProfileDao,
+        categoryDao: CategoryDao,
+        abspielen: Boolean = true, // German4K 3.3.1 (B3)
+    ): Boolean {
+        if (!allows(profileId, categoryId, profileDao, categoryDao)) return false
+        if (categoryId == null || !German4kErwachsenPin.aktiv() || German4kErwachsenPin.istFrei()) return true
+        val name = categoryDao.getById(categoryId)?.name
+        // German4K 3.3.1 (B3): Abbruch vor dem Abspielen melden, damit kein schwarzes Vollbild stehen bleibt.
+        return if (abspielen) German4kErwachsenPin.durchlassenZumAbspielen(name) else German4kErwachsenPin.durchlassen(name)
+    }
+
+    /** German4K 3.2 (F1): liegt dieser Titel in einer Erwachsenen-Rubrik? Unbekannte Rubrik = nein. */
+    suspend fun inErwachsenRubrik(categoryId: Long?, categoryDao: CategoryDao): Boolean =
+        categoryId != null && isAdult(categoryDao.getById(categoryId)?.name)
+
+    private fun compact(value: String): String = value
+            .replace(Regex("[^\\p{L}\\p{N}+]"), " ")
+            .replace(Regex("\\s+"), " ")
+            .trim()
+}

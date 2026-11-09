@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1 — Strom U (Oberfläche). German is the primary language, see values-de. -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- A6: own description for the preferred audio language (the shared one talks about subtitles). -->
+    <string name="settings_preferred_audio_language_description">Auto-select this audio track when available.</string>
+    <!-- A6: plain wait time for "Give up on a channel after" (not an amount of buffered video). -->
+    <string name="settings_seconds_short"><xliff:g id="seconds">%1$d</xliff:g>s</string>
+    <!-- B3: filter chips on the start page's trending shelf. -->
+    <string name="g4k_angesagt_filter_alle">All</string>
+    <string name="g4k_angesagt_filter_filme">Movies</string>
+    <string name="g4k_angesagt_filter_serien">Series</string>
+    <!-- D4: search keywords for the two device rows. -->
+    <string name="g4k_suche_darstellung">appearance display tv phone tablet layout view</string>
+    <string name="g4k_suche_abmelden">sign out remove access device logout</string>
+    <!-- D5: start page settings status — reads the German4K trending shelf, not the old TMDB trend. -->
+    <plurals name="g4k_angesagt_status">
+        <item quantity="one">Trending on German4K shows <xliff:g id="count">%1$d</xliff:g> title on the start page.</item>
+        <item quantity="other">Trending on German4K shows <xliff:g id="count">%1$d</xliff:g> titles on the start page.</item>
+    </plurals>
+    <!-- D2: descriptions of the German4K start page shelves in Layout > Start screen. -->
+    <string name="g4k_startregal_fussball_text">Live football matches right now, with the channels showing them.</string>
+    <string name="g4k_startregal_jetzt_tv_text">What is on air right now on your channels.</string>
+    <string name="g4k_startregal_neu_filme_text">The newest films added to the catalogue.</string>
+    <!-- U19: own description for "Trending layout" (it showed the trending row's text). -->
+    <string name="g4k_trend_layout_text">A detailed card with backdrop and description, or just a row of posters.</string>
+    <!-- U24: detail page once the lookup came back empty (was "Loading…" forever). -->
+    <string name="g4k_detail_keine">No further details for this title.</string>
+    <!-- U29: More > My access, when no expiry date is known (pane was empty). -->
+    <string name="g4k_mehr_zugang_text">Renew, set up a second device or message us – each via QR code on your phone.</string>
+    <!-- U35: Live TV, empty preview column while the live preview setting is off. -->
+    <string name="g4k_live_vorschau_aus_titel">Live preview off</string>
+    <string name="g4k_live_vorschau_aus_text">Highlight a channel – OK starts it.</string>
+    <!-- U44: Player subtitle menu, closed-caption track (eia_608/708). Short: the menu is narrow. -->
+    <string name="u321_untertitel_cc_kurz">Captions (CC)</string>
+    <!-- U47: Player top bar, programme on air: start–end time and minutes left, e.g. "07:05–09:00 · 127 min left". -->
+    <string name="u321_live_zeit_rest"><xliff:g id="start" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%1$s</xliff:g>–<xliff:g id="end" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%2$s</xliff:g> · <xliff:g id="minutes" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">%3$d</xliff:g> min left</string>
+    <!-- U50: Video player > Most tiles — own description (it repeated the Multiview text). -->
+    <string name="g4k_multiview_max_text">The ceiling for Multiview: it opens with two tiles and you can add more up to this number. Each tile uses one of your provider\'s connections.</string>
+    <!-- U57: Start page shelf with the newest films. -->
+    <string name="g4k_home_neue_filme">New movies</string>
+</resources>

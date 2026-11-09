@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1, Strom P (Player & Betrieb). German in values-de. -->
+<resources>
+    <string name="p321_mv_zweiter_dazu">Add a second channel</string>
+    <string name="p321_mv_zweiter_hinweis">Hold OK: add as second channel</string>
+    <string name="p321_mv_zweiter_waehlen">Pick the second channel</string>
+    <string name="p321_leitung_neustart">Connection freed – the channel restarts in a moment.</string>
+    <string name="p321_leitung_fehler">Freeing the connection didn\'t work. Try again in a few minutes.</string>
+    <string name="p321_aufnahme_weicht">Recording stopped – on your single connection, watching comes first.</string>
+    <string name="p321_aufnahme_wartet">Recording not started – your connection is in use for watching.</string>
+    <string name="p321_pflicht_downloader">If the download fails: open the Downloader app and enter code %1$s.</string>
+    <string name="p321_ton_sprachen">Audio: %1$s</string>
+    <!-- P7: Untertitel über Engine-Wechsel -->
+    <string name="p321_bild_ut_nur_exo">Image subtitles (PGS/VobSub) can only be shown by ExoPlayer for this film. Pick the track in the subtitle menu to switch playback there.</string>
+    <string name="p321_bild_ut_text_ersatz">Image subtitles can only be shown by ExoPlayer – mpv is showing “%1$s” instead.</string>
+    <string name="p321_bild_ut_exo_geht_nicht">Image subtitles are only possible with ExoPlayer for this film – and ExoPlayer can\'t play it on this device. Pick a text subtitle instead.</string>
+    <string name="p321_untertitel_cc">Closed captions (CC)</string>
+</resources>

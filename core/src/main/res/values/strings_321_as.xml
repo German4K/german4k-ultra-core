@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1 — Strom AS (Audiosprache Deutsch als Standard). German is the primary language, see values-de. -->
+<resources>
+    <string name="g4k_audio_automatisch">Automatic (%1$s)</string>
+    <string name="g4k_audio_keine">None (stream default)</string>
+    <string name="g4k_audio_beschreibung">Automatic starts films and channels in German, or in your device language if it is neither German nor English. Pick a language to always prefer it; “None” keeps the stream’s default track.</string>
+</resources>

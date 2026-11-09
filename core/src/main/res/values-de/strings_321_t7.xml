@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K 3.2.1 (t-7): Kundentexte für Wiedergabefehler — roher Server-Text wird nie angezeigt. Du-Form. -->
+<resources>
+    <string name="t7_321_leitung_belegt">Dein Zugang wird gerade auf einem anderen Gerät genutzt.</string>
+    <string name="t7_321_leitung_kachel">Für eine zweite Kachel reicht deine Leitung gerade nicht.</string>
+    <string name="t7_321_leitung_freigeben">Leitung freigeben</string>
+    <string name="t7_321_abgelehnt">Dieser Sender wurde für deinen Zugang abgelehnt. Prüfe bitte, ob dein Zugang noch aktiv ist.</string>
+    <string name="t7_321_nicht_gefunden">Dieser Sender ist gerade nicht verfügbar. Versuch einen anderen Sender oder probier es später noch einmal.</string>
+    <string name="t7_321_land">Dieser Sender ist in deinem Land nicht verfügbar.</string>
+    <string name="t7_321_anmeldung_netz">Dein Netzwerk lässt den Stream nicht durch. Bist du im Hotel- oder Gäste-WLAN, melde dich dort zuerst an – sonst blockiert ihn vielleicht ein VPN oder Schutzfilter.</string>
+    <string name="t7_321_ausgelastet">Der Server ist gerade ausgelastet. Versuch es gleich noch einmal.</string>
+    <string name="t7_321_ausgelastet_warten">Der Server ist gerade ausgelastet. Neuer Versuch in %1$d s.</string>
+    <string name="t7_321_zeitueberschreitung">Der Sender antwortet gerade nicht. Prüf bitte deine Internetverbindung und versuch es noch einmal.</string>
+    <string name="t7_321_format">Dieser Sender liefert gerade ein Format, das dein Gerät nicht abspielen kann. Versuch es gleich noch einmal.</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1 — Strom Q (Abnahme Android 9). German is the primary language, see values-de. -->
+<resources>
+    <!-- Q1: OpenSubtitles without the customer's own API key or server — the third-party relay is off. -->
+    <string name="g4k_opensubtitles_eigener_schluessel">Online subtitles need your own OpenSubtitles API key. Add it under “Advanced options”.</string>
+    <!-- Q4: weather location without a customer entry comes coarsely from our server (no third-party IP lookup). -->
+    <string name="g4k_wetter_ort_beschreibung">Set the city for the weather. Blank uses the approximate location from our server; on a VPN it may be off. Then enter your city (e.g. London) or &quot;lat,lon&quot; (e.g. 51.5,-0.12).</string>
+    <string name="g4k_wetter_ort_hinweis">Leave blank to use the approximate location from our server. Enter a city (e.g. London) or &quot;lat,lon&quot; (e.g. 51.5,-0.12).</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German4K Ultra 3.2.1 — Strom Q (Abnahme Android 9). -->
+<resources>
+    <string name="g4k_opensubtitles_eigener_schluessel">Online-Untertitel brauchen deinen eigenen OpenSubtitles-API-Schlüssel. Trag ihn unter „Erweiterte Optionen“ ein.</string>
+    <string name="g4k_wetter_ort_beschreibung">Lege die Stadt fürs Wetter fest. Leer = ungefährer Ort über unseren Server; mit VPN kann er danebenliegen. Dann trag deine Stadt (z. B. Berlin) oder „Breitengrad,Längengrad“ (z. B. 52.52,13.40) ein.</string>
+    <string name="g4k_wetter_ort_hinweis">Leer lassen = ungefährer Ort über unseren Server. Oder gib eine Stadt (z. B. Berlin) oder „Breitengrad,Längengrad“ (z. B. 52.52,13.40) ein.</string>
+</resources>
